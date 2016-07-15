@@ -86,7 +86,17 @@ class BasePlot(object):
 
     def draw_edges(self):
         """
-        Needs to be implemented for each plot
+        Needs to be implemented for each plot.
         """
         pass
 
+    def clone_axis(self):
+        """
+        Needs to be implemented for each plot, but only as necessary.
+
+        Intent: Visually clone a selected axis on the plot to visualize
+        within-group connectivity.
+        """
+        pass
+
+    
