@@ -2,7 +2,7 @@ from matplotlib.pyplot import plt
 
 
 class BasePlot(object):
-    """docstring for BasePlot"""
+    """BasePlot: the base plotting object that computes the layouts."""
     def __init__(self, nodes, edges,
                  nodecolors, edgecolors,
                  nodeprops, edgeprops):
@@ -98,5 +98,3 @@ class BasePlot(object):
         within-group connectivity.
         """
         pass
-
-    
