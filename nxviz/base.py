@@ -1,4 +1,4 @@
-from matplotlib.pyplot import plt
+import matplotlib.pyplot as plt
 
 
 class BasePlot(object):
