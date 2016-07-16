@@ -9,6 +9,9 @@ def node_theta(nodelist, node):
     """
     Maps node to Angle.
     """
+    assert len(nodelist) > 0, 'nodelist must be a list of items.'
+    assert node in nodelist, 'node must be inside nodelist.'
+
     i = nodelist.index(node)
     theta = i*2*np.pi/len(nodelist)
 
