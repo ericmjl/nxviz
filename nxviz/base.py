@@ -4,9 +4,9 @@ from matplotlib.pyplot import plt
 class BasePlot(object):
     """BasePlot: the base plotting object that computes the layouts."""
     def __init__(self, nodes, edges,
-                 nodecolors, edgecolors,
-                 nodeprops, edgeprops,
-                 figsize):
+                 nodecolors=None, edgecolors=None,
+                 nodeprops=None, edgeprops=None,
+                 figsize=None):
         super(BasePlot, self).__init__()
         self.nodes = nodes
         self.edges = edges
