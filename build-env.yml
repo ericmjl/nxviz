@@ -4,3 +4,4 @@ dependencies:
 - numpy
 - python=3.5
 - pytest
+- pycodestyle
