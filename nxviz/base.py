@@ -54,15 +54,12 @@ class BasePlot(object):
 
     def set_edgeprops(self, edgeprops):
         """
-        Sets the edge visualization properties.
+        Sets the edge visualization properties. Follows matplotlib conventions.
+
+        TOOD: Add link to matplotlib conventions.
         """
-        if edgeprops is not None:
-            if isinstance(edgeprops, dict):
-                self.edgeprops = edgeprops
-            else:
-                raise TypeError("edgeprops must be a dictionary")
-        else:
-            self.edgeprops = {}
+        assert isinstance(edgeprops, dict), "edgeprops must be a dictionary, even if empty"
+        self.edgeprops = edgeprops
 
     def set_nodecolors(self, nodecolors):
         """
