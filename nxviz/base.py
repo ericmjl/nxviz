@@ -89,12 +89,16 @@ class BasePlot(object):
 
     def draw_nodes(self):
         """
+        Renders the nodes to the plot or screen.
+
         Needs to be implemented for each plot.
         """
         pass
 
     def draw_edges(self):
         """
+        Renders the nodes to the plot or screen.
+
         Needs to be implemented for each plot.
         """
         pass
