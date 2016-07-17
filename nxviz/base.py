@@ -93,15 +93,14 @@ class BasePlot(object):
             self.nodecolors = nodecolors
         # Else, if nodes is a string, set `nodecolors` to be a list of the same
         # length as the number of nodes in the graph.
-        graph_size = len(self.nodes)
         elif is_dict:
             assert set(nodecolors.keys()) == set(self.nodes),\
                 "the all nodes in the graph must be present as keys in the " +\
                 "dictionary"
         elif is_string:
-            self.nodecolors = [nodecolors] * graph_size
+            self.nodecolors = [nodecolors] * len(self.nodes)
         else:
-            self.nodecolors = ['blue'] * graph_size
+            self.nodecolors = ['blue'] * len(self.nodes)
 
     def set_edgecolors(self, edgecolors):
         """
