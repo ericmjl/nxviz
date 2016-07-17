@@ -104,7 +104,17 @@ class BasePlot(object):
 
     def set_edgecolors(self, edgecolors):
         """
-        Sets the edge colors. Priority: edgecolor > edgeprops > default.
+        Sets the edgecolors. Priority: edgecolor > edgeprops > default.
+
+        `edgecolors` should be either a `string` or an iterable (list, tuple, dict).
+
+        If `edgecolors` is a `string`, all edges will carry that color.
+
+        If `edgecolors` is a `list` or `tuple`, then edges will be coloured in
+        order by the list or tuple elements.
+
+        If `edgecolors` is a `dict`, then the keys have to be all present in
+        the edgelist.
 
         By default, edge color is black.
         """
