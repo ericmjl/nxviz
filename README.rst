@@ -2,6 +2,10 @@
 nxviz
 ===============================
 
+.. image:: https://badges.gitter.im/ericmjl/nxviz.svg
+   :alt: Join the chat at https://gitter.im/ericmjl/nxviz
+   :target: https://gitter.im/ericmjl/nxviz?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+
 
 .. image:: https://img.shields.io/pypi/v/nxviz.svg
         :target: https://pypi.python.org/pypi/nxviz
