@@ -65,17 +65,35 @@ class BasePlot(object):
         """
         Sets the nodecolors. Priority: nodecolor > nodeprops > default.
 
+        `nodecolors` should be either a `string` or an iterable (list, tuple, dict).
+
+        If `nodecolors` is a `string`, all nodes will carry that color.
+
+        If `nodecolors` is an
+
         By default, node color is blue.
         """
-        if nodecolors is not None:
+        # Defensive check that nodecolors is either a string or an iterable.
+        is_list = isinstance(nodecolors, list)
+        is_tuple = isinstance(nodecolors, tuple)
+        is_string = isinstance(nodecolors, str)
+        assert is_string or is_list or is_tuple,\
+            "`nodecolors` must be a string or iterable"
+
+        # If `nodecolors` is an iterable, check that it is of the same length
+        # as the number of nodes in the graph.
+        if is_iterable:
+            assert len(nodecolors) == len(self.nodes),\
+                "`nodecolors` iterable must be the same length as nodes"
             self.nodecolors = nodecolors
-        elif self.nodeprops:
-            try:
-                self.nodecolors = self.nodeprops.pop('facecolor')
-            except KeyError:
-                self.nodecolors = 'blue'
+
+        # Else, if nodes is a string, set `nodecolors` to be a list of the same
+        # length as the number of nodes in the graph.
+        graph_size = len(self.nodes)
+        elif is_string:
+            self.nodecolors = [nodecolors] * graph_size
         else:
-            self.nodecolors = 'blue'
+            self.nodecolors = ['blue'] * graph_size
 
     def set_edgecolors(self, edgecolors):
         """
