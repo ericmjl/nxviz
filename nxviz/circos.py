@@ -7,12 +7,28 @@ from matplotlib.path import Path
 
 class CircosPlot(BasePlot):
     """docstring for CircosPlot"""
-    def __init__(self, nodes, edges, radius,
+    def __init__(self, nodes, edges,
+                 radius, node_radius
                  nodecolor=None, edgecolor=None,
                  nodeprops=None, edgeprops=None,
                  figsize=None):
         BasePlot.__init__()
+        # The following attributes are specific to CircosPlot
         self.radius = radius
+        self.node_radius = node_radius
+        # The rest of these attributes are inherited from BasePlot:
+        # self.nodes
+        # self.edges
+        # self.nodeprops
+        # self.edgeprops
+        # self.nodecolors
+        # self.edgecolors
+        # self.figure
+        # self.ax
+        # self.node_coords
+        # self.nodes_and_colors
+        # self.edges_and_colors
+
 
     def draw_nodes(self):
         """
