@@ -79,6 +79,14 @@ class BasePlot(object):
         self.draw_nodes()
         self.draw_edges()
 
+    def compute_node_positions(self):
+        """
+        Computes the positions of each node on the plot.
+
+        Needs to be implemented for each plot.
+        """
+        pass
+
     def draw_nodes(self):
         """
         Needs to be implemented for each plot.
