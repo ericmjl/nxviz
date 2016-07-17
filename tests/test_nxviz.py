@@ -1,8 +1,8 @@
 from hypothesis import given, assume
-from hypothesis.strategies import lists, integers, floats
+from hypothesis.strategies import lists, integers, floats, tuples
 import numpy as np
 import nxviz as nv
-from nxviz import base
+from nxviz.base import BasePlot
 from nxviz import circos
 from nxviz import geometry as gm
 import pytest
@@ -30,3 +30,16 @@ def test_get_cartesian(r, theta):
 
     assert np.allclose(x_obs, x_exp)
     assert np.allclose(y_obs, y_exp)
+
+
+@given(floats())
+def test_correct_negative_angle(angle):
+
+    assume(angle < 0)
+    assume(angle >= -2 * np.pi)
+    exp = 2 * np.pi + angle
+    obs = gm.correct_negative_angle(angle)
+
+    assert np.allclose(obs, exp)
+    assert obs <= 2 * np.pi
+    assert obs >= 0
