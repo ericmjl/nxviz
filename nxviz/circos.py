@@ -49,31 +49,11 @@ class CircosPlot(BasePlot):
         """
         Renders nodes to the figure.
         """
-        r = self.radius
         node_r = self.node_radius
-        # if 'color' in self.nodeprops:
-        #    self.nodeprops.pop('color')
-        if 'facecolor' in self.nodeprops:
-            self.nodeprops.pop('facecolor')
-        # Check if self.nodecolor is a string. If so, this color gets applied
-        # to all nodes.
-        if isinstance(self.nodecolor, str):
-            nodes_and_colors = zip(self.nodes,
-                                   [self.nodecolor] * len(self.nodes))
-        # Check if nodecolor is an iterable. If so and same length as nodes.
-        # This applies each matched color to that node.
-        elif hasattr(self.nodecolor, '__iter__') and \
-                (len(self.nodes) == len(self.nodecolor)):
-            nodes_and_colors = zip(self.nodes, self.nodecolor)
-        # Throw error if above two conditions are not met.
-        else:
-            raise TypeError("""nodecolor must be a string or iterable of the
-                same length as nodes.""")
-        # Draw the nodes to screen.
-        for node, color in nodes_and_colors:
-            theta = node_theta(self.nodelist, node)
-            x, y = get_cartesian(r, theta)
-            self.nodeprops['facecolor'] = color
+        for i, node in enumerate(self.nodes):
+            x = self.node_coords[x][i]
+            y = self.node_coords[y][i]
+            self.nodeprops['facecolor'] = self.nodes_and_colors[i]
             node_patch = patches.Ellipse((x, y), node_r, node_r,
                                          lw=0, **self.nodeprops)
             self.ax.add_patch(node_patch)
