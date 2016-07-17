@@ -13,6 +13,7 @@ requirements = [
     'Click>=6.0',
     'matplotlib',
     'numpy',
+    'networkx',
 ]
 
 test_requirements = [
