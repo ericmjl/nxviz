@@ -87,11 +87,10 @@ class BasePlot(object):
 
         # If `nodecolors` is an iterable, check that it is of the same length
         # as the number of nodes in the graph.
-        if is_iterable:
+        if is_list or is_tuple:
             assert len(nodecolors) == len(self.nodes),\
                 "`nodecolors` iterable must be the same length as nodes"
             self.nodecolors = nodecolors
-
         # Else, if nodes is a string, set `nodecolors` to be a list of the same
         # length as the number of nodes in the graph.
         graph_size = len(self.nodes)
