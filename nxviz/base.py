@@ -118,15 +118,34 @@ class BasePlot(object):
 
         By default, edge color is black.
         """
-        if edgecolors is not None:
+        # Defensive check that nodecolors is an acceptable data type.
+        is_string = isinstance(edgecolors, str)
+        is_list = isinstance(edgecolors, list)
+        is_tuple = isinstance(edgecolors, tuple)
+        is_dict = isinstance(edgecolors, dict)
+        assert is_string or is_tuple or is_list or is_dict,\
+            "`edgecolors` must be a string, list, tuple, or dict"
+
+        if is_list or is_tuple:
+            assert len(edgecolors) == len(self.edges),\
+                "`edgecolors` must be of the same length as the number of edges"
             self.edgecolors = edgecolors
-        elif self.edgeprops:
-            try:
-                self.edgecolors = self.edgeprops.pop('edgecolors')
-            except KeyError:
-                self.edgecolors = 'black'
+        elif is_dict:
+            assert set(edgecolors.keys()) == set(self.edges),\
+                "the keys in edgecolors must be identical to the edges"
+            self.edgecolors = edgecolors
+        elif is_string:
+            self.edgecolors = [edgecolors] * len(self.edges)
         else:
-            self.edgecolors = 'black'
+            self.edgecolors = ['black'] * len(self.edges)
+
+        # if self.edgeprops:
+        #     try:
+        #         self.edgecolors = self.edgeprops.pop('edgecolors')
+        #     except KeyError:
+        #         self.edgecolors = ['black'] * len(self.edges)
+        # else:
+        #     self.edgecolors = ['black'] * len(self.edges)
 
     def draw(self):
         self.draw_nodes()
