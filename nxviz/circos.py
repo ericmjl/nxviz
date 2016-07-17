@@ -12,6 +12,7 @@ class CircosPlot(BasePlot):
                  nodecolor=None, edgecolor=None,
                  nodeprops=None, edgeprops=None,
                  figsize=None):
+        # Initialize using BasePlot
         BasePlot.__init__()
         # The following attributes are specific to CircosPlot
         self.radius = radius
