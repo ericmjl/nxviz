@@ -77,12 +77,13 @@ class BasePlot(object):
 
         By default, node color is blue.
         """
-        # Defensive check that nodecolors is either a string or an iterable.
+        # Defensive check that nodecolors is an acceptable data type.
+        is_string = isinstance(nodecolors, str)
         is_list = isinstance(nodecolors, list)
         is_tuple = isinstance(nodecolors, tuple)
-        is_string = isinstance(nodecolors, str)
-        assert is_string or is_list or is_tuple,\
-            "`nodecolors` must be a string or iterable"
+        is_dict = isinstance(nodecolors, dict)
+        assert is_string or is_tuple or is_list or is_dict,\
+            "`nodecolors` must be a string, list, tuple, or dict"
 
         # If `nodecolors` is an iterable, check that it is of the same length
         # as the number of nodes in the graph.
