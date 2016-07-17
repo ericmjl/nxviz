@@ -13,7 +13,7 @@ class CircosPlot(BasePlot):
                  nodeprops=None, edgeprops=None,
                  figsize=None):
         # Initialize using BasePlot
-        BasePlot.__init__()
+        BasePlot.__init__(self, nodes, edges)
         # The following attributes are specific to CircosPlot
         self.radius = radius
         self.node_radius = node_radius
@@ -27,8 +27,14 @@ class CircosPlot(BasePlot):
         # self.figure
         # self.ax
         # self.node_coords
-        # self.nodes_and_colors
-        # self.edges_and_colors
+        self.compute_node_positions()
+        self.ax.set_xlim(-radius*1.2, radius*1.2)
+        self.ax.set_ylim(-radius*1.2, radius*1.2)
+        self.ax.xaxis.set_visible(False)
+        self.ax.yaxis.set_visible(False)
+        self.ax.set_aspect('equal')
+        for k in self.ax.spines.keys():
+            self.ax.spines[k].set_visible(False)
 
     def compute_node_positions(self):
         """
@@ -40,7 +46,7 @@ class CircosPlot(BasePlot):
         xs =[]
         ys = []
         for node in self.nodes:
-            theta = node_theta(self.nodelist, node)
+            theta = node_theta(self.nodes, node)
             x, y = get_cartesian(self.radius, theta)
             xs.append(x)
             ys.append(y)
@@ -52,9 +58,9 @@ class CircosPlot(BasePlot):
         """
         node_r = self.node_radius
         for i, node in enumerate(self.nodes):
-            x = self.node_coords[x][i]
-            y = self.node_coords[y][i]
-            self.nodeprops['facecolor'] = self.nodes_and_colors[i]
+            x = self.node_coords['x'][i]
+            y = self.node_coords['y'][i]
+            self.nodeprops['facecolor'] = self.nodecolors[i]
             node_patch = patches.Ellipse((x, y), node_r, node_r,
                                          lw=0, **self.nodeprops)
             self.ax.add_patch(node_patch)
@@ -63,9 +69,9 @@ class CircosPlot(BasePlot):
         """
         Draws edges to screen.
         """
-        for start, end in self.edges:
-            start_theta = node_theta(self.nodelist, start)
-            end_theta = node_theta(self.nodelist, end)
+        for i, (start, end) in enumerate(self.edges):
+            start_theta = node_theta(self.nodes, start)
+            end_theta = node_theta(self.nodes, end)
             verts = [get_cartesian(self.radius, start_theta),
                      (0, 0),
                      get_cartesian(self.radius, end_theta)]
@@ -73,6 +79,6 @@ class CircosPlot(BasePlot):
 
             path = Path(verts, codes)
             self.edgeprops['facecolor'] = 'none'
-            self.edgeprops['edgecolor'] = self.edgecolor
+            self.edgeprops['edgecolor'] = self.edgecolors[i]
             patch = patches.PathPatch(path, lw=1, **self.edgeprops)
             self.ax.add_patch(patch)
