@@ -8,7 +8,7 @@ from matplotlib.path import Path
 class CircosPlot(BasePlot):
     """docstring for CircosPlot"""
     def __init__(self, nodes, edges,
-                 radius, node_radius
+                 radius, node_radius,
                  nodecolor=None, edgecolor=None,
                  nodeprops=None, edgeprops=None,
                  figsize=None):
