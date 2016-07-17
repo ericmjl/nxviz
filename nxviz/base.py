@@ -41,15 +41,16 @@ class BasePlot(object):
 
     def set_nodeprops(self, nodeprops):
         """
-        Sets the node properties.
+        Sets the node properties. Follows matplotlib conventions.
+
+        This provides a convenient way for applying a particular styling (e.g.
+        border width, border dashes, alpha) to all nodes. Currently, only color
+        is customizable by using the `set_nodecolors(iterable)` function.
+
+        TODO: Add link to matplotlib conventions.
         """
-        if nodeprops is not None:
-            if isinstance(nodeprops, dict):
-                self.nodeprops = nodeprops
-            else:
-                raise TypeError("nodeprops must be a dictionary")
-        else:
-            self.nodeprops = {}
+        assert isinstance(nodeprops, dict), "nodeprops must be a dictionary, even if empty"
+        self.nodeprops = nodeprops
 
     def set_edgeprops(self, edgeprops):
         """
