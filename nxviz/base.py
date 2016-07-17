@@ -69,7 +69,11 @@ class BasePlot(object):
 
         If `nodecolors` is a `string`, all nodes will carry that color.
 
-        If `nodecolors` is an
+        If `nodecolors` is a `list` or `tuple`, then nodes will be coloured in
+        order by the list or tuple elements.
+
+        If `nodecolors` is a `dict`, then the keys have to be all present in
+        the nodelist.
 
         By default, node color is blue.
         """
