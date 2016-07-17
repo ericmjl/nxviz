@@ -29,6 +29,21 @@ class CircosPlot(BasePlot):
         # self.nodes_and_colors
         # self.edges_and_colors
 
+    def compute_node_positions(self):
+        """
+        Uses the get_cartesian function to computes the positions of each node
+        in the Circos plot.
+
+        Returns `xs` and `ys`, lists of x- and y-coordinates.
+        """
+        xs =[]
+        ys = []
+        for node in self.nodes:
+            theta = node_theta(self.nodelist, node)
+            x, y = get_cartesian(self.radius, theta)
+            xs.append(x)
+            ys.append(y)
+        self.node_coords = {'x':xs, 'y':ys}
 
     def draw_nodes(self):
         """
