@@ -47,6 +47,10 @@ class BasePlot(object):
         # node. They should be in the same order as self.nodes.
         self.node_coords = None
 
+        # Set the Axes object splines to be invisible.
+        for k in self.ax.spines.keys():
+            self.ax.spines[k].set_visible(False)
+
     def set_nodeprops(self, nodeprops):
         """
         Sets the node properties. Follows matplotlib conventions.
