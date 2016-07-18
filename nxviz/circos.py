@@ -6,7 +6,9 @@ from matplotlib.path import Path
 
 
 class CircosPlot(BasePlot):
-    """docstring for CircosPlot"""
+    """
+    Plotting object for CircosPlot.
+    """
     def __init__(self, nodes, edges,
                  radius, node_radius=0.3,
                  nodecolor='blue', edgecolor='black',
