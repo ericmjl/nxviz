@@ -44,6 +44,7 @@ def test_correct_negative_angle(angle):
     assert obs <= 2 * np.pi
     assert obs >= 0
 
+
 @given(lists(integers(), unique=True),
        lists(integers(), unique=True, min_size=2, max_size=2))
 def test_initialization(nodes, edges):
