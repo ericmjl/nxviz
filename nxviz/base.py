@@ -2,8 +2,16 @@ import matplotlib.pyplot as plt
 
 
 class BasePlot(object):
-    """BasePlot: the base plotting object that computes the layouts."""
-    def __init__(self, nodes, edges,
+    """
+    BasePlot: An extensible class for designing new network visualizations.
+
+    The BasePlot constructor takes in a nodelist `nodes` and an edgelist
+    `edges`. This design is intentional, rather than taking in a networkx
+    graph (commonly referred to as `G` in their examples). Doing so allows
+    for other graph representations to be fed in, such as sets of nodes and
+    sets of edges.
+    """
+    def __init__(self, nodes, edges, node_radius=0.3,
                  nodecolors='blue', edgecolors='black',
                  nodeprops=dict(), edgeprops=dict(alpha=0.5),
                  figsize=(8, 8)):
