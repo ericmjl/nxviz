@@ -67,7 +67,7 @@ class CircosPlot(BasePlot):
 
     def draw_edges(self):
         """
-        Draws edges to screen.
+        Renders edges to the figure.
         """
         for i, (start, end) in enumerate(self.edges):
             start_theta = node_theta(self.nodes, start)
