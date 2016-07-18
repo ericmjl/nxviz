@@ -11,9 +11,9 @@ class BasePlot(object):
     for other graph representations to be fed in, such as sets of nodes and
     sets of edges.
     """
-    def __init__(self, nodes, edges, node_radius=0.3,
+    def __init__(self, nodes, edges,
                  nodecolors='blue', edgecolors='black',
-                 nodeprops=dict(), edgeprops=dict(alpha=0.5),
+                 nodeprops=dict(radius=0.3), edgeprops=dict(alpha=0.5),
                  figsize=(8, 8)):
         super(BasePlot, self).__init__()
         self.nodes = nodes
