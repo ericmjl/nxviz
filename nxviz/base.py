@@ -5,8 +5,8 @@ class BasePlot(object):
     """BasePlot: the base plotting object that computes the layouts."""
     def __init__(self, nodes, edges,
                  nodecolors='blue', edgecolors='black',
-                 nodeprops=dict(), edgeprops=dict(),
-                 figsize=None):
+                 nodeprops=dict(), edgeprops=dict(alpha=0.5),
+                 figsize=(8, 8)):
         super(BasePlot, self).__init__()
         self.nodes = nodes
         self.edges = edges
