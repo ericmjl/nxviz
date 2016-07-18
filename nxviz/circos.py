@@ -9,16 +9,14 @@ class CircosPlot(BasePlot):
     """
     Plotting object for CircosPlot.
     """
-    def __init__(self, nodes, edges,
-                 radius, node_radius=0.3,
-                 nodecolor='blue', edgecolor='black',
-                 nodeprops=dict(), edgeprops=dict(),
+    def __init__(self, nodes, edges, plot_radius,
+                 nodecolors='blue', edgecolors='black',
+                 nodeprops=dict(radius=0.3), edgeprops=dict(alpha=0.5),
                  figsize=(8, 8)):
         # Initialize using BasePlot
         BasePlot.__init__(self, nodes, edges)
         # The following attributes are specific to CircosPlot
-        self.radius = radius
-        self.node_radius = node_radius
+        self.plot_radius = plot_radius
         # The rest of these attributes are inherited from BasePlot:
         # self.nodes
         # self.edges
@@ -47,7 +45,7 @@ class CircosPlot(BasePlot):
         ys = []
         for node in self.nodes:
             theta = node_theta(self.nodes, node)
-            x, y = get_cartesian(self.radius, theta)
+            x, y = get_cartesian(self.plot_radius, theta)
             xs.append(x)
             ys.append(y)
         self.node_coords = {'x': xs, 'y': ys}
@@ -56,7 +54,7 @@ class CircosPlot(BasePlot):
         """
         Renders nodes to the figure.
         """
-        node_r = self.node_radius
+        node_r = self.nodeprops['radius']
         for i, node in enumerate(self.nodes):
             x = self.node_coords['x'][i]
             y = self.node_coords['y'][i]
@@ -72,9 +70,9 @@ class CircosPlot(BasePlot):
         for i, (start, end) in enumerate(self.edges):
             start_theta = node_theta(self.nodes, start)
             end_theta = node_theta(self.nodes, end)
-            verts = [get_cartesian(self.radius, start_theta),
+            verts = [get_cartesian(self.plot_radius, start_theta),
                      (0, 0),
-                     get_cartesian(self.radius, end_theta)]
+                     get_cartesian(self.plot_radius, end_theta)]
             codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
 
             path = Path(verts, codes)
