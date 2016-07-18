@@ -1,8 +1,8 @@
 from .base import BasePlot
 from .geometry import node_theta, get_cartesian
-import matplotlib.patches as patches
-
 from matplotlib.path import Path
+
+import matplotlib.patches as patches
 
 
 class CircosPlot(BasePlot):
