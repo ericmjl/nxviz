@@ -8,10 +8,10 @@ from matplotlib.path import Path
 class CircosPlot(BasePlot):
     """docstring for CircosPlot"""
     def __init__(self, nodes, edges,
-                 radius, node_radius,
-                 nodecolor=None, edgecolor=None,
-                 nodeprops=None, edgeprops=None,
-                 figsize=None):
+                 radius, node_radius=0.3,
+                 nodecolor='blue', edgecolor='black',
+                 nodeprops=dict(), edgeprops=dict(),
+                 figsize=(8, 8)):
         # Initialize using BasePlot
         BasePlot.__init__(self, nodes, edges)
         # The following attributes are specific to CircosPlot
