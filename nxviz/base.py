@@ -61,7 +61,8 @@ class BasePlot(object):
 
         TODO: Add link to matplotlib conventions.
         """
-        assert isinstance(nodeprops, dict), "nodeprops must be a dictionary, even if empty"
+        assert isinstance(nodeprops, dict),\
+            "nodeprops must be a dictionary, even if empty"
         self.nodeprops = nodeprops
 
     def set_edgeprops(self, edgeprops):
@@ -70,14 +71,16 @@ class BasePlot(object):
 
         TOOD: Add link to matplotlib conventions.
         """
-        assert isinstance(edgeprops, dict), "edgeprops must be a dictionary, even if empty"
+        assert isinstance(edgeprops, dict),\
+            "edgeprops must be a dictionary, even if empty"
         self.edgeprops = edgeprops
 
     def set_nodecolors(self, nodecolors):
         """
         Sets the nodecolors. Priority: nodecolor > nodeprops > default.
 
-        `nodecolors` should be either a `string` or an iterable (list, tuple, dict).
+        `nodecolors` should be either a `string` or an iterable (list, tuple,
+        dict).
 
         If `nodecolors` is a `string`, all nodes will carry that color.
 
@@ -118,7 +121,8 @@ class BasePlot(object):
         """
         Sets the edgecolors. Priority: edgecolor > edgeprops > default.
 
-        `edgecolors` should be either a `string` or an iterable (list, tuple, dict).
+        `edgecolors` should be either a `string` or an iterable (list, tuple,
+        dict).
 
         If `edgecolors` is a `string`, all edges will carry that color.
 
@@ -140,7 +144,7 @@ class BasePlot(object):
 
         if is_list or is_tuple:
             assert len(edgecolors) == len(self.edges),\
-                "`edgecolors` must be of the same length as the number of edges"
+              "`edgecolors` must be of the same length as the number of edges"
             self.edgecolors = edgecolors
         elif is_dict:
             assert set(edgecolors.keys()) == set(self.edges),\
