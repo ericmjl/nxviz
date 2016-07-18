@@ -43,14 +43,14 @@ class CircosPlot(BasePlot):
 
         Returns `xs` and `ys`, lists of x- and y-coordinates.
         """
-        xs =[]
+        xs = []
         ys = []
         for node in self.nodes:
             theta = node_theta(self.nodes, node)
             x, y = get_cartesian(self.radius, theta)
             xs.append(x)
             ys.append(y)
-        self.node_coords = {'x':xs, 'y':ys}
+        self.node_coords = {'x': xs, 'y': ys}
 
     def draw_nodes(self):
         """
