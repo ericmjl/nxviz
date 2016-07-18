@@ -35,8 +35,6 @@ class CircosPlot(BasePlot):
         self.ax.xaxis.set_visible(False)
         self.ax.yaxis.set_visible(False)
         self.ax.set_aspect('equal')
-        for k in self.ax.spines.keys():
-            self.ax.spines[k].set_visible(False)
 
     def compute_node_positions(self):
         """
