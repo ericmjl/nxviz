@@ -18,6 +18,8 @@ requirements = [
 
 test_requirements = [
     # TODO: put package test requirements here
+    'hypothesis',
+    'pytest'
 ]
 
 setup(
