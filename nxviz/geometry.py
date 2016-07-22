@@ -3,7 +3,6 @@ Utility geometry functions that can help with drawing to screen.
 """
 
 import numpy as np
-from polcart import to_cartesian
 
 
 def node_theta(nodelist, node):
@@ -21,13 +20,12 @@ def node_theta(nodelist, node):
 
 def get_cartesian(r, theta):
     """
-    Wrapper function for to_cartesian from polcart. Takes advantage of all the
-    angle value checking that polcart offers.
-
-    We currently do this wrapping to minimize the changes that are needed in
-    the rest of the codebase.
+    Returns the cartesian (x,y) coordinates of (r, theta).
     """
-    return to_cartesian(r, theta)
+    x = r*np.sin(theta)
+    y = r*np.cos(theta)
+
+    return x, y
 
 
 def correct_negative_angle(angle):

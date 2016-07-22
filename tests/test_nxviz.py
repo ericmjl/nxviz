@@ -20,7 +20,6 @@ def test_node_theta(nodelist, node):
 
 
 @given(floats(), floats())
-@pytest.mark.skip(reason='this function is tested in polcart')
 def test_get_cartesian(r, theta):
     assume(np.isfinite(theta))
     assume(np.isfinite(r))

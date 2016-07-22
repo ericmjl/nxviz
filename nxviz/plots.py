@@ -204,16 +204,17 @@ class CircosPlot(BasePlot):
     """
     def __init__(self, nodes, edges, plot_radius,
                  nodecolors='blue', edgecolors='black',
-                 nodeprops=dict(radius=0.3), edgeprops=dict(alpha=0.5),
+                 nodeprops=dict(r=0.3), edgeprops=dict(alpha=0.5),
                  figsize=(8, 8)):
         # Initialize using BasePlot
-        BasePlot.__init__(self, nodes, edges)
+        BasePlot.__init__(self, nodes, edges, nodecolors, edgecolors,
+                          nodeprops, edgeprops, figsize)
         # The following attributes are specific to CircosPlot
         self.plot_radius = plot_radius
         # The rest of the relevant attributes are inherited from BasePlot.
         self.compute_node_positions()
-        self.ax.set_xlim(-radius*1.2, radius*1.2)
-        self.ax.set_ylim(-radius*1.2, radius*1.2)
+        self.ax.set_xlim(-plot_radius*1.2, plot_radius*1.2)
+        self.ax.set_ylim(-plot_radius*1.2, plot_radius*1.2)
         self.ax.xaxis.set_visible(False)
         self.ax.yaxis.set_visible(False)
         self.ax.set_aspect('equal')
@@ -238,13 +239,13 @@ class CircosPlot(BasePlot):
         """
         Renders nodes to the figure.
         """
-        node_r = self.nodeprops['radius']
+        node_r = self.nodeprops['r']
         for i, node in enumerate(self.nodes):
             x = self.node_coords['x'][i]
             y = self.node_coords['y'][i]
             self.nodeprops['facecolor'] = self.nodecolors[i]
             node_patch = patches.Ellipse((x, y), node_r, node_r,
-                                         lw=0, **self.nodeprops)
+                                         lw=0)
             self.ax.add_patch(node_patch)
 
     def draw_edges(self):
@@ -410,7 +411,7 @@ class HivePlot(BasePlot):
         """
         Convenience function for simplifying the code in draw_nodes().
         """
-        circle = plt.Circle(xy=(x, y), radius=self.nodeprops['radius'],
+        circle = plt.Circle(xy=(x, y), radius=self.nodeprops['r'],
                             color=self.nodecolors[group], linewidth=0)
         self.ax.add_patch(circle)
 
