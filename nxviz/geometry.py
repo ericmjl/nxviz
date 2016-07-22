@@ -1,7 +1,7 @@
 """
 Utility geometry functions that can help with drawing to screen.
 """
-
+from polcart import to_cartesian
 import numpy as np
 
 
@@ -15,6 +15,9 @@ def node_theta(nodelist, node):
     i = nodelist.index(node)
     theta = i*2*np.pi/len(nodelist)
 
+    if theta > np.pi:
+        theta = np.pi - theta
+
     return theta
 
 
@@ -22,10 +25,10 @@ def get_cartesian(r, theta):
     """
     Returns the cartesian (x,y) coordinates of (r, theta).
     """
-    x = r*np.sin(theta)
-    y = r*np.cos(theta)
+    # x = r*np.sin(theta)
+    # y = r*np.cos(theta)
 
-    return x, y
+    return to_cartesian(r, theta)
 
 
 def correct_negative_angle(angle):
