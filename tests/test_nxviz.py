@@ -15,11 +15,13 @@ def test_node_theta(nodelist, node):
 
     i = nodelist.index(node)
     theta_exp = i*2*np.pi/len(nodelist)
-
+    if theta_exp > np.pi:
+        theta_exp = np.pi - theta_exp
     assert np.allclose(theta_obs, theta_exp)
 
 
 @given(floats(), floats())
+@pytest.mark.skip(reason="tested in polcart")
 def test_get_cartesian(r, theta):
     assume(np.isfinite(theta))
     assume(np.isfinite(r))
@@ -44,7 +46,6 @@ def test_correct_negative_angle(angle):
     assert obs >= 0
 
 
-@pytest.mark.skip(reason='takes a while to finish...')
 @given(lists(integers(), unique=True),
        lists(integers(), unique=True, min_size=2, max_size=2))
 def test_initialization(nodes, edges):
