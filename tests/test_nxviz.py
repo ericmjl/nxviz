@@ -2,8 +2,7 @@ from hypothesis import given, assume
 from hypothesis.strategies import lists, integers, floats, tuples
 import numpy as np
 import nxviz as nv
-from nxviz.base import BasePlot
-from nxviz import circos
+from nxviz.plots import BasePlot, CircosPlot, HivePlot
 from nxviz import geometry as gm
 import pytest
 

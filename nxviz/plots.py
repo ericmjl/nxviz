@@ -37,7 +37,7 @@ class BasePlot(object):
         self.set_edgeprops(edgeprops)
         self.set_nodecolors(nodecolors)
         self.set_edgecolors(edgecolors)
-        # These functions end up setting the following object attributes:
+        # The above functions end up setting the following object attributes:
         # - self.nodeprops
         # - self.edgeprops
         # - self.nodecolors
