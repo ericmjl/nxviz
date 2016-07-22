@@ -7,6 +7,7 @@ import matplotlib.patches as patches
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 class HivePlot(BasePlot):
     """
     Plotting object for HivePlot.
@@ -87,7 +88,6 @@ class HivePlot(BasePlot):
             self.nodecolors = dict()
             for k in self.nodes.keys():
                 self.nodecolors[k] = nodecolors
-
 
     def has_edge_within_group(self, group):
         """

@@ -21,6 +21,7 @@ def test_node_theta(nodelist, node):
 
 
 @given(floats(), floats())
+@pytest.mark.skip(reason='this function is tested in polcart')
 def test_get_cartesian(r, theta):
     assume(np.isfinite(theta))
     assume(np.isfinite(r))
@@ -43,6 +44,7 @@ def test_correct_negative_angle(angle):
     assert np.allclose(obs, exp)
     assert obs <= 2 * np.pi
     assert obs >= 0
+
 
 @pytest.mark.skip(reason='takes a while to finish...')
 @given(lists(integers(), unique=True),
