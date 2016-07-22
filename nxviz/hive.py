@@ -15,7 +15,7 @@ class HivePlot(BasePlot):
                  nodecolors='blue', edgecolors='black',
                  nodeprops=dict(radius=0.2), edgeprops=dict(alpha=0.5),
                  figsize=(8, 8)):
-        # Initialize the BasePlot
+        # Initialize using BasePlot
         BasePlot.__init__(self, nodes, edges)
 
         # The following method calls are specific to HivePlot.
@@ -31,9 +31,11 @@ class HivePlot(BasePlot):
         # 5. Set the aspect ratio of the plot to be equal.
         self.ax.set_aspect('equal')
         # 6. Set the xlim and ylim of the plot.
+        # Change the following two lines to an automatic function that computes
+        # the appropriate x- and y- limits from the number of nodes in each
+        # group.
         self.ax.set_xlim(-10, 10)
         self.ax.set_ylim(-10, 10)
-        # self.set_xylims()
 
     def set_xylims(self):
         pass
