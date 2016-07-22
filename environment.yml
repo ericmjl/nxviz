@@ -16,3 +16,4 @@ dependencies:
 - polcart
 - pip:
   - coverage
+  - click
