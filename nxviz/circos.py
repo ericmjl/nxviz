@@ -17,16 +17,7 @@ class CircosPlot(BasePlot):
         BasePlot.__init__(self, nodes, edges)
         # The following attributes are specific to CircosPlot
         self.plot_radius = plot_radius
-        # The rest of these attributes are inherited from BasePlot:
-        # self.nodes
-        # self.edges
-        # self.nodeprops
-        # self.edgeprops
-        # self.nodecolors
-        # self.edgecolors
-        # self.figure
-        # self.ax
-        # self.node_coords
+        # The rest of the relevant attributes are inherited from BasePlot.
         self.compute_node_positions()
         self.ax.set_xlim(-radius*1.2, radius*1.2)
         self.ax.set_ylim(-radius*1.2, radius*1.2)
