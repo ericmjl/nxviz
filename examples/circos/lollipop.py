@@ -2,7 +2,7 @@
 Displays a NetworkX octahedral graph to screen using a CircosPlot.
 """
 
-from nxviz.circos import CircosPlot
+from nxviz.plots import CircosPlot
 import networkx as nx
 import matplotlib.pyplot as plt
 
