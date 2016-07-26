@@ -1,6 +1,6 @@
 language: python
 python:
-  # We don't actually use the Travis Python, but this keeps it organized. 
+  # We don't actually use the Travis Python, but this keeps it organized.
   - "3.5"
 install:
   # We do this conditionally because it saves us some downloading if the
@@ -11,6 +11,8 @@ install:
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
+  - conda config --add channels conda-forge
+
 
   # Useful for debugging any issues with conda
   - conda info -a
@@ -20,7 +22,7 @@ install:
   - source activate build
   - python setup.py install
 
-script: 
+script:
   # Your test script goes here
   - pycodestyle .
   - py.test
