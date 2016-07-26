@@ -11,9 +11,9 @@ dependencies:
 - python=3.5
 - setuptools
 - pytest
-- hypothesis
 - pycodestyle
 - polcart
 - pip:
   - coverage
   - click
+  - hypothesis
