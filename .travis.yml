@@ -18,7 +18,7 @@ install:
   - conda info -a
 
   # Install Python, py.text, and required packages.
-  - conda env create -f build-env.yml
+  - conda env create -f environment.yml
   - source activate build
   - python setup.py install
 
