@@ -1,8 +1,8 @@
 name: nxviz
 channels:
-- ericmjl
-- defaults
 - conda-forge
+- defaults
+- ericmjl
 dependencies:
 - matplotlib
 - networkx
@@ -12,8 +12,8 @@ dependencies:
 - setuptools
 - pytest
 - pycodestyle
+- hypothesis
+- click
+- polcart
 - pip:
   - coverage
-  - click
-  - hypothesis
-  - polcart
