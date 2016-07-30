@@ -116,7 +116,7 @@ class BasePlot(object):
         # length as the number of nodes in the graph.
         elif is_dict:
             assert set(nodecolors.keys()) == set(self.nodes),\
-                "the all nodes in the graph must be present as keys in the " +\
+                "all nodes in the graph must be present as keys in the " +\
                 "dictionary"
         elif is_string:
             self.nodecolors = [nodecolors] * len(self.nodes)

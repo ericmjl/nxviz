@@ -1,5 +1,5 @@
 """
-Displays a NetworkX octahedral graph to screen using a CircosPlot.
+Displays a NetworkX barbell graph to screen using a CircosPlot.
 """
 
 from nxviz.plots import CircosPlot
