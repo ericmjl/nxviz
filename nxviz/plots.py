@@ -11,163 +11,43 @@ class BasePlot(object):
     """
     BasePlot: An extensible class for designing new network visualizations.
 
-    The BasePlot constructor takes in a nodelist `nodes` and an edgelist
-    `edges`. This design is intentional, rather than taking in a networkx
-    graph (commonly referred to as `G` in their examples). Doing so allows
-    for other graph representations to be fed in, such as sets of nodes and
-    sets of edges.
+    The BasePlot constructor takes in a NetworkX graph object, and a series of
+    keyword arguments specifying how nodes and edges should be styled and
+    ordered.
+
+    An optional data_types dictionary can be passed in to bypass data type
+    inference.
     """
-    def __init__(self, nodes, edges,
-                 nodecolors='blue', edgecolors='black',
-                 nodeprops=dict(radius=0.3), edgeprops=dict(alpha=0.5),
-                 figsize=(8, 8)):
+    def __init__(self, graph, node_order=None, node_size=None,
+                 node_grouping=None, node_color=None, edge_width=None,
+                 edge_color=None, data_types=None):
         super(BasePlot, self).__init__()
-        self.nodes = nodes
-        self.edges = edges
+        # Set graph object
+        self.graph = graph
 
-        # Set the node and edge props and colors.
-        # These are written with functions because there are type checks that
-        # have to take place first, and it would make the __init__ function
-        # unwieldy to have them all in here.
-        #
-        # Later if we support other backends, such as Bokeh, it may be wise to
-        # set these as "generic" parameters that we can write translators for
-        # to other packages.
-        self.set_nodeprops(nodeprops)
-        self.set_edgeprops(edgeprops)
-        self.set_nodecolors(nodecolors)
-        self.set_edgecolors(edgecolors)
-        # The above functions end up setting the following object attributes:
-        # - self.nodeprops
-        # - self.edgeprops
-        # - self.nodecolors
-        # - self.edgecolors
+        # Set node keys
+        self.node_order = node_order
+        self.node_size = node_size
+        self.node_grouping = node_grouping
+        self.node_color = node_color
+        # Set edge keys
+        self.edge_width = edge_width
+        self.edge_color = edge_color
 
-        # Initialize a figure object with an axes subplot.
-        # Later on if we support other backends, such as Bokeh, then it would
-        # be wise to take this out of the class.
+        # Set data_types dictionary
+        if not data_types:
+            self.data_types = dict()
+        else:
+            self.data_types = data_types
+
+
         self.figure = plt.figure(figsize=figsize)
         self.ax = self.figure.add_subplot(1, 1, 1)
-
-        # We have an attribute that stores the x- and y-coordinates of each
-        # node. They should be in the same order as self.nodes.
-        self.node_coords = None
 
         # Set the Axes object splines to be invisible.
         for k in self.ax.spines.keys():
             self.ax.spines[k].set_visible(False)
 
-    def set_nodeprops(self, nodeprops):
-        """
-        Sets the node properties. Follows matplotlib conventions.
-
-        This provides a convenient way for applying a particular styling (e.g.
-        border width, border dashes, alpha) to all nodes. Currently, only color
-        is customizable by using the `set_nodecolors(iterable)` function.
-
-        TODO: Add link to matplotlib conventions.
-        """
-        assert isinstance(nodeprops, dict),\
-            "nodeprops must be a dictionary, even if empty"
-        self.nodeprops = nodeprops
-
-    def set_edgeprops(self, edgeprops):
-        """
-        Sets the edge visualization properties. Follows matplotlib conventions.
-
-        TOOD: Add link to matplotlib conventions.
-        """
-        assert isinstance(edgeprops, dict),\
-            "edgeprops must be a dictionary, even if empty"
-        self.edgeprops = edgeprops
-
-    def set_nodecolors(self, nodecolors):
-        """
-        Sets the nodecolors. Priority: nodecolor > nodeprops > default.
-
-        `nodecolors` should be either a `string` or an iterable (list, tuple,
-        dict).
-
-        If `nodecolors` is a `string`, all nodes will carry that color.
-
-        If `nodecolors` is a `list` or `tuple`, then nodes will be coloured in
-        order by the list or tuple elements.
-
-        If `nodecolors` is a `dict`, then the keys have to be all present in
-        the nodelist.
-
-        By default, node color is blue.
-        """
-        # Defensive check that nodecolors is an acceptable data type.
-        is_string = isinstance(nodecolors, str)
-        is_list = isinstance(nodecolors, list)
-        is_tuple = isinstance(nodecolors, tuple)
-        is_dict = isinstance(nodecolors, dict)
-        assert is_string or is_tuple or is_list or is_dict,\
-            "`nodecolors` must be a string, list, tuple, or dict"
-
-        # If `nodecolors` is an iterable, check that it is of the same length
-        # as the number of nodes in the graph.
-        if is_list or is_tuple:
-            assert len(nodecolors) == len(self.nodes),\
-                "`nodecolors` iterable must be the same length as nodes"
-            self.nodecolors = nodecolors
-        # Else, if nodes is a string, set `nodecolors` to be a list of the same
-        # length as the number of nodes in the graph.
-        elif is_dict:
-            assert set(nodecolors.keys()) == set(self.nodes),\
-                "all nodes in the graph must be present as keys in the " +\
-                "dictionary"
-        elif is_string:
-            self.nodecolors = [nodecolors] * len(self.nodes)
-        else:
-            self.nodecolors = ['blue'] * len(self.nodes)
-
-    def set_edgecolors(self, edgecolors):
-        """
-        Sets the edgecolors. Priority: edgecolor > edgeprops > default.
-
-        `edgecolors` should be either a `string` or an iterable (list, tuple,
-        dict).
-
-        If `edgecolors` is a `string`, all edges will carry that color.
-
-        If `edgecolors` is a `list` or `tuple`, then edges will be coloured in
-        order by the list or tuple elements.
-
-        If `edgecolors` is a `dict`, then the keys have to be all present in
-        the edgelist.
-
-        By default, edge color is black.
-        """
-        # Defensive check that nodecolors is an acceptable data type.
-        is_string = isinstance(edgecolors, str)
-        is_list = isinstance(edgecolors, list)
-        is_tuple = isinstance(edgecolors, tuple)
-        is_dict = isinstance(edgecolors, dict)
-        assert is_string or is_tuple or is_list or is_dict,\
-            "`edgecolors` must be a string, list, tuple, or dict"
-
-        if is_list or is_tuple:
-            assert len(edgecolors) == len(self.edges),\
-              "`edgecolors` must be of the same length as the number of edges"
-            self.edgecolors = edgecolors
-        elif is_dict:
-            assert set(edgecolors.keys()) == set(self.edges),\
-                "the keys in edgecolors must be identical to the edges"
-            self.edgecolors = edgecolors
-        elif is_string:
-            self.edgecolors = [edgecolors] * len(self.edges)
-        else:
-            self.edgecolors = ['black'] * len(self.edges)
-
-        # if self.edgeprops:
-        #     try:
-        #         self.edgecolors = self.edgeprops.pop('edgecolors')
-        #     except KeyError:
-        #         self.edgecolors = ['black'] * len(self.edges)
-        # else:
-        #     self.edgecolors = ['black'] * len(self.edges)
 
     def draw(self):
         self.draw_nodes()
