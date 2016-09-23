@@ -36,6 +36,8 @@ def infer_data_type(data_container):
 def is_data_diverging(data_container):
     """
     We want to use this to check whether the data are diverging or not.
+
+    This is a simple check, can be made much more sophisticated.
     """
     assert infer_data_type(data_container) in ['ordinal', 'continuous'], \
         "data type should be ordinal or continuous"
