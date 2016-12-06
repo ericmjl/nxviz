@@ -41,3 +41,10 @@ def correct_negative_angle(angle):
         pass
 
     return angle
+
+
+def circos_radius(n_nodes, node_r):
+    A = 2 * np.pi / n_nodes
+    B = (np.pi - A) / 2
+    a = 2 * node_r
+    return a * np.sin(B) / np.sin(A)
