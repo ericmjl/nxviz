@@ -1,4 +1,4 @@
-from .geometry import node_theta, get_cartesian
+from .geometry import node_theta, get_cartesian, circos_radius
 from collections import defaultdict
 from matplotlib.path import Path
 
@@ -40,14 +40,12 @@ class BasePlot(object):
         else:
             self.data_types = data_types
 
-
-        self.figure = plt.figure(figsize=figsize)
-        self.ax = self.figure.add_subplot(1, 1, 1)
-
-        # Set the Axes object splines to be invisible.
-        for k in self.ax.spines.keys():
-            self.ax.spines[k].set_visible(False)
-
+        # self.figure = plt.figure(figsize=figsize)
+        # self.ax = self.figure.add_subplot(1, 1, 1)
+        #
+        # # Set the Axes object splines to be invisible.
+        # for k in self.ax.spines.keys():
+        #     self.ax.spines[k].set_visible(False)
 
     def draw(self):
         self.draw_nodes()
@@ -82,22 +80,22 @@ class CircosPlot(BasePlot):
     """
     Plotting object for CircosPlot.
     """
-    def __init__(self, nodes, edges, plot_radius,
-                 nodecolors='blue', edgecolors='black',
-                 nodeprops=dict(r=0.3), edgeprops=dict(alpha=0.5),
-                 figsize=(8, 8)):
+    def __init__(self, graph, node_order=None, node_size=None,
+                 node_grouping=None, node_color=None, edge_width=None,
+                 edge_color=None, data_types=None):
         # Initialize using BasePlot
-        BasePlot.__init__(self, nodes, edges, nodecolors, edgecolors,
-                          nodeprops, edgeprops, figsize)
+        BasePlot.__init__(self, graph, node_order=None, node_size=None,
+                          node_grouping=None, node_color=None, edge_width=None,
+                          edge_color=None, data_types=None)
         # The following attributes are specific to CircosPlot
-        self.plot_radius = plot_radius
+        # self.plot_radius = plot_radius
         # The rest of the relevant attributes are inherited from BasePlot.
         self.compute_node_positions()
-        self.ax.set_xlim(-plot_radius*1.2, plot_radius*1.2)
-        self.ax.set_ylim(-plot_radius*1.2, plot_radius*1.2)
-        self.ax.xaxis.set_visible(False)
-        self.ax.yaxis.set_visible(False)
-        self.ax.set_aspect('equal')
+        # self.ax.set_xlim(-plot_radius*1.2, plot_radius*1.2)
+        # self.ax.set_ylim(-plot_radius*1.2, plot_radius*1.2)
+        # self.ax.xaxis.set_visible(False)
+        # self.ax.yaxis.set_visible(False)
+        # self.ax.set_aspect('equal')
 
     def compute_node_positions(self):
         """
@@ -110,7 +108,8 @@ class CircosPlot(BasePlot):
         ys = []
         for node in self.nodes:
             theta = node_theta(self.nodes, node)
-            x, y = get_cartesian(self.plot_radius, theta)
+            radius = circos_radius(n_nodes=len(self.graph.nodes()), node_r=1)
+            x, y = get_cartesian(r=radius, theta=theta)
             xs.append(x)
             ys.append(y)
         self.node_coords = {'x': xs, 'y': ys}
