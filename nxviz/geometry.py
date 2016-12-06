@@ -44,6 +44,15 @@ def correct_negative_angle(angle):
 
 
 def circos_radius(n_nodes, node_r):
+    """
+    Computes the origin-to-node centre radius of the Circos plot using the
+    triangle equality sine rule.
+
+    a / sin(A) == b / sin(B) == c / sin(C)
+
+    n_nodes: the number of nodes in the plot.
+    node_r: the radius of each node.
+    """
     A = 2 * np.pi / n_nodes
     B = (np.pi - A) / 2
     a = 2 * node_r
