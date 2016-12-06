@@ -6,6 +6,7 @@ def is_data_homogenous(data_container):
     data_types = set([type(i) for i in data_container])
     return len(data_types) == 1
 
+
 def infer_data_type(data_container):
     """
     For a given container of data, infer the type of data as one of
@@ -15,10 +16,10 @@ def infer_data_type(data_container):
     # 1. Don't want to deal with only single values.
     assert len(set(data_container)) > 1
     # 2. Don't want to deal with mixed data.
-    assert is_data_homogenous(data_container), "data are not of a homogenous type!"
+    assert is_data_homogenous(data_container), \
+        "data are not of a homogenous type!"
 
     datum = data_container[0]
-
 
     # Return statements below
     if isinstance(datum, str):
@@ -32,6 +33,7 @@ def infer_data_type(data_container):
 
     else:
         return 'unknown'
+
 
 def is_data_diverging(data_container):
     """
