@@ -20,7 +20,8 @@ def infer_data_type(data_container):
     # Defensive programming checks.
     # 1. Don't want to deal with only single values.
     assert isinstance(data_container, list) or \
-        isinstance(data_container, tuple)
+        isinstance(data_container, tuple), \
+        "data_container should be a list or tuple"
     assert len(set(data_container)) > 1, \
         "there should be more than one value in the data container."
     # 2. Don't want to deal with mixed data.
