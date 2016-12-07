@@ -19,7 +19,10 @@ def infer_data_type(data_container):
     """
     # Defensive programming checks.
     # 1. Don't want to deal with only single values.
-    assert len(set(data_container)) > 1
+    assert isinstance(data_container, list) or \
+        isinstance(data_container, tuple)
+    assert len(set(data_container)) > 1, \
+        "there should be more than one value in the data container."
     # 2. Don't want to deal with mixed data.
     assert is_data_homogenous(data_container), \
         "data are not of a homogenous type!"
