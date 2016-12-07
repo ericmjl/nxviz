@@ -11,6 +11,11 @@ def infer_data_type(data_container):
     """
     For a given container of data, infer the type of data as one of
     continuous, categorical, or ordinal.
+
+    For now, it is a one-to-one mapping as such:
+    - str:   categorical
+    - int:   ordinal
+    - float: continuous
     """
     # Defensive programming checks.
     # 1. Don't want to deal with only single values.
@@ -32,7 +37,7 @@ def infer_data_type(data_container):
         return 'continuous'
 
     else:
-        return 'unknown'
+        raise ValueError('Not possible to tell what the data type is.')
 
 
 def is_data_diverging(data_container):
