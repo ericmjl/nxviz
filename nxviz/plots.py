@@ -99,10 +99,8 @@ class CircosPlot(BasePlot):
 
     def compute_node_positions(self):
         """
-        Uses the get_cartesian function to computes the positions of each node
+        Uses the get_cartesian function to compute the positions of each node
         in the Circos plot.
-
-        Returns `xs` and `ys`, lists of x- and y-coordinates.
         """
         xs = []
         ys = []
