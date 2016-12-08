@@ -16,18 +16,26 @@ def infer_data_type(data_container):
     - str:   categorical
     - int:   ordinal
     - float: continuous
+
+    There may be better ways that are not currently implemented below. For
+    example, with a list of numbers, we can check whether the number of unique
+    entries is less than or equal to 12, but has over 10000+ entries. This
+    would be a good candidate for floats being categorical.
     """
     # Defensive programming checks.
-    # 1. Don't want to deal with only single values.
+    # 0. Ensure that we are dealing with lists or tuples, and nothing else.
     assert isinstance(data_container, list) or \
         isinstance(data_container, tuple), \
-        "data_container should be a list or tuple"
+        "data_container should be a list or tuple."
+    # 1. Don't want to deal with only single values.
     assert len(set(data_container)) > 1, \
-        "there should be more than one value in the data container."
+        "There should be more than one value in the data container."
     # 2. Don't want to deal with mixed data.
     assert is_data_homogenous(data_container), \
-        "data are not of a homogenous type!"
+        "Data are not of a homogenous type!"
 
+    # Once we check that the data type of the container is homogenous, we only
+    # need to check the first element in the data container for its type.
     datum = data_container[0]
 
     # Return statements below
@@ -51,7 +59,7 @@ def is_data_diverging(data_container):
     This is a simple check, can be made much more sophisticated.
     """
     assert infer_data_type(data_container) in ['ordinal', 'continuous'], \
-        "data type should be ordinal or continuous"
+        "Data type should be ordinal or continuous"
 
     # Check whether the data contains negative and positive values.
     has_negative = False
@@ -65,3 +73,17 @@ def is_data_diverging(data_container):
         return True
     else:
         return False
+
+
+def is_groupable(data_container):
+    """
+    Returns whether the data container is a "groupable" container or not.
+
+    By "groupable", we mean it is a 'categorical' or 'ordinal' variable.
+
+    If the data_container contains continuous variables, it'd be good to
+    """
+    is_groupable = False
+    if infer_data_type(data_container) in ['categorical', 'ordinal']:
+        is_groupable = True
+    return is_groupable
