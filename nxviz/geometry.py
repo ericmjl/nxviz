@@ -25,9 +25,6 @@ def get_cartesian(r, theta):
     """
     Returns the cartesian (x,y) coordinates of (r, theta).
     """
-    # x = r*np.sin(theta)
-    # y = r*np.cos(theta)
-
     return to_cartesian(r, theta)
 
 
