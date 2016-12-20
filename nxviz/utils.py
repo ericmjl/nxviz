@@ -1,7 +1,8 @@
-def is_data_homogenous(data_container):
+def _is_data_homogenous(data_container):
     """
     Checks that all of the data in the container are of the same Python data
-    type.
+    type. This function is called in every other function below, and as such
+    need not necessarily be called.
     """
     data_types = set([type(i) for i in data_container])
     return len(data_types) == 1
@@ -31,7 +32,7 @@ def infer_data_type(data_container):
     assert len(set(data_container)) > 1, \
         "There should be more than one value in the data container."
     # 2. Don't want to deal with mixed data.
-    assert is_data_homogenous(data_container), \
+    assert _is_data_homogenous(data_container), \
         "Data are not of a homogenous type!"
 
     # Once we check that the data type of the container is homogenous, we only
