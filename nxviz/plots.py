@@ -1,4 +1,5 @@
 from .geometry import node_theta, get_cartesian, circos_radius
+from .utils import infer_data_type,
 from collections import defaultdict
 from matplotlib.path import Path
 
@@ -24,6 +25,10 @@ class BasePlot(object):
         super(BasePlot, self).__init__()
         # Set graph object
         self.graph = graph
+        self.nodes = graph.nodes()  # keep track of nodes separately.
+
+        # Keep a separate node list so that we can order them properly.
+        self.group_and_sort_nodes()
 
         # Set node keys
         self.node_order = node_order
@@ -40,12 +45,12 @@ class BasePlot(object):
         else:
             self.data_types = data_types
 
-        # self.figure = plt.figure(figsize=figsize)
-        # self.ax = self.figure.add_subplot(1, 1, 1)
-        #
-        # # Set the Axes object splines to be invisible.
-        # for k in self.ax.spines.keys():
-        #     self.ax.spines[k].set_visible(False)
+        self.figure = plt.figure(figsize=(6, 6))
+        self.ax = self.figure.add_subplot(1, 1, 1)
+
+        # Set the Axes object splines to be invisible.
+        for k in self.ax.spines.keys():
+            self.ax.spines[k].set_visible(False)
 
     def draw(self):
         self.draw_nodes()
@@ -75,6 +80,27 @@ class BasePlot(object):
         """
         pass
 
+    def group_and_sort_nodes(self):
+        """
+        Groups and then sorts the nodes according to the criteria passed into
+        the Plot constructor. Does the following:
+
+        1. Checks that the data type for each is correct.
+        """
+
+        if self.node_grouping and not self.node_order:
+            self.nodes = sorted(self.graph.nodes(data=True),
+                                key=lambda x: x[1][self.node_grouping])
+
+        elif self.node_order and not self.node_grouping:
+            self.nodes = sorted(self.graph.nodes(data=True),
+                                key=lambda x:x[1][self.node_order])
+
+        elif self.node_grouping and self.node_order:
+            self.nodes = sorted(self.graph.nodes(data=True),
+                                key=lambda x:(x[1][self.node_grouping],
+                                              x[1][self.node_order]))
+
 
 class CircosPlot(BasePlot):
     """
@@ -88,14 +114,8 @@ class CircosPlot(BasePlot):
                           node_grouping=None, node_color=None, edge_width=None,
                           edge_color=None, data_types=None)
         # The following attributes are specific to CircosPlot
-        # self.plot_radius = plot_radius
-        # The rest of the relevant attributes are inherited from BasePlot.
         self.compute_node_positions()
-        # self.ax.set_xlim(-plot_radius*1.2, plot_radius*1.2)
-        # self.ax.set_ylim(-plot_radius*1.2, plot_radius*1.2)
-        # self.ax.xaxis.set_visible(False)
-        # self.ax.yaxis.set_visible(False)
-        # self.ax.set_aspect('equal')
+
 
     def compute_node_positions(self):
         """
