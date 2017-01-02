@@ -13,6 +13,7 @@ def test_initialization():
 
     assert len(b.nodes) == len(G.nodes())
 
+
 def make_graph_for_grouping():
 
     nodelist = [('Andrew', {'affiliation': 'MIT', 'year': 5}),
@@ -26,6 +27,7 @@ def make_graph_for_grouping():
     G = nx.Graph()
     G.add_nodes_from(nodelist)
     return G
+
 
 def test_init_group_nodes():
     """
