@@ -93,12 +93,12 @@ class BasePlot(object):
 
         elif self.node_order and not self.node_grouping:
             self.nodes = sorted(self.graph.nodes(data=True),
-                                key=lambda x:x[1][self.node_order])
+                                key=lambda x: x[1][self.node_order])
 
         elif self.node_grouping and self.node_order:
             self.nodes = sorted(self.graph.nodes(data=True),
-                                key=lambda x:(x[1][self.node_grouping],
-                                              x[1][self.node_order]))
+                                key=lambda x: (x[1][self.node_grouping],
+                                               x[1][self.node_order]))
 
 
 class CircosPlot(BasePlot):
