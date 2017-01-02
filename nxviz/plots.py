@@ -115,7 +115,6 @@ class CircosPlot(BasePlot):
         # The following attributes are specific to CircosPlot
         self.compute_node_positions()
 
-
     def compute_node_positions(self):
         """
         Uses the get_cartesian function to compute the positions of each node
