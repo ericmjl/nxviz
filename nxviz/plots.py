@@ -1,5 +1,4 @@
 from .geometry import node_theta, get_cartesian, circos_radius
-from .utils import infer_data_type,
 from collections import defaultdict
 from matplotlib.path import Path
 
@@ -27,9 +26,6 @@ class BasePlot(object):
         self.graph = graph
         self.nodes = graph.nodes()  # keep track of nodes separately.
 
-        # Keep a separate node list so that we can order them properly.
-        self.group_and_sort_nodes()
-
         # Set node keys
         self.node_order = node_order
         self.node_size = node_size
@@ -38,6 +34,9 @@ class BasePlot(object):
         # Set edge keys
         self.edge_width = edge_width
         self.edge_color = edge_color
+
+        # Keep a separate node list so that we can order them properly.
+        self.group_and_sort_nodes()
 
         # Set data_types dictionary
         if not data_types:
