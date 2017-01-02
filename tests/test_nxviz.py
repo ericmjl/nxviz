@@ -1,13 +1,14 @@
-from hypothesis import given, assume
-from hypothesis.strategies import lists, integers,
 from nxviz.plots import BasePlot
+import networkx as nx
 
 
-@given(lists(integers(), unique=True),
-       lists(integers(), unique=True, min_size=2, max_size=2))
-def test_initialization(nodes, edges):
-    assume(len(nodes) > 2 and len(nodes) < 5)
-    assume(len(edges) > 1 and len(edges) < 5)
-    b = BasePlot(nodes, edges)
-    assert b.nodecolors == ['blue'] * len(b.nodes)
-    assert b.edgecolors == ['black'] * len(b.edges)
+def test_initialization():
+    """
+    Tests initialization of plot object.
+    """
+    n_nodes = 10
+    G = nx.erdos_renyi_graph(n=n_nodes, p=0.3)
+
+    b = BasePlot(graph=G)
+
+    assert len(b.nodes) == len(G.nodes())
