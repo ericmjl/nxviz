@@ -3,7 +3,7 @@ from nxviz.geometry import (circos_radius, node_theta, get_cartesian,
 from hypothesis import given, assume
 from hypothesis.strategies import lists, integers, floats
 import numpy as np
-import pytest
+import polcart
 
 
 def test_circos_radius():
@@ -38,16 +38,14 @@ def test_node_theta(nodelist, node):
 
 
 @given(floats(), floats())
-@pytest.mark.skip(reason="tested in polcart")
 def test_get_cartesian(r, theta):
+    """
+    In this test, we are testing to make sure that `get_cartesian` remains a
+    wrapper around polcart's `to_cartesian`.
+    """
     assume(np.isfinite(theta))
     assume(np.isfinite(r))
-    x_obs, y_obs = get_cartesian(r, theta)
-    x_exp = r * np.sin(theta)
-    y_exp = r * np.cos(theta)
-
-    assert np.allclose(x_obs, x_exp)
-    assert np.allclose(y_obs, y_exp)
+    assert get_cartesian(r, theta) == polcart.to_cartesian(r, theta)
 
 
 @given(floats())
