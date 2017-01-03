@@ -31,7 +31,7 @@ def test_node_theta(nodelist, node):
     theta_obs = node_theta(nodelist, node)
 
     i = nodelist.index(node)
-    theta_exp = i*2*np.pi/len(nodelist)
+    theta_exp = -np.pi + i*2*np.pi/len(nodelist)
     if theta_exp > np.pi:
         theta_exp = np.pi - theta_exp
     assert np.allclose(theta_obs, theta_exp)
