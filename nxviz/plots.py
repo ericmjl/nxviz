@@ -51,9 +51,17 @@ class BasePlot(object):
         for k in self.ax.spines.keys():
             self.ax.spines[k].set_visible(False)
 
+        # We provide the following attributes that can be set by the end-user.
+        # nodeprops are matplotlib patches properties.
+        self.nodeprops = dict()
+        # edgeprops are matplotlib line properties
+        self.edgeprops = dict()
+
     def draw(self):
         self.draw_nodes()
         self.draw_edges()
+        self.ax.relim()
+        self.ax.autoscale_view()
 
     def compute_node_positions(self):
         """
@@ -82,9 +90,7 @@ class BasePlot(object):
     def group_and_sort_nodes(self):
         """
         Groups and then sorts the nodes according to the criteria passed into
-        the Plot constructor. Does the following:
-
-        1. Checks that the data type for each is correct.
+        the Plot constructor.
         """
 
         if self.node_grouping and not self.node_order:
@@ -122,10 +128,11 @@ class CircosPlot(BasePlot):
         """
         xs = []
         ys = []
+
+        radius = circos_radius(n_nodes=len(self.graph.nodes()), node_r=1)
+        self.plot_radius = radius
         for node in self.nodes:
-            theta = node_theta(self.nodes, node)
-            radius = circos_radius(n_nodes=len(self.graph.nodes()), node_r=1)
-            x, y = get_cartesian(r=radius, theta=theta)
+            x, y = get_cartesian(r=radius, theta=node_theta(self.nodes, node))
             xs.append(x)
             ys.append(y)
         self.node_coords = {'x': xs, 'y': ys}
@@ -134,20 +141,30 @@ class CircosPlot(BasePlot):
         """
         Renders nodes to the figure.
         """
-        node_r = self.nodeprops['r']
+        node_r = 1
         for i, node in enumerate(self.nodes):
             x = self.node_coords['x'][i]
             y = self.node_coords['y'][i]
-            self.nodeprops['facecolor'] = self.nodecolors[i]
             node_patch = patches.Ellipse((x, y), node_r, node_r,
                                          lw=0)
             self.ax.add_patch(node_patch)
+
+        # This is the old implementation, which used nodeprops to configure
+        # styling.
+        # node_r = self.nodeprops['r']
+        # for i, node in enumerate(self.nodes):
+        #     x = self.node_coords['x'][i]
+        #     y = self.node_coords['y'][i]
+        #     self.nodeprops['facecolor'] = self.nodecolors[i]
+        #     node_patch = patches.Ellipse((x, y), node_r, node_r,
+        #                                  lw=0)
+        #     self.ax.add_patch(node_patch)
 
     def draw_edges(self):
         """
         Renders edges to the figure.
         """
-        for i, (start, end) in enumerate(self.edges):
+        for i, (start, end) in enumerate(self.graph.edges()):
             start_theta = node_theta(self.nodes, start)
             end_theta = node_theta(self.nodes, end)
             verts = [get_cartesian(self.plot_radius, start_theta),
@@ -156,9 +173,9 @@ class CircosPlot(BasePlot):
             codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
 
             path = Path(verts, codes)
-            self.edgeprops['facecolor'] = 'none'
-            self.edgeprops['edgecolor'] = self.edgecolors[i]
-            patch = patches.PathPatch(path, lw=1, **self.edgeprops)
+            # self.edgeprops['facecolor'] = 'none'
+            # self.edgeprops['edgecolor'] = self.edgecolors[i]
+            patch = patches.PathPatch(path, lw=1, **{'facecolor': 'none'})
             self.ax.add_patch(patch)
 
 
