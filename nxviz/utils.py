@@ -1,3 +1,6 @@
+from palettable.colorbrewer import qualitative, sequential, diverging
+
+
 def is_data_homogenous(data_container):
     """
     Checks that all of the data in the container are of the same Python data
@@ -88,3 +91,22 @@ def is_groupable(data_container):
     if infer_data_type(data_container) in ['categorical', 'ordinal']:
         is_groupable = True
     return is_groupable
+
+
+def num_discrete_groups(data_container):
+    """
+    Returns the number of discrete groups present in a data container.
+    """
+    return len(set(data_container))
+
+
+cmaps = {
+    'Accent_3': qualitative.Accent_3,
+    'Accent_4': qualitative.Accent_4,
+    'Accent_5': qualitative.Accent_5,
+    'Accent_6': qualitative.Accent_6,
+    'Accent_7': qualitative.Accent_7,
+    'Accent_8': qualitative.Accent_8,
+    'continuous': sequential.YlGnBu_9,
+    'diverging': diverging.RdBu_11,
+}
