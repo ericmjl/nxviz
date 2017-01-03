@@ -13,7 +13,7 @@ def node_theta(nodelist, node):
     assert node in nodelist, 'node must be inside nodelist.'
 
     i = nodelist.index(node)
-    theta = i*2*np.pi/len(nodelist)
+    theta = -np.pi + i*2*np.pi/len(nodelist)
 
     if theta > np.pi:
         theta = np.pi - theta
