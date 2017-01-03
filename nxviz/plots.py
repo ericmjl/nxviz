@@ -54,6 +54,7 @@ class BasePlot(object):
         if not data_types:
             self.data_types = dict()
         else:
+            self.check_data_types(data_types)
             self.data_types = data_types
 
         self.figure = plt.figure(figsize=(6, 6))
@@ -71,6 +72,16 @@ class BasePlot(object):
 
         # Compute each node's positions.
         self.compute_node_positions()
+
+    def check_data_types(self, data_types):
+        """
+        Checks the data_types passed into the Plot constructor and makes sure
+        that:
+        - the values passed in belong to 'ordinal', 'categorical', or
+          'continuous'.
+        """
+        for k, v in data_types.items():
+            assert v in ['ordinal', 'categorical', 'continuous']
 
     def draw(self):
         self.draw_nodes()

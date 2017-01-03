@@ -84,3 +84,16 @@ def test_init_sort_nodes():
                               key=lambda x: x[1]['year']
                               )
                        ]
+
+
+def test_init_data_types():
+    """
+    Checks to make sure that the data_types dictionary is initialized
+    correctly.
+    """
+
+    G = make_graph_for_grouping()
+
+    b = BasePlot(graph=G, data_types={'year': 'ordinal',
+                                      'affiliation': 'categorical'})
+    assert isinstance(b.data_types, dict)
