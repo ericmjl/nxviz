@@ -1,6 +1,9 @@
 from .geometry import node_theta, get_cartesian, circos_radius
+from .utils import (infer_data_type, num_discrete_groups, cmaps,
+                    is_data_diverging)
 from collections import defaultdict
 from matplotlib.path import Path
+from matplotlib.cm import get_cmap
 
 import matplotlib.patches as patches
 import numpy as np
@@ -26,20 +29,23 @@ class BasePlot(object):
         self.graph = graph
         self.nodes = graph.nodes()  # keep track of nodes separately.
 
-        # Set node keys
+        # Set node arrangement
         self.node_order = node_order
-        self.node_size = node_size
         self.node_grouping = node_grouping
-        if node_color:
+        self.group_and_sort_nodes()
+
+        self.node_size = node_size
+
+        self.node_color = node_color
+        if self.node_color:
+            self.node_colors = []
             self.compute_node_colors()
         else:
-            self.node_color = None
+            self.node_colors = ['blue'] * len(self.nodes)
+
         # Set edge keys
         self.edge_width = edge_width
         self.edge_color = edge_color
-
-        # Keep a separate node list so that we can order them properly.
-        self.group_and_sort_nodes()
 
         # Set data_types dictionary
         if not data_types:
@@ -69,7 +75,7 @@ class BasePlot(object):
         self.ax.relim()
         self.ax.autoscale_view()
 
-    def compute_node_colors(self, color):
+    def compute_node_colors(self):
         """
         Computes each node's color.
 
@@ -108,17 +114,20 @@ class BasePlot(object):
         """
 
         if self.node_grouping and not self.node_order:
-            self.nodes = sorted(self.graph.nodes(data=True),
-                                key=lambda x: x[1][self.node_grouping])
+            self.nodes = [n for n, d in
+                          sorted(self.graph.nodes(data=True),
+                                 key=lambda x: x[1][self.node_grouping])]
 
         elif self.node_order and not self.node_grouping:
-            self.nodes = sorted(self.graph.nodes(data=True),
-                                key=lambda x: x[1][self.node_order])
+            self.nodes = [n for n, _ in
+                          sorted(self.graph.nodes(data=True),
+                                 key=lambda x: x[1][self.node_order])]
 
         elif self.node_grouping and self.node_order:
-            self.nodes = sorted(self.graph.nodes(data=True),
-                                key=lambda x: (x[1][self.node_grouping],
-                                               x[1][self.node_order]))
+            self.nodes = [n for n, d in
+                          sorted(self.graph.nodes(data=True),
+                                 key=lambda x: (x[1][self.node_grouping],
+                                                x[1][self.node_order]))]
 
 
 class CircosPlot(BasePlot):
@@ -128,10 +137,12 @@ class CircosPlot(BasePlot):
     def __init__(self, graph, node_order=None, node_size=None,
                  node_grouping=None, node_color=None, edge_width=None,
                  edge_color=None, data_types=None):
+
         # Initialize using BasePlot
-        BasePlot.__init__(self, graph, node_order=None, node_size=None,
-                          node_grouping=None, node_color=None, edge_width=None,
-                          edge_color=None, data_types=None)
+        BasePlot.__init__(self, graph, node_order=node_order,
+                          node_size=node_size, node_grouping=node_grouping,
+                          node_color=node_color, edge_width=edge_width,
+                          edge_color=edge_color, data_types=data_types)
 
     def compute_node_positions(self):
         """
@@ -149,6 +160,26 @@ class CircosPlot(BasePlot):
             ys.append(y)
         self.node_coords = {'x': xs, 'y': ys}
 
+    def compute_node_colors(self):
+        """
+        Computes the node colors.
+        """
+        data = [self.graph.node[n][self.node_color] for n in self.nodes]
+        data_reduced = list(set(data))
+        dtype = infer_data_type(data)
+        n_grps = num_discrete_groups(data)
+
+        if dtype == 'categorical' or dtype == 'ordinal':
+            cmap = get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
+        elif dtype == 'continuous' and not is_data_diverging(data):
+            cmap = get_cmap(cmaps['continuous'].mpl_colormap)
+        elif dtype == 'continuous' and is_data_diverging(data):
+            cmap = get_cmap(cmaps['diverging'].mpl_colormap)
+
+        for d in data:
+            idx = data_reduced.index(d) / n_grps
+            self.node_colors.append(cmap(idx))
+
     def draw_nodes(self):
         """
         Renders nodes to the figure.
@@ -157,20 +188,10 @@ class CircosPlot(BasePlot):
         for i, node in enumerate(self.nodes):
             x = self.node_coords['x'][i]
             y = self.node_coords['y'][i]
+            color = self.node_colors[i]
             node_patch = patches.Ellipse((x, y), node_r, node_r,
-                                         lw=0)
+                                         lw=0, color=color)
             self.ax.add_patch(node_patch)
-
-        # This is the old implementation, which used nodeprops to configure
-        # styling.
-        # node_r = self.nodeprops['r']
-        # for i, node in enumerate(self.nodes):
-        #     x = self.node_coords['x'][i]
-        #     y = self.node_coords['y'][i]
-        #     self.nodeprops['facecolor'] = self.nodecolors[i]
-        #     node_patch = patches.Ellipse((x, y), node_r, node_r,
-        #                                  lw=0)
-        #     self.ax.add_patch(node_patch)
 
     def draw_edges(self):
         """
