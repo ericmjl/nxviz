@@ -40,8 +40,9 @@ def test_init_group_nodes():
     G = make_graph_for_grouping()
     b = BasePlot(graph=G, node_grouping='affiliation')
 
-    assert b.nodes == sorted(G.nodes(data=True),
-                             key=lambda x: x[1]['affiliation'])
+    assert b.nodes == [n for n, d in
+                       sorted(G.nodes(data=True),
+                              key=lambda x: x[1]['affiliation'])]
 
 
 def test_init_sort_nodes():
@@ -54,5 +55,9 @@ def test_init_sort_nodes():
 
     b = BasePlot(graph=G, node_grouping='affiliation', node_order='year')
 
-    assert b.nodes == sorted(G.nodes(data=True),
-                             key=lambda x: (x[1]['affiliation'], x[1]['year']))
+    assert b.nodes == [n for n, d in
+                       sorted(G.nodes(data=True),
+                              key=lambda x: (x[1]['affiliation'],
+                                             x[1]['year'])
+                              )
+                       ]
