@@ -19,9 +19,9 @@ def make_graph_for_grouping():
     nodelist = [('Andrew', {'affiliation': 'MIT', 'year': 5}),
                 ('Felipe', {'affiliation': 'Broad', 'year': 4}),
                 ('Thomas', {'affiliation': 'Harvard', 'year': 2}),
-                ('Jerome', {'affiliation': 'Broad', 'year': 3}),
+                ('Elizabeth', {'affiliation': 'Broad', 'year': 3}),
                 ('Lily', {'affiliation': 'MIT', 'year': 2}),
-                ('Tyrus', {'affiliation': 'MIT', 'year': 2})
+                ('Jessica', {'affiliation': 'MIT', 'year': 2})
                 ]
 
     G = nx.Graph()
