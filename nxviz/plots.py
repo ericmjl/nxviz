@@ -382,9 +382,12 @@ class MatrixPlot(BasePlot):
                           node_color=node_color, edge_width=edge_width,
                           edge_color=edge_color, data_types=data_types)
 
+        # The following atribute is specific to MatrixPlots
+        self.cmap = cmaps['continuous'].mpl_colormap
+
     def draw(self):
         """
         Draws the plot to screen.
         """
         matrix = nx.to_numpy_matrix(self.graph, nodelist=self.nodes)
-        self.ax.matshow(matrix, cmap=cmaps['continuous'].mpl_colormap)
+        self.ax.matshow(matrix, cmap=self.cmap)
