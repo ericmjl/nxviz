@@ -77,11 +77,23 @@ class BasePlot(object):
 
     def compute_node_colors(self):
         """
-        Computes each node's color.
-
-        Needs to be implemented for each plot type.
+        Computes the node colors.
         """
-        pass
+        data = [self.graph.node[n][self.node_color] for n in self.nodes]
+        data_reduced = sorted(list(set(data)))
+        dtype = infer_data_type(data)
+        n_grps = num_discrete_groups(data)
+
+        if dtype == 'categorical' or dtype == 'ordinal':
+            cmap = get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
+        elif dtype == 'continuous' and not is_data_diverging(data):
+            cmap = get_cmap(cmaps['continuous'].mpl_colormap)
+        elif dtype == 'continuous' and is_data_diverging(data):
+            cmap = get_cmap(cmaps['diverging'].mpl_colormap)
+
+        for d in data:
+            idx = data_reduced.index(d) / n_grps
+            self.node_colors.append(cmap(idx))
 
     def compute_node_positions(self):
         """
@@ -159,26 +171,6 @@ class CircosPlot(BasePlot):
             xs.append(x)
             ys.append(y)
         self.node_coords = {'x': xs, 'y': ys}
-
-    def compute_node_colors(self):
-        """
-        Computes the node colors.
-        """
-        data = [self.graph.node[n][self.node_color] for n in self.nodes]
-        data_reduced = sorted(list(set(data)))
-        dtype = infer_data_type(data)
-        n_grps = num_discrete_groups(data)
-
-        if dtype == 'categorical' or dtype == 'ordinal':
-            cmap = get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
-        elif dtype == 'continuous' and not is_data_diverging(data):
-            cmap = get_cmap(cmaps['continuous'].mpl_colormap)
-        elif dtype == 'continuous' and is_data_diverging(data):
-            cmap = get_cmap(cmaps['diverging'].mpl_colormap)
-
-        for d in data:
-            idx = data_reduced.index(d) / n_grps
-            self.node_colors.append(cmap(idx))
 
     def draw_nodes(self):
         """
