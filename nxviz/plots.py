@@ -165,7 +165,7 @@ class CircosPlot(BasePlot):
         Computes the node colors.
         """
         data = [self.graph.node[n][self.node_color] for n in self.nodes]
-        data_reduced = list(set(data))
+        data_reduced = sorted(list(set(data)))
         dtype = infer_data_type(data)
         n_grps = num_discrete_groups(data)
 
