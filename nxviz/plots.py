@@ -8,6 +8,7 @@ from matplotlib.cm import get_cmap
 import matplotlib.patches as patches
 import numpy as np
 import matplotlib.pyplot as plt
+import networkx as nx
 
 
 class BasePlot(object):
@@ -34,8 +35,10 @@ class BasePlot(object):
         self.node_grouping = node_grouping
         self.group_and_sort_nodes()
 
+        # Set node radius
         self.node_size = node_size
 
+        # Set node colors
         self.node_color = node_color
         if self.node_color:
             self.node_colors = []
@@ -43,7 +46,7 @@ class BasePlot(object):
         else:
             self.node_colors = ['blue'] * len(self.nodes)
 
-        # Set edge keys
+        # Set edge properties
         self.edge_width = edge_width
         self.edge_color = edge_color
 
@@ -363,3 +366,25 @@ class HivePlot(BasePlot):
 
         """
         pass
+
+
+class MatrixPlot(BasePlot):
+    """
+    Plotting object for the MatrixPlot.
+    """
+    def __init__(self, graph, node_order=None, node_size=None,
+                 node_grouping=None, node_color=None, edge_width=None,
+                 edge_color=None, data_types=None):
+
+        # Initialize using BasePlot
+        BasePlot.__init__(self, graph, node_order=node_order,
+                          node_size=node_size, node_grouping=node_grouping,
+                          node_color=node_color, edge_width=edge_width,
+                          edge_color=edge_color, data_types=data_types)
+
+    def draw(self):
+        """
+        Draws the plot to screen.
+        """
+        matrix = nx.to_numpy_matrix(self.graph, nodelist=self.nodes)
+        self.ax.matshow(matrix, cmap=cmaps['continuous'].mpl_colormap)
