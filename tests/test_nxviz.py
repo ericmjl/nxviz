@@ -33,8 +33,8 @@ def test_init_group_nodes():
     """
     Tests initialization with grouping of nodes.
 
-    I provide a graph with nodes that should be grouped in a particular
-    fashion.
+    This only tests that the nodes are ordered correctly when sorted on the
+    `node_grouping` key.
     """
 
     G = make_graph_for_grouping()
@@ -42,14 +42,18 @@ def test_init_group_nodes():
 
     assert b.nodes == [n for n, d in
                        sorted(G.nodes(data=True),
-                              key=lambda x: x[1]['affiliation'])]
+                              key=lambda x: x[1]['affiliation']
+                              )
+                       ]
 
 
-def test_init_sort_nodes():
+def test_init_sort_and_group_nodes():
     """
-    Tests initialization with sorting of nodes.
+    Tests initialization with sorting and grouping of nodes.
 
-    I provide a graph with nodes that should be sorted in a particular fashion.
+    This tests that the nodes are ordered correctly when first grouped on the
+    `node_grouping` key, and then sorted within each group on the `node_order`
+    key.
     """
     G = make_graph_for_grouping()
 
@@ -59,5 +63,24 @@ def test_init_sort_nodes():
                        sorted(G.nodes(data=True),
                               key=lambda x: (x[1]['affiliation'],
                                              x[1]['year'])
+                              )
+                       ]
+
+
+def test_init_sort_nodes():
+    """
+    Tests initialization with sorting of nodes.
+
+    This tests that the nodes are ordered correctly when sorted on the
+    "node_order" key.
+    """
+
+    G = make_graph_for_grouping()
+
+    b = BasePlot(graph=G, node_order='year')
+
+    assert b.nodes == [n for n, d in
+                       sorted(G.nodes(data=True),
+                              key=lambda x: x[1]['year']
                               )
                        ]
