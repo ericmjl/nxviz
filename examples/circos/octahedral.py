@@ -7,6 +7,6 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 G = nx.octahedral_graph()
-c = CircosPlot(G.nodes(), G.edges(), plot_radius=5)
+c = CircosPlot(G)
 c.draw()
 plt.show()
