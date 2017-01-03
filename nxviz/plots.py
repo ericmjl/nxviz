@@ -30,7 +30,10 @@ class BasePlot(object):
         self.node_order = node_order
         self.node_size = node_size
         self.node_grouping = node_grouping
-        self.node_color = node_color
+        if node_color:
+            self.compute_node_colors()
+        else:
+            self.node_color = None
         # Set edge keys
         self.edge_width = edge_width
         self.edge_color = edge_color
@@ -57,17 +60,28 @@ class BasePlot(object):
         # edgeprops are matplotlib line properties
         self.edgeprops = dict()
 
+        # Compute each node's positions.
+        self.compute_node_positions()
+
     def draw(self):
         self.draw_nodes()
         self.draw_edges()
         self.ax.relim()
         self.ax.autoscale_view()
 
+    def compute_node_colors(self, color):
+        """
+        Computes each node's color.
+
+        Needs to be implemented for each plot type.
+        """
+        pass
+
     def compute_node_positions(self):
         """
         Computes the positions of each node on the plot.
 
-        Needs to be implemented for each plot.
+        Needs to be implemented for each plot type.
         """
         pass
 
@@ -75,7 +89,7 @@ class BasePlot(object):
         """
         Renders the nodes to the plot or screen.
 
-        Needs to be implemented for each plot.
+        Needs to be implemented for each plot type.
         """
         pass
 
@@ -83,7 +97,7 @@ class BasePlot(object):
         """
         Renders the nodes to the plot or screen.
 
-        Needs to be implemented for each plot.
+        Needs to be implemented for each plot type.
         """
         pass
 
@@ -118,8 +132,6 @@ class CircosPlot(BasePlot):
         BasePlot.__init__(self, graph, node_order=None, node_size=None,
                           node_grouping=None, node_color=None, edge_width=None,
                           edge_color=None, data_types=None)
-        # The following attributes are specific to CircosPlot
-        self.compute_node_positions()
 
     def compute_node_positions(self):
         """
