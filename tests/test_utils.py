@@ -1,4 +1,5 @@
-from nxviz.utils import is_data_homogenous, infer_data_type, is_data_diverging
+from nxviz.utils import (is_data_homogenous, infer_data_type,
+                         is_data_diverging, is_groupable, num_discrete_groups)
 import pytest
 
 categorical = ['sun', 'moon', 'light']
@@ -34,3 +35,14 @@ def test_is_data_diverging():
 def test_unknown_data_type():
     with pytest.raises(ValueError):
         infer_data_type(unknown_type)
+
+
+def test_is_groupable():
+    assert is_groupable(categorical)
+    with pytest.raises(AssertionError):
+        is_groupable(mixed)
+
+
+def test_num_discrete_groups():
+    assert num_discrete_groups(categorical) == 3
+    assert num_discrete_groups(ordinal) == 5
