@@ -1,12 +1,10 @@
 from .geometry import node_theta, get_cartesian, circos_radius
 from .utils import (infer_data_type, num_discrete_groups, cmaps,
                     is_data_diverging)
-from collections import defaultdict
 from matplotlib.path import Path
 from matplotlib.cm import get_cmap
 
 import matplotlib.patches as patches
-import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 
