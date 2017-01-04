@@ -15,9 +15,6 @@ def node_theta(nodelist, node):
     i = nodelist.index(node)
     theta = -np.pi + i*2*np.pi/len(nodelist)
 
-    if theta > np.pi:
-        theta = np.pi - theta
-
     return theta
 
 
