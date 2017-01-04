@@ -96,3 +96,20 @@ def test_init_data_types():
     b = BasePlot(graph=G, data_types={'year': 'ordinal',
                                       'affiliation': 'categorical'})
     assert isinstance(b.data_types, dict)
+
+
+def test_init_node_colors():
+    """
+    Does two checks:
+    1. If node_color is not passed in as a keyword argument, check that
+       self.node_colors is a list of 'blue', of length (number of nodes).
+    2. If node_color is passed in as a keyword argument, check that
+       self.node_colors is a list with more than one element.
+    """
+    G = make_graph_for_grouping()
+    b = BasePlot(graph=G, node_color="year")
+    assert len(set(b.node_colors)) > 1
+
+    G = make_graph_for_grouping()
+    b = BasePlot(graph=G)
+    assert len(set(b.node_colors)) == 1
