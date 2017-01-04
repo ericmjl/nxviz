@@ -16,12 +16,12 @@ def test_initialization():
 
 def make_graph_for_grouping():
 
-    nodelist = [('Andrew', {'affiliation': 'MIT', 'year': 5}),
-                ('Felipe', {'affiliation': 'Broad', 'year': 4}),
-                ('Thomas', {'affiliation': 'Harvard', 'year': 2}),
-                ('Elizabeth', {'affiliation': 'Broad', 'year': 3}),
-                ('Lily', {'affiliation': 'MIT', 'year': 2}),
-                ('Jessica', {'affiliation': 'MIT', 'year': 2})
+    nodelist = [('Andrew', {'affiliation': 'MIT', 'year': 5, 'score': -2.0}),
+                ('Felipe', {'affiliation': 'Broad', 'year': 4, 'score': 0.0}),
+                ('Tom', {'affiliation': 'Harvard', 'year': 2, 'score': 1.0}),
+                ('Liz', {'affiliation': 'Broad', 'year': 3, 'score': 2.0}),
+                ('Lily', {'affiliation': 'MIT', 'year': 2, 'score': 3.0}),
+                ('Jessica', {'affiliation': 'MIT', 'year': 2, 'score': 0.0})
                 ]
 
     G = nx.Graph()
