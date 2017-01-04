@@ -88,8 +88,7 @@ def test_init_sort_nodes():
 
 def test_init_data_types():
     """
-    Checks to make sure that the data_types dictionary is initialized
-    correctly.
+    Checks that the data_types dictionary is initialized correctly.
     """
 
     G = make_graph_for_grouping()
