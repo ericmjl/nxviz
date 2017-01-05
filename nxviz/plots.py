@@ -109,7 +109,6 @@ class BasePlot(object):
         data = [self.graph.node[n][self.node_color] for n in self.nodes]
         data_reduced = sorted(list(set(data)))
         dtype = infer_data_type(data)
-        print(dtype)
         n_grps = num_discrete_groups(data)
 
         if dtype == 'categorical' or dtype == 'ordinal':
