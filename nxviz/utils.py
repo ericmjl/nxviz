@@ -43,7 +43,11 @@ def infer_data_type(data_container):
     datum = data_container[0]
 
     # Return statements below
-    if isinstance(datum, str):
+    # treat binomial data as categorical
+    if len(set(data_container)) == 2:
+        return 'categorical'
+
+    elif isinstance(datum, str):
         return 'categorical'
 
     elif isinstance(datum, int):
@@ -51,10 +55,6 @@ def infer_data_type(data_container):
 
     elif isinstance(datum, float):
         return 'continuous'
-
-    # treat binomial data as categorical
-    elif len(set(data_container)) == 2:
-        return 'categorical'
 
     else:
         raise ValueError('Not possible to tell what the data type is.')
