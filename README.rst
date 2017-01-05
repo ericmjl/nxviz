@@ -22,8 +22,17 @@ nxviz
      :alt: Updates
 
 
-Graph Visualization Package
+`nxviz` is a graph visualization package for NetworkX. With nxviz, you can create beautiful graph visualizations by a **declarative** API. Here's an example.
 
+.. code:: python
+
+    # Assume we have a professional network of physicians belonging to hospitals.
+    c = CircosPlot(G, node_color='affiliation', node_grouping='affiliation')
+    c.draw()
+    plt.show()  # only needed in scripts
+
+
+Check out the examples for more details!
 
 * Free software: MIT license
 * Documentation: https://nxviz.readthedocs.io.
@@ -32,7 +41,8 @@ Graph Visualization Package
 Features
 --------
 
-* TODO
+* Declarative API.
+* Works with NetworkX, one of the more popular graph libraries in Python.
 
 Credits
 ---------

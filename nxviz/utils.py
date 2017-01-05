@@ -43,7 +43,12 @@ def infer_data_type(data_container):
     datum = data_container[0]
 
     # Return statements below
-    if isinstance(datum, str):
+    # treat binomial data as categorical
+    # TODO: make tests for this.
+    if len(set(data_container)) == 2:
+        return 'categorical'
+
+    elif isinstance(datum, str):
         return 'categorical'
 
     elif isinstance(datum, int):
@@ -101,6 +106,7 @@ def num_discrete_groups(data_container):
 
 
 cmaps = {
+    'Accent_2': qualitative.Accent_3,
     'Accent_3': qualitative.Accent_3,
     'Accent_4': qualitative.Accent_4,
     'Accent_5': qualitative.Accent_5,
