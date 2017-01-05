@@ -27,7 +27,7 @@ nxviz
 .. code:: python
 
     # Assume we have a professional network of physicians belonging to hospitals.
-    c = CircosPlot(G, node_color='affiliation')
+    c = CircosPlot(G, node_color='affiliation', node_grouping='affiliation')
     c.draw()
     plt.show()  # only needed in scripts
 
