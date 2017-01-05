@@ -9,6 +9,9 @@ continuous = [1.0, 1.1, 1.2]
 diverging_ordinal = [1, 2, 3, 4, -1, -2, -3, -4]
 diverging_continuous = [0.0, 0.1, 0.2, 0.3, -0.1, -0.2, -0.3]
 unknown_type = [(1, 2), (2, 3), (3, 4)]
+binomial = ['hello', 'interesting']
+binomial_integer = [0, 1]
+binomial_float = [0.1, 0.2]
 
 
 def test_is_data_homogenous():
@@ -46,3 +49,9 @@ def test_is_groupable():
 def test_num_discrete_groups():
     assert num_discrete_groups(categorical) == 3
     assert num_discrete_groups(ordinal) == 5
+
+
+def test_binomial():
+    assert infer_data_type(binomial) == 'categorical'
+    assert infer_data_type(binomial_float) == 'categorical'
+    assert infer_data_type(binomial_integer) == 'categorical'

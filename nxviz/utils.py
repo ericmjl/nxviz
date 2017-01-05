@@ -44,6 +44,7 @@ def infer_data_type(data_container):
 
     # Return statements below
     # treat binomial data as categorical
+    # TODO: make tests for this.
     if len(set(data_container)) == 2:
         return 'categorical'
 
