@@ -1,56 +1,115 @@
-from hypothesis import given, assume
-from hypothesis.strategies import lists, integers, floats, tuples
-import numpy as np
-import nxviz as nv
-from nxviz.plots import BasePlot, CircosPlot, HivePlot
-from nxviz import geometry as gm
-import pytest
+from nxviz.plots import BasePlot
+import networkx as nx
 
 
-@given(lists(integers()), integers())
-def test_node_theta(nodelist, node):
-    assume(len(nodelist) > 0)
-    assume(node in nodelist)
-    theta_obs = gm.node_theta(nodelist, node)
+def test_initialization():
+    """
+    Tests initialization of plot object.
+    """
+    n_nodes = 10
+    G = nx.erdos_renyi_graph(n=n_nodes, p=0.3)
 
-    i = nodelist.index(node)
-    theta_exp = i*2*np.pi/len(nodelist)
-    if theta_exp > np.pi:
-        theta_exp = np.pi - theta_exp
-    assert np.allclose(theta_obs, theta_exp)
+    b = BasePlot(graph=G)
 
-
-@given(floats(), floats())
-@pytest.mark.skip(reason="tested in polcart")
-def test_get_cartesian(r, theta):
-    assume(np.isfinite(theta))
-    assume(np.isfinite(r))
-    x_obs, y_obs = gm.get_cartesian(r, theta)
-    x_exp = r * np.sin(theta)
-    y_exp = r * np.cos(theta)
-
-    assert np.allclose(x_obs, x_exp)
-    assert np.allclose(y_obs, y_exp)
+    assert len(b.nodes) == len(G.nodes())
 
 
-@given(floats())
-def test_correct_negative_angle(angle):
+def make_graph_for_grouping():
 
-    assume(angle < 0)
-    assume(angle >= -2 * np.pi)
-    exp = 2 * np.pi + angle
-    obs = gm.correct_negative_angle(angle)
+    nodelist = [('Andrew', {'affiliation': 'MIT', 'year': 5, 'score': -2.0}),
+                ('Felipe', {'affiliation': 'Broad', 'year': 4, 'score': 0.0}),
+                ('Tom', {'affiliation': 'Harvard', 'year': 2, 'score': 1.0}),
+                ('Liz', {'affiliation': 'Broad', 'year': 3, 'score': 2.0}),
+                ('Lily', {'affiliation': 'MIT', 'year': 2, 'score': 3.0}),
+                ('Jessica', {'affiliation': 'MIT', 'year': 2, 'score': 0.0})
+                ]
 
-    assert np.allclose(obs, exp)
-    assert obs <= 2 * np.pi
-    assert obs >= 0
+    G = nx.Graph()
+    G.add_nodes_from(nodelist)
+    return G
 
 
-@given(lists(integers(), unique=True),
-       lists(integers(), unique=True, min_size=2, max_size=2))
-def test_initialization(nodes, edges):
-    assume(len(nodes) > 2 and len(nodes) < 5)
-    assume(len(edges) > 1 and len(edges) < 5)
-    b = BasePlot(nodes, edges)
-    assert b.nodecolors == ['blue'] * len(b.nodes)
-    assert b.edgecolors == ['black'] * len(b.edges)
+def test_init_group_nodes():
+    """
+    Tests initialization with grouping of nodes.
+
+    This only tests that the nodes are ordered correctly when sorted on the
+    `node_grouping` key.
+    """
+
+    G = make_graph_for_grouping()
+    b = BasePlot(graph=G, node_grouping='affiliation')
+
+    assert b.nodes == [n for n, d in
+                       sorted(G.nodes(data=True),
+                              key=lambda x: x[1]['affiliation']
+                              )
+                       ]
+
+
+def test_init_sort_and_group_nodes():
+    """
+    Tests initialization with sorting and grouping of nodes.
+
+    This tests that the nodes are ordered correctly when first grouped on the
+    `node_grouping` key, and then sorted within each group on the `node_order`
+    key.
+    """
+    G = make_graph_for_grouping()
+
+    b = BasePlot(graph=G, node_grouping='affiliation', node_order='year')
+
+    assert b.nodes == [n for n, d in
+                       sorted(G.nodes(data=True),
+                              key=lambda x: (x[1]['affiliation'],
+                                             x[1]['year'])
+                              )
+                       ]
+
+
+def test_init_sort_nodes():
+    """
+    Tests initialization with sorting of nodes.
+
+    This tests that the nodes are ordered correctly when sorted on the
+    "node_order" key.
+    """
+
+    G = make_graph_for_grouping()
+
+    b = BasePlot(graph=G, node_order='year')
+
+    assert b.nodes == [n for n, d in
+                       sorted(G.nodes(data=True),
+                              key=lambda x: x[1]['year']
+                              )
+                       ]
+
+
+def test_init_data_types():
+    """
+    Checks that the data_types dictionary is initialized correctly.
+    """
+
+    G = make_graph_for_grouping()
+
+    b = BasePlot(graph=G, data_types={'year': 'ordinal',
+                                      'affiliation': 'categorical'})
+    assert isinstance(b.data_types, dict)
+
+
+def test_init_node_colors():
+    """
+    Does two checks:
+    1. If node_color is not passed in as a keyword argument, check that
+       self.node_colors is a list of 'blue', of length (number of nodes).
+    2. If node_color is passed in as a keyword argument, check that
+       self.node_colors is a list with more than one element.
+    """
+    G = make_graph_for_grouping()
+    b = BasePlot(graph=G, node_color="year")
+    assert len(set(b.node_colors)) > 1
+
+    G = make_graph_for_grouping()
+    b = BasePlot(graph=G)
+    assert len(set(b.node_colors)) == 1
