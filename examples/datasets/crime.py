@@ -48,10 +48,10 @@ for n in G.nodes():
     dcs = nx.degree_centrality(G)
     G.node[n]['connectivity'] = dcs[n]
 
-# # Make a CircosPlot of the bipartite graph
-# c = CircosPlot(G, node_grouping='bipartite', node_order='connectivity',
-#                node_color='bipartite',)
-# c.draw()
+# Make a CircosPlot of the bipartite graph
+c = CircosPlot(G, node_grouping='bipartite', node_order='connectivity',
+               node_color='bipartite',)
+c.draw()
 
 
 # Make the "people" projection of the bipartite graph.
