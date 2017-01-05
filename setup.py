@@ -9,15 +9,12 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [
-    'Click>=6.0',
-    'matplotlib',
-    'numpy',
-    'networkx',
-]
+requirements = []
+with open('requirements.txt') as f:
+    for l in f.readlines():
+        requirements.append(f.strip('\n'))
 
 test_requirements = [
-    # TODO: put package test requirements here
     'hypothesis',
     'pytest'
 ]

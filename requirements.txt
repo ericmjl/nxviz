@@ -1,0 +1,17 @@
+cryptography==1.5
+hypothesis==3.4.2
+matplotlib==1.5.3
+networkx==1.11
+numpy==1.11.3
+palettable==2.1.1
+pytest==2.9.2
+polcart==2016.6.4
+setuptools==32.3.1
+PyYAML==3.12
+pip==9.0.1
+wheel==0.29.0
+watchdog==0.8.3
+flake8==3.2.1
+coverage==4.3.1
+Sphinx==1.4.6
+cryptography==1.7.1
