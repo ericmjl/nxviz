@@ -12,7 +12,7 @@ with open('HISTORY.rst') as history_file:
 requirements = []
 with open('requirements.txt') as f:
     for l in f.readlines():
-        requirements.append(f.strip('\n'))
+        requirements.append(l.strip('\n'))
 
 test_requirements = [
     'hypothesis',
