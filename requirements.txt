@@ -4,7 +4,7 @@ matplotlib==1.5.3
 networkx==1.11
 numpy==1.11.3
 palettable==2.1.1
-pytest==2.9.2
+pytest==3.0.5
 polcart==2016.6.4
 setuptools==32.3.1
 PyYAML==3.12
