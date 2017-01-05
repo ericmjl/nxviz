@@ -136,7 +136,6 @@ class BasePlot(object):
         Groups and then sorts the nodes according to the criteria passed into
         the Plot constructor.
         """
-
         if self.node_grouping and not self.node_order:
             self.nodes = [n for n, d in
                           sorted(self.graph.nodes(data=True),
@@ -210,8 +209,6 @@ class CircosPlot(BasePlot):
             codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
 
             path = Path(verts, codes)
-            # self.edgeprops['facecolor'] = 'none'
-            # self.edgeprops['edgecolor'] = self.edgecolors[i]
             patch = patches.PathPatch(path, lw=1, **{'facecolor': 'none'})
             self.ax.add_patch(patch)
 
@@ -384,3 +381,84 @@ class MatrixPlot(BasePlot):
         """
         matrix = nx.to_numpy_matrix(self.graph, nodelist=self.nodes)
         self.ax.matshow(matrix, cmap=self.cmap)
+
+
+class ArcPlot(BasePlot):
+    """
+    Plotting object for CircosPlot.
+    """
+    def __init__(self, graph, node_order=None, node_size=None,
+                 node_grouping=None, node_color=None, edge_width=None,
+                 edge_color=None, data_types=None):
+
+        # Initialize using BasePlot
+        BasePlot.__init__(self, graph, node_order=node_order,
+                          node_size=node_size, node_grouping=node_grouping,
+                          node_color=node_color, edge_width=edge_width,
+                          edge_color=edge_color, data_types=data_types)
+
+    def compute_node_positions(self):
+        """
+        Computes nodes positions.
+
+        Arranges nodes in a line starting at (x,y) = (0,0). Node radius is
+        assumed to be equal to 0.5 units. Nodes are placed at integer
+        locations.
+        """
+        xs = []
+        ys = []
+
+        for node in self.nodes:
+            xs.append(self.nodes.index(node))
+            ys.append(0)
+
+        self.node_coords = {'x': xs, 'y': ys}
+
+    def draw_nodes(self):
+        """
+        Draw nodes to screen.
+        """
+        node_r = 1
+        for i, node in enumerate(self.nodes):
+            x = self.node_coords['x'][i]
+            y = self.node_coords['y'][i]
+            color = self.node_colors[i]
+            node_patch = patches.Ellipse((x, y), node_r, node_r,
+                                         lw=0, color=color)
+            self.ax.add_patch(node_patch)
+
+    def draw_edges(self):
+        """
+        Renders edges to the figure.
+        """
+        for i, (start, end) in enumerate(self.graph.edges()):
+            start_idx = self.nodes.index(start)
+            start_x = self.node_coords['x'][start_idx]
+            start_y = self.node_coords['y'][start_idx]
+
+            end_idx = self.nodes.index(end)
+            end_x = self.node_coords['x'][end_idx]
+            end_y = self.node_coords['y'][end_idx]
+
+            arc_radius = abs(end_x - start_x) / 2
+            # we do min(start_x, end_x) just in case start_x is greater than
+            # end_x.
+            middle_x = min(start_x, end_x) + arc_radius
+            middle_y = arc_radius * 2
+
+            verts = [(start_x, start_y),
+                     (middle_x, middle_y),
+                     (end_x, end_y)]
+
+            codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
+
+            path = Path(verts, codes)
+            patch = patches.PathPatch(path, lw=1, **{'facecolor': 'none'})
+            self.ax.add_patch(patch)
+
+    def draw(self):
+        self.draw_nodes()
+        self.draw_edges()
+        limits = (-1, len(self.nodes) + 1)
+        self.ax.set_xlim(*limits)
+        self.ax.set_ylim(*limits)
