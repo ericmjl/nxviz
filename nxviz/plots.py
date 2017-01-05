@@ -9,6 +9,15 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 
+def despine(ax):
+    for spine in ax.spines:
+        ax.spines[spine].set_visible(False)
+    plt.setp(ax.get_xticklabels(), visible=False)
+    plt.setp(ax.get_yticklabels(), visible=False)
+    ax.xaxis.set_visible(False)
+    ax.yaxis.set_visible(False)
+
+
 class BasePlot(object):
     """
     BasePlot: An extensible class for designing new network visualizations.
@@ -22,7 +31,8 @@ class BasePlot(object):
     """
     def __init__(self, graph, node_order=None, node_size=None,
                  node_grouping=None, node_color=None, edge_width=None,
-                 edge_color=None, data_types=None):
+                 edge_color=None, data_types=None, nodeprops=None,
+                 edgeprops=None):
         super(BasePlot, self).__init__()
         # Set graph object
         self.graph = graph
@@ -57,16 +67,21 @@ class BasePlot(object):
 
         self.figure = plt.figure(figsize=(6, 6))
         self.ax = self.figure.add_subplot(1, 1, 1)
-
-        # Set the Axes object splines to be invisible.
-        for k in self.ax.spines.keys():
-            self.ax.spines[k].set_visible(False)
+        despine(self.ax)
 
         # We provide the following attributes that can be set by the end-user.
         # nodeprops are matplotlib patches properties.
-        self.nodeprops = dict()
-        # edgeprops are matplotlib line properties
-        self.edgeprops = dict()
+        if nodeprops:
+            self.nodeprops = nodeprops
+        else:
+            self.nodeprops = {'radius': 1}
+        # edgeprops are matplotlib line properties. These can be set after
+        # instantiation but before calling the draw() function.
+        if edgeprops:
+            self.edgeprops = edgeprops
+        else:
+            self.edgeprops = {'facecolor': 'none',
+                              'alpha': 0.2}
 
         # Compute each node's positions.
         self.compute_node_positions()
@@ -94,6 +109,7 @@ class BasePlot(object):
         data = [self.graph.node[n][self.node_color] for n in self.nodes]
         data_reduced = sorted(list(set(data)))
         dtype = infer_data_type(data)
+        print(dtype)
         n_grps = num_discrete_groups(data)
 
         if dtype == 'categorical' or dtype == 'ordinal':
@@ -159,13 +175,15 @@ class CircosPlot(BasePlot):
     """
     def __init__(self, graph, node_order=None, node_size=None,
                  node_grouping=None, node_color=None, edge_width=None,
-                 edge_color=None, data_types=None):
+                 edge_color=None, data_types=None, nodeprops=None,
+                 edgeprops=None):
 
         # Initialize using BasePlot
         BasePlot.__init__(self, graph, node_order=node_order,
                           node_size=node_size, node_grouping=node_grouping,
                           node_color=node_color, edge_width=edge_width,
-                          edge_color=edge_color, data_types=data_types)
+                          edge_color=edge_color, data_types=data_types,
+                          nodeprops=nodeprops, edgeprops=edgeprops)
 
     def compute_node_positions(self):
         """
@@ -174,9 +192,10 @@ class CircosPlot(BasePlot):
         """
         xs = []
         ys = []
-
-        radius = circos_radius(n_nodes=len(self.graph.nodes()), node_r=1)
+        node_r = self.nodeprops['radius']
+        radius = circos_radius(n_nodes=len(self.graph.nodes()), node_r=node_r)
         self.plot_radius = radius
+        self.nodeprops['linewidth'] = radius * 0.01
         for node in self.nodes:
             x, y = get_cartesian(r=radius, theta=node_theta(self.nodes, node))
             xs.append(x)
@@ -187,13 +206,15 @@ class CircosPlot(BasePlot):
         """
         Renders nodes to the figure.
         """
-        node_r = 1
+        node_r = self.nodeprops['radius']
+        lw = self.nodeprops['linewidth']
         for i, node in enumerate(self.nodes):
             x = self.node_coords['x'][i]
             y = self.node_coords['y'][i]
             color = self.node_colors[i]
-            node_patch = patches.Ellipse((x, y), node_r, node_r,
-                                         lw=0, color=color)
+            node_patch = patches.Circle((x, y), node_r,
+                                        lw=lw, color=color,
+                                        zorder=2)
             self.ax.add_patch(node_patch)
 
     def draw_edges(self):
@@ -209,7 +230,7 @@ class CircosPlot(BasePlot):
             codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
 
             path = Path(verts, codes)
-            patch = patches.PathPatch(path, lw=1, **{'facecolor': 'none'})
+            patch = patches.PathPatch(path, lw=1, **self.edgeprops, zorder=1)
             self.ax.add_patch(patch)
 
 
@@ -364,13 +385,15 @@ class MatrixPlot(BasePlot):
     """
     def __init__(self, graph, node_order=None, node_size=None,
                  node_grouping=None, node_color=None, edge_width=None,
-                 edge_color=None, data_types=None):
+                 edge_color=None, data_types=None, nodeprops=None,
+                 edgeprops=None):
 
         # Initialize using BasePlot
         BasePlot.__init__(self, graph, node_order=node_order,
                           node_size=node_size, node_grouping=node_grouping,
                           node_color=node_color, edge_width=edge_width,
-                          edge_color=edge_color, data_types=data_types)
+                          edge_color=edge_color, data_types=data_types,
+                          nodeprops=nodeprops, edgeprops=edgeprops)
 
         # The following atribute is specific to MatrixPlots
         self.cmap = cmaps['continuous'].mpl_colormap
@@ -385,17 +408,19 @@ class MatrixPlot(BasePlot):
 
 class ArcPlot(BasePlot):
     """
-    Plotting object for CircosPlot.
+    Plotting object for ArcPlot.
     """
     def __init__(self, graph, node_order=None, node_size=None,
                  node_grouping=None, node_color=None, edge_width=None,
-                 edge_color=None, data_types=None):
+                 edge_color=None, data_types=None, nodeprops=None,
+                 edgeprops=None):
 
         # Initialize using BasePlot
         BasePlot.__init__(self, graph, node_order=node_order,
                           node_size=node_size, node_grouping=node_grouping,
                           node_color=node_color, edge_width=edge_width,
-                          edge_color=edge_color, data_types=data_types)
+                          edge_color=edge_color, data_types=data_types,
+                          nodeprops=nodeprops, edgeprops=edgeprops)
 
     def compute_node_positions(self):
         """
@@ -424,7 +449,7 @@ class ArcPlot(BasePlot):
             y = self.node_coords['y'][i]
             color = self.node_colors[i]
             node_patch = patches.Ellipse((x, y), node_r, node_r,
-                                         lw=0, color=color)
+                                         lw=0, color=color, zorder=2)
             self.ax.add_patch(node_patch)
 
     def draw_edges(self):
@@ -453,12 +478,14 @@ class ArcPlot(BasePlot):
             codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
 
             path = Path(verts, codes)
-            patch = patches.PathPatch(path, lw=1, **{'facecolor': 'none'})
+            patch = patches.PathPatch(path, lw=1, **self.edgeprops, zorder=1)
             self.ax.add_patch(patch)
 
     def draw(self):
         self.draw_nodes()
         self.draw_edges()
-        limits = (-1, len(self.nodes) + 1)
-        self.ax.set_xlim(*limits)
-        self.ax.set_ylim(*limits)
+        xlimits = (-1, len(self.nodes) + 1)
+        # halfwidth = len(self.nodes) + 1 / 2
+        # ylimits = (-halfwidth, halfwidth)
+        self.ax.set_xlim(*xlimits)
+        self.ax.set_ylim(*xlimits)
