@@ -40,7 +40,7 @@ setup(
     include_package_data=True,
     install_requires=requirements,
     license="MIT license",
-    zip_safe=False,
+    # zip_safe=False,
     keywords='nxviz',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
