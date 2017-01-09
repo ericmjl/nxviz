@@ -16,7 +16,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='nxviz',
-    version='0.2.7',
+    version='0.2.9',
     description="Graph Visualization Package",
     long_description=readme + '\n\n' + history,
     author="Eric J. Ma",
