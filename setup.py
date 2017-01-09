@@ -16,7 +16,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='nxviz',
-    version='0.2.4',
+    version='0.2.5',
     description="Graph Visualization Package",
     long_description=readme + '\n\n' + history,
     author="Eric J. Ma",
@@ -25,11 +25,9 @@ setup(
     packages=[
         'nxviz',
     ],
-    package_dir={'nxviz':
-                 'nxviz'},
+    package_dir={'nxviz': 'nxviz'},
     entry_points={
         'console_scripts': [
-            'nxviz=nxviz.cli:main'
         ]
     },
     include_package_data=True,

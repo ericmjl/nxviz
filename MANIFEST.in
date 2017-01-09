@@ -4,6 +4,7 @@ include HISTORY.rst
 include LICENSE
 include README.rst
 include requirements.txt
+recursive-include examples/*
 
 recursive-include tests *
 recursive-exclude * __pycache__
