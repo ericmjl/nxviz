@@ -14,14 +14,9 @@ with open('requirements.txt') as f:
     for l in f.readlines():
         requirements.append(l.strip('\n'))
 
-test_requirements = [
-    'hypothesis',
-    'pytest'
-]
-
 setup(
     name='nxviz',
-    version='0.2.3',
+    version='0.2.4',
     description="Graph Visualization Package",
     long_description=readme + '\n\n' + history,
     author="Eric J. Ma",
@@ -49,6 +44,5 @@ setup(
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
     ],
-    test_suite='tests',
-    tests_require=test_requirements
+    test_suite='tests'
 )
