@@ -1,4 +1,4 @@
-cryptography==1.5
+cryptography==1.7.1
 hypothesis==3.4.2
 matplotlib==1.5.3
 networkx==1.11
