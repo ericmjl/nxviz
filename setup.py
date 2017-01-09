@@ -16,7 +16,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='nxviz',
-    version='0.2.9',
+    version='0.2.10',
     description="Graph Visualization Package",
     long_description=readme + '\n\n' + history,
     author="Eric J. Ma",
@@ -35,11 +35,4 @@ setup(
     license="MIT license",
     zip_safe=False,
     keywords='nxviz',
-    classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Natural Language :: English',
-        'Programming Language :: Python :: 3',
-    ],
 )
