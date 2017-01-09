@@ -9,14 +9,21 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = []
-with open('requirements.txt') as f:
-    for l in f.readlines():
-        requirements.append(l.strip('\n'))
+requirements = [
+    'cryptography',
+    'hypothesis',
+    'matplotlib',
+    'networkx',
+    'numpy',
+    'palettable',
+    'pandas',
+    'pytest',
+    'polcart',
+]
 
 setup(
     name='nxviz',
-    version='0.2.10',
+    version='0.2.11',
     description="Graph Visualization Package",
     long_description=readme + '\n\n' + history,
     author="Eric J. Ma",
