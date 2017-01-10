@@ -19,7 +19,6 @@ install:
   - conda update -q conda
   - conda config --add channels conda-forge
 
-
   # Useful for debugging any issues with conda
   - conda info -a
 
