@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from setuptools import setup
 
 with open('README.rst') as readme_file:
@@ -33,14 +30,9 @@ setup(
         'nxviz',
     ],
     package_dir={'nxviz': 'nxviz'},
-    # entry_points={
-    #     'console_scripts': [
-    #     ]
-    # },
     include_package_data=True,
     install_requires=requirements,
     license="MIT license",
-    # zip_safe=False,
     keywords='nxviz',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
