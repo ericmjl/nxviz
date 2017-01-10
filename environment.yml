@@ -15,5 +15,5 @@ dependencies:
 - hypothesis
 - click
 - polcart
-- pip:
-  - coverage
+- pandas
+- coverage
