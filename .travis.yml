@@ -31,7 +31,7 @@ install:
 script:
   # Your test script goes here
   - pycodestyle .
-  - py.test
+  - bash run_tests.sh
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
