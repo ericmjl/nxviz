@@ -1,6 +1,6 @@
 cryptography
 hypothesis
-matplotlib
+matplotlib==1.5.3
 networkx
 numpy
 palettable
