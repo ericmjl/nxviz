@@ -3,7 +3,7 @@ hypothesis
 matplotlib
 networkx
 numpy
-palettable
+palettable==2.1.1
 pandas
 pytest
 polcart==2017.1.9.21.24
