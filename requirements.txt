@@ -1,6 +1,6 @@
 cryptography==1.7.1
 hypothesis==3.6.1
-matplotlib
+matplotlib==1.5.3
 networkx==1.11
 numpy
 palettable==2.1.1
