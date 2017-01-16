@@ -6,17 +6,10 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [
-    'cryptography',
-    'hypothesis',
-    'matplotlib',
-    'networkx',
-    'numpy',
-    'palettable',
-    'pandas',
-    'pytest',
-    'polcart',
-]
+requirements = []
+with open('requirements.txt') as rqmts:
+    for r in rqmts:
+        requirements.append(r.strip('\n'))
 
 setup(
     name='nxviz',
