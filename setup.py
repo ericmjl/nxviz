@@ -1,3 +1,4 @@
+from nxviz import __version__, __email__, __author__
 from setuptools import setup
 
 with open('README.rst') as readme_file:
@@ -20,11 +21,11 @@ requirements = [
 
 setup(
     name='nxviz',
-    version='0.2.11',
+    version=__version__,
     description="Graph Visualization Package",
     long_description=readme + '\n\n' + history,
-    author="Eric J. Ma",
-    author_email='ericmajinglong@gmail.com',
+    author=__author__,
+    author_email=__email__,
     url='https://github.com/ericmjl/nxviz',
     packages=[
         'nxviz',
