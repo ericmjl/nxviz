@@ -4,6 +4,6 @@ matplotlib
 networkx
 numpy
 palettable
-pandas
+pandas==0.19.2
 pytest
 polcart
