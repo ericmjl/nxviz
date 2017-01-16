@@ -21,7 +21,7 @@ requirements = [
 
 setup(
     name='nxviz',
-    version="0.3.0",
+    version="0.3.1",
     description="Graph Visualization Package",
     long_description=readme + '\n\n' + history,
     author="Eric J. Ma",
