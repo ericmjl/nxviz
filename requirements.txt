@@ -5,5 +5,5 @@ networkx==1.11
 numpy
 palettable==2.1.1
 pandas
-pytest
+pytest==3.0.5
 polcart==2017.1.9.21.24
