@@ -21,11 +21,11 @@ requirements = [
 
 setup(
     name='nxviz',
-    version=__version__,
+    version="0.3.0",
     description="Graph Visualization Package",
     long_description=readme + '\n\n' + history,
-    author=__author__,
-    author_email=__email__,
+    author="Eric J. Ma",
+    author_email="ericmajinglong@gmail.com",
     url='https://github.com/ericmjl/nxviz',
     packages=[
         'nxviz',
@@ -36,7 +36,6 @@ setup(
     license="MIT license",
     keywords='nxviz',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
