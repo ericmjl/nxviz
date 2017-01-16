@@ -6,4 +6,4 @@ numpy
 palettable
 pandas
 pytest
-polcart
+polcart==2017.1.9.21.24
