@@ -1,0 +1,9 @@
+cryptography
+hypothesis
+matplotlib
+networkx
+numpy
+palettable
+pandas
+pytest
+polcart
