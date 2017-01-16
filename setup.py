@@ -1,4 +1,3 @@
-from nxviz import __version__, __email__, __author__
 from setuptools import setup
 
 with open('README.rst') as readme_file:
