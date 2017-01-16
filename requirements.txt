@@ -2,7 +2,7 @@ cryptography==1.7.1
 hypothesis
 matplotlib
 networkx
-numpy
+numpy==1.12.0
 palettable==2.1.1
 pandas
 pytest
