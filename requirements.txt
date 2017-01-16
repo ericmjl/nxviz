@@ -4,6 +4,6 @@ matplotlib
 networkx==1.11
 numpy
 palettable==2.1.1
-pandas
+pandas==0.19.2
 pytest
 polcart==2017.1.9.21.24
