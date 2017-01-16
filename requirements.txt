@@ -1,7 +1,7 @@
 cryptography
 hypothesis
 matplotlib
-networkx
+networkx==1.11
 numpy
 palettable
 pandas
