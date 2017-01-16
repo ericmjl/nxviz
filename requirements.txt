@@ -1,5 +1,5 @@
 cryptography
-hypothesis
+hypothesis==3.6.1
 matplotlib
 networkx
 numpy
