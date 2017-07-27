@@ -8,6 +8,11 @@ import numpy as np
 def node_theta(nodelist, node):
     """
     Maps node to Angle.
+
+    :param nodelist: Nodelist from the graph.
+    :type nodelist: list.
+    :param node: The node of interest. Must be in the nodelist.
+    :returns: theta -- the angle of the node in radians.
     """
     assert len(nodelist) > 0, 'nodelist must be a list of items.'
     assert node in nodelist, 'node must be inside nodelist.'
@@ -21,6 +26,12 @@ def node_theta(nodelist, node):
 def get_cartesian(r, theta):
     """
     Returns the cartesian (x,y) coordinates of (r, theta).
+
+    :param r: Real-valued radius.
+    :type r: int, float.
+    :param theta: Angle
+    :type theta: int, float.
+    :returns: to_cartesian(r, theta)
     """
     return to_cartesian(r, theta)
 
