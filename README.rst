@@ -31,11 +31,7 @@ nxviz
     c.draw()
     plt.show()  # only needed in scripts
 
-
-Check out the examples for more details!
-
-* Free software: MIT license
-* Documentation: https://nxviz.readthedocs.io.
+* This is free software distributed under the MIT License.
 
 
 Features
