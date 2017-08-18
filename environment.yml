@@ -17,3 +17,5 @@ dependencies:
 - polcart
 - pandas
 - coverage
+- sphinx
+- palettable
