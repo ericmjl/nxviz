@@ -1,12 +1,13 @@
-from .geometry import node_theta, get_cartesian, circos_radius
-from .utils import (infer_data_type, num_discrete_groups, cmaps,
-                    is_data_diverging)
-from matplotlib.path import Path
-from matplotlib.cm import get_cmap
-
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
+from matplotlib.cm import get_cmap
+from matplotlib.path import Path
+
 import networkx as nx
+
+from .geometry import circos_radius, get_cartesian, node_theta
+from .utils import (cmaps, infer_data_type, is_data_diverging,
+                    num_discrete_groups)
 
 
 def despine(ax):
@@ -26,9 +27,39 @@ class BasePlot(object):
     keyword arguments specifying how nodes and edges should be styled and
     ordered.
 
-    An optional data_types dictionary can be passed in to bypass data type
+    An optional `data_types` dictionary can be passed in to bypass data type
     inference.
-    """
+
+    :param graph: A NetworkX graph object.
+    :type graph: `nx.Graph`, `nx.DiGraph`, `nx.MultiGraph`, `nx.MultiDiGraph`
+
+    :param node_order: The node attribute on which to specify the coloring of nodes.
+    :type node_order: `dict_key` (often `str`)
+
+    :param node_size: The node attribute on which to specify the size of nodes.
+    :type node_size: `dict_key` (often `str`)
+
+    :param node_grouping: The node attribute on which to specify the grouping position of nodes.
+    :type node_grouping: `dict_key` (often `str`)
+
+    :param node_color: The node attribute on which to specify the colour of nodes.
+    :type node_color: `dict_key` (often `str`)
+
+    :param edge_width: The edge attribute on which to specify the width of edges.
+    :type edge_with: `dict_key` (often `str`)
+
+    :param edge_color: The edge attribute on which to specify the colour of edges.
+    :type edge_color: `dict_key` (often `str`)
+
+    :param data_types: A mapping of node and edge data types that are stored.
+    :type data_types: `dict`
+
+    :param nodeprops: A `matplotlib`-compatible `props` dictionary.
+    :type nodeprops: `dict`
+
+    :param edgeprops: A `matplotlib-compatible `props` dictioanry.
+    :type edgeprops: `dict`
+    """  # noqa
     def __init__(self, graph, node_order=None, node_size=None,
                  node_grouping=None, node_color=None, edge_width=None,
                  edge_color=None, data_types=None, nodeprops=None,
@@ -89,14 +120,19 @@ class BasePlot(object):
     def check_data_types(self, data_types):
         """
         Checks the data_types passed into the Plot constructor and makes sure
-        that:
-        - the values passed in belong to 'ordinal', 'categorical', or
-          'continuous'.
+        that the values passed in belong to 'ordinal', 'categorical', or
+        'continuous'.
+
+        :param data_types: A dictionary mapping of data types.
+        :type data_types: `dict`
         """
         for k, v in data_types.items():
             assert v in ['ordinal', 'categorical', 'continuous']
 
     def draw(self):
+        """
+        Draws the Plot to screen.
+        """
         self.draw_nodes()
         self.draw_edges()
         self.ax.relim()

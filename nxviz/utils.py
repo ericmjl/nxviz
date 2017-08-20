@@ -6,6 +6,9 @@ def is_data_homogenous(data_container):
     Checks that all of the data in the container are of the same Python data
     type. This function is called in every other function below, and as such
     need not necessarily be called.
+
+    :param data_container: A generic container of data points.
+    :type data_container: `iterable`
     """
     data_types = set([type(i) for i in data_container])
     return len(data_types) == 1
@@ -17,6 +20,7 @@ def infer_data_type(data_container):
     continuous, categorical, or ordinal.
 
     For now, it is a one-to-one mapping as such:
+
     - str:   categorical
     - int:   ordinal
     - float: continuous
@@ -25,6 +29,10 @@ def infer_data_type(data_container):
     example, with a list of numbers, we can check whether the number of unique
     entries is less than or equal to 12, but has over 10000+ entries. This
     would be a good candidate for floats being categorical.
+
+    :param data_container: A generic container of data points.
+    :type data_container: `iterable`
+
     """
     # Defensive programming checks.
     # 0. Ensure that we are dealing with lists or tuples, and nothing else.
@@ -66,6 +74,9 @@ def is_data_diverging(data_container):
     We want to use this to check whether the data are diverging or not.
 
     This is a simple check, can be made much more sophisticated.
+
+    :param data_container: A generic container of data points.
+    :type data_container: `iterable`
     """
     assert infer_data_type(data_container) in ['ordinal', 'continuous'], \
         "Data type should be ordinal or continuous"
@@ -90,7 +101,8 @@ def is_groupable(data_container):
 
     By "groupable", we mean it is a 'categorical' or 'ordinal' variable.
 
-    If the data_container contains continuous variables, it'd be good to
+    :param data_container: A generic container of data points.
+    :type data_container: `iterable`
     """
     is_groupable = False
     if infer_data_type(data_container) in ['categorical', 'ordinal']:
@@ -101,6 +113,9 @@ def is_groupable(data_container):
 def num_discrete_groups(data_container):
     """
     Returns the number of discrete groups present in a data container.
+
+    :param data_container: A generic container of data points.
+    :type data_container: `iterable`
     """
     return len(set(data_container))
 
