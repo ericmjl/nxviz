@@ -1,4 +1,4 @@
-from palettable.colorbrewer import qualitative, sequential, diverging
+from palettable.colorbrewer import diverging, qualitative, sequential
 
 
 def is_data_homogenous(data_container):

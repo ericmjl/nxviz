@@ -66,7 +66,7 @@ def circos_radius(n_nodes, node_r):
     :type node_r: float
     :returns: Origin-to-node centre radius.
     """
-    A = 2 * np.pi / n_nodes
-    B = (np.pi - A) / 2
+    A = 2 * np.pi / n_nodes  # noqa
+    B = (np.pi - A) / 2  # noqa
     a = 2 * node_r
     return a * np.sin(B) / np.sin(A)
