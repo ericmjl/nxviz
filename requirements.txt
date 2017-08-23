@@ -5,6 +5,6 @@ networkx==1.11
 numpy==1.13.1
 palettable==2.1.1
 pandas==0.19.2
-pytest==3.0.6
+pytest==3.2.1
 polcart==2017.1.16.14.45
 sphinxcontrib-fulltoc==1.2.0
