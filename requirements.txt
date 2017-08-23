@@ -3,7 +3,7 @@ hypothesis==3.21.0
 matplotlib==2.0.2
 networkx==1.11
 numpy==1.13.1
-palettable==2.1.1
+palettable==3.0.0
 pandas==0.20.3
 pytest==3.2.1
 polcart==2017.1.16.14.45
