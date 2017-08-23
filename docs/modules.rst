@@ -1,4 +1,4 @@
-nxviz
+API Documentation
 =====
 
 .. toctree::
