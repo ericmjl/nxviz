@@ -21,8 +21,8 @@ nxviz
      :target: https://pyup.io/repos/github/ericmjl/nxviz/
      :alt: Updates
 
- .. image:: https://pyup.io/repos/github/ericmjl/polcart/python-3-shield.svg
-      :target: https://pyup.io/repos/github/ericmjl/polcart/
+ .. image:: https://pyup.io/repos/github/ericmjl/nxviz/python-3-shield.svg
+      :target: https://pyup.io/repos/github/ericmjl/nxviz/
       :alt: Python 3
 
 
