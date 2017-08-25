@@ -4,21 +4,22 @@ channels:
 - defaults
 - ericmjl
 dependencies:
-- matplotlib=2.0.2
-- networkx=1.11
-- numpy=1.13.1
+- python>=3.5
+- matplotlib>=2.0.0
+- networkx>=1.11
+- numpy>=1.13.1
 - pip
-- python=3.5
 - setuptools
 - pycodestyle
 - click
-- pandas=0.20.3
+- pandas>=0.20.0
 - coverage
 - sphinx
 - cython
 - palettable=3.0.0
-- sphinxcontrib-fulltoc=1.2.0
 - cryptography=2.0.3
 - hypothesis=3.6.1
 - pytest=3.2.1
 - polcart=2017.1.16.14.45
+- pip:
+    - sphinxcontrib-fulltoc==1.2.0
