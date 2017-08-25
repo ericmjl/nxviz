@@ -16,6 +16,7 @@ dependencies:
 - coverage
 - sphinx
 - palettable=2.1.1
+- cython
 - pip:
     - sphinxcontrib-fulltoc==1.2.0
     - cryptography==1.7.2
