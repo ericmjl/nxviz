@@ -11,6 +11,7 @@ Welcome to nxviz's documentation!
 .. toctree::
    :maxdepth: 2
 
+   contents
    installation
    usage
    contributing

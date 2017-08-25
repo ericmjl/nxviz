@@ -1,3 +1,4 @@
-.. README
-..
-.. .. include:: ../README.rst
+README
+======
+
+.. include:: ../README.rst

@@ -22,6 +22,8 @@ import sys
 # sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('../'))
 
+# Automock imports to prevent build errors on ReadTheDocs
+autodoc_mock_imports = ['_tkinter']
 
 # -- General configuration ------------------------------------------------
 
