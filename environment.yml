@@ -17,9 +17,8 @@ dependencies:
 - sphinx
 - cython
 - palettable=3.0.0
-- pip:
-    - sphinxcontrib-fulltoc==1.2.0
-    - cryptography==2.0.3
-    - hypothesis==3.6.1
-    - pytest==3.2.1
-    - polcart==2017.1.16.14.45
+- sphinxcontrib-fulltoc=1.2.0
+- cryptography=2.0.3
+- hypothesis=3.6.1
+- pytest=3.2.1
+- polcart=2017.1.16.14.45
