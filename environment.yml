@@ -22,4 +22,4 @@ dependencies:
     - hypothesis==3.6.1
     - pytest==3.0.6
     - polcart==2017.1.16.14.45
-    - palettable=3.2.1
+    - palettable==3.2.1
