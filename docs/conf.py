@@ -22,9 +22,6 @@ import sys
 # sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('../'))
 
-# Automock imports to prevent build errors on ReadTheDocs
-autodoc_mock_imports = ['_tkinter']
-
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -176,3 +173,8 @@ texinfo_documents = [
      author, 'nxviz', 'One line description of project.',
      'Miscellaneous'),
 ]
+
+
+# Use Agg backend to make builds on ReadTheDocs work.
+import matplotlib  # noqa
+matplotlib.use('agg')
