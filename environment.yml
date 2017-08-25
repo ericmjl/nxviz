@@ -14,6 +14,7 @@ dependencies:
 - click
 - pandas>=0.20.0
 - coverage
+- pytest-cov
 - sphinx
 - cython
 - palettable=3.0.0
