@@ -21,6 +21,10 @@ nxviz
      :target: https://pyup.io/repos/github/ericmjl/nxviz/
      :alt: Updates
 
+ .. image:: https://pyup.io/repos/github/ericmjl/polcart/python-3-shield.svg
+      :target: https://pyup.io/repos/github/ericmjl/polcart/
+      :alt: Python 3
+
 
 `nxviz` is a graph visualization package for NetworkX. With nxviz, you can create beautiful graph visualizations by a **declarative** API. Here's an example.
 
