@@ -21,6 +21,7 @@ dependencies:
 - hypothesis
 - pytest
 - cryptography
+- pyyaml
 - pip:
     - sphinxcontrib-fulltoc
     - pipreqs
