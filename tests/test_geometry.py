@@ -1,8 +1,11 @@
-from nxviz.geometry import (circos_radius, node_theta, get_cartesian,
-                            correct_negative_angle)
-from hypothesis import given, assume
-from hypothesis.strategies import lists, integers, floats
+from hypothesis import assume, given
+from hypothesis.strategies import floats, integers, lists
+
 import numpy as np
+
+from nxviz.geometry import (circos_radius, correct_negative_angle,
+                            get_cartesian, node_theta,)
+
 import polcart
 
 
@@ -14,7 +17,7 @@ def test_circos_radius():
     n_nodes = 10
     node_r = 1
 
-    A = 2 * np.pi / n_nodes
+    A = 2 * np.pi / n_nodes  # noqa
 
     circ_r = 2 * node_r / np.sqrt(2 * (1 - np.cos(A)))
 

@@ -1,5 +1,4 @@
 hypothesis==3.21.2
-polcart==2017.8.25.10.44
 pytest==3.2.1
 cryptography==2.0.3
 pandas==0.20.3

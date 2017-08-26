@@ -1,5 +1,8 @@
-from nxviz.utils import (is_data_homogenous, infer_data_type,
-                         is_data_diverging, is_groupable, num_discrete_groups)
+from nxviz.utils import (infer_data_type,
+                         is_data_diverging,
+                         is_data_homogenous,
+                         is_groupable,
+                         num_discrete_groups)
 import pytest
 
 categorical = ['sun', 'moon', 'light']
