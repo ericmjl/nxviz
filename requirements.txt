@@ -3,7 +3,7 @@ pytest==3.2.1
 cryptography==2.0.3
 pandas==0.20.3
 matplotlib==2.0.2
-palettable==3.0.0
+palettable==3.1.0
 networkx==1.11
 setuptools==36.3.0
 numpy==1.13.1
