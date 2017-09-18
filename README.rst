@@ -37,12 +37,20 @@ nxviz
 
 * This is free software distributed under the MIT License.
 
-
 Features
 --------
 
 * Declarative API.
 * Works with NetworkX, one of the more popular graph libraries in Python.
+
+Feature Requests
+----------------
+
+If you have a feature request, please post it as an issue on the GitHub repository issue_ tracker. Even better, put in a PR for it! I am more than happy to guide you through the codebase so that you can put in a contribution to the codebase - and I'll give you a digital `nxviz` contributor badge that you can put on your personal website, as a way of saying thanks!
+
+Because nxviz is currently maintained by volunteers and has no fiscal support, any feature requests will be prioritized according to what maintainers encounter as a need in our day-to-day jobs. Please temper expectations accordingly.
+
+.. _issue: https://github.com/ericmjl/nxviz/issues
 
 Credits
 ---------

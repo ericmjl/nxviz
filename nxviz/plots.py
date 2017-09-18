@@ -9,6 +9,10 @@ from .geometry import circos_radius, get_cartesian, node_theta
 from .utils import (cmaps, infer_data_type, is_data_diverging,
                     num_discrete_groups)
 
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
 
 def despine(ax):
     for spine in ax.spines:
@@ -79,6 +83,8 @@ class BasePlot(object):
 
         # Set node colors
         self.node_color = node_color
+        self.sm = None  # sm -> for scalarmappable. See https://stackoverflow.com/questions/8342549/matplotlib-add-colorbar-to-a-sequence-of-line-plots  # noqa
+        logging.debug(f'INIT: {self.sm}')
         if self.node_color:
             self.node_colors = []
             self.compute_node_colors()
@@ -132,16 +138,25 @@ class BasePlot(object):
     def draw(self):
         """
         Draws the Plot to screen.
+
+        If there is a continuous datatype for the nodes, it will be reflected
+        in self.sm being constructed (in `compute_node_colors`). It will then
+        automatically add in a colorbar to the plot and scale the plot axes
+        accordingly.
         """
         self.draw_nodes()
         self.draw_edges()
+        logging.debug(f'DRAW: {self.sm}')
+        if self.sm:
+            self.figure.subplots_adjust(right=0.8)
+            cax = self.figure.add_axes([0.85, 0.2, 0.05, 0.6])
+            self.figure.colorbar(self.sm, cax=cax)
         self.ax.relim()
         self.ax.autoscale_view()
+        self.ax.set_aspect('equal')
 
     def compute_node_colors(self):
-        """
-        Computes the node colors.
-        """
+        """Compute the node colors. Also computes the colorbar."""
         data = [self.graph.node[n][self.node_color] for n in self.nodes]
         data_reduced = sorted(list(set(data)))
         dtype = infer_data_type(data)
@@ -157,6 +172,17 @@ class BasePlot(object):
         for d in data:
             idx = data_reduced.index(d) / n_grps
             self.node_colors.append(cmap(idx))
+
+        # Add colorbar if required.
+        logging.debug(f'length of data_reduced: {len(data_reduced)}')
+        logging.debug(f'dtype: {dtype}')
+        if len(data_reduced) > 1 and dtype == 'continuous':
+            self.sm = plt.cm.ScalarMappable(cmap=cmap,
+                                            norm=plt.Normalize(vmin=min(data_reduced),  # noqa
+                                                               vmax=max(data_reduced)   # noqa
+                                                               )
+                                            )
+            self.sm._A = []
 
     def compute_node_positions(self):
         """
@@ -436,6 +462,10 @@ class MatrixPlot(BasePlot):
     def draw(self):
         """
         Draws the plot to screen.
+
+        Note to self: Do NOT call super(MatrixPlot, self).draw(); the
+        underlying logic for drawing here is completely different from other
+        plots, and as such necessitates a different implementation.
         """
         matrix = nx.to_numpy_matrix(self.graph, nodelist=self.nodes)
         self.ax.matshow(matrix, cmap=self.cmap)
@@ -517,10 +547,7 @@ class ArcPlot(BasePlot):
             self.ax.add_patch(patch)
 
     def draw(self):
-        self.draw_nodes()
-        self.draw_edges()
+        super(ArcPlot, self).draw()
         xlimits = (-1, len(self.nodes) + 1)
-        # halfwidth = len(self.nodes) + 1 / 2
-        # ylimits = (-halfwidth, halfwidth)
         self.ax.set_xlim(*xlimits)
         self.ax.set_ylim(*xlimits)
