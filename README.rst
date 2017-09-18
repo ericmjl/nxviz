@@ -37,6 +37,13 @@ nxviz
 
 * This is free software distributed under the MIT License.
 
+Requirements
+------------
+
+For requirements, consult the `requirements.txt` file in the GitHub repository. As a matter of practice, nxviz development will try (where relevant) to take advantage of the latest Python features.
+
+As of 18 September 2017, this means Python 3.6 is the "officially" supported version, as there are places where we use f-string formatting to simplify logging and debugging.
+
 Features
 --------
 
