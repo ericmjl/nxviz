@@ -23,6 +23,7 @@ dependencies:
 - pytest
 - cryptography
 - pyyaml
+- twine
 - pip:
     - sphinxcontrib-fulltoc
     - pipreqs
