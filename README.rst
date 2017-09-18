@@ -40,24 +40,23 @@ nxviz
 Requirements
 ------------
 
-For requirements, consult the `requirements.txt` file in the GitHub repository. As a matter of practice, nxviz development will try (where relevant) to take advantage of the latest Python features.
-
-As of 18 September 2017, this means Python 3.6 is the "officially" supported version, as there are places where we use f-string formatting to simplify logging and debugging.
+For requirements, consult the `requirements.txt` file in the GitHub repository. As a matter of practice, nxviz development will try (where relevant) to take advantage of the latest Python features. As of 18 September 2017, this means Python 3.6 is the "officially" supported version, as there are places where we use f-string formatting to simplify logging and debugging.
 
 Features
 --------
 
-* Declarative API.
+* Declarative API. 
 * Works with NetworkX, one of the more popular graph libraries in Python.
 
 Feature Requests
 ----------------
 
-If you have a feature request, please post it as an issue on the GitHub repository issue_ tracker. Even better, put in a PR for it! I am more than happy to guide you through the codebase so that you can put in a contribution to the codebase - and I'll give you a digital `nxviz` contributor badge that you can put on your personal website, as a way of saying thanks!
+If you have a feature request, please post it as an issue on the GitHub repository issue_ tracker. Even better, put in a PR_ for it! I am more than happy to guide you through the codebase so that you can put in a contribution to the codebase - and I'll give you a digital `nxviz` contributor badge that you can put on your personal website, as a way of saying thanks!
 
 Because nxviz is currently maintained by volunteers and has no fiscal support, any feature requests will be prioritized according to what maintainers encounter as a need in our day-to-day jobs. Please temper expectations accordingly.
 
 .. _issue: https://github.com/ericmjl/nxviz/issues
+.. _PR: https://github.com/ericmjl/nxviz/pulls
 
 Credits
 ---------
