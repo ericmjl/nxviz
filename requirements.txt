@@ -8,4 +8,4 @@ networkx==1.11
 setuptools==36.4.0
 numpy==1.13.1
 PyYAML==3.12
-sphinxcontrib
+sphinxcontrib-fulltoc
