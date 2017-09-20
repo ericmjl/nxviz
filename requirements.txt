@@ -4,7 +4,7 @@ cryptography==2.0.3
 pandas==0.20.3
 matplotlib==2.0.2
 palettable==3.1.0
-networkx==1.11
+networkx==2.0
 setuptools==36.5.0
 numpy==1.13.1
 PyYAML==3.12
