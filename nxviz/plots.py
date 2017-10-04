@@ -84,7 +84,7 @@ class BasePlot(object):
         # Set node colors
         self.node_color = node_color
         self.sm = None  # sm -> for scalarmappable. See https://stackoverflow.com/questions/8342549/matplotlib-add-colorbar-to-a-sequence-of-line-plots  # noqa
-        logging.debug(f'INIT: {self.sm}')
+        logging.debug('INIT: {0}'.format(self.sm))
         if self.node_color:
             self.node_colors = []
             self.compute_node_colors()
@@ -146,7 +146,7 @@ class BasePlot(object):
         """
         self.draw_nodes()
         self.draw_edges()
-        logging.debug(f'DRAW: {self.sm}')
+        logging.debug('DRAW: {0}'.format(self.sm))
         if self.sm:
             self.figure.subplots_adjust(right=0.8)
             cax = self.figure.add_axes([0.85, 0.2, 0.05, 0.6])
@@ -174,8 +174,8 @@ class BasePlot(object):
             self.node_colors.append(cmap(idx))
 
         # Add colorbar if required.
-        logging.debug(f'length of data_reduced: {len(data_reduced)}')
-        logging.debug(f'dtype: {dtype}')
+        logging.debug('length of data_reduced: {0}'.format(len(data_reduced)))
+        logging.debug('dtype: {0}'.format(dtype))
         if len(data_reduced) > 1 and dtype == 'continuous':
             self.sm = plt.cm.ScalarMappable(cmap=cmap,
                                             norm=plt.Normalize(vmin=min(data_reduced),  # noqa

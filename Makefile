@@ -1,7 +1,7 @@
 SHELL=/bin/bash
 
 test:
-	py.test --cov --cov-report term-missing -v --doctest-modules
+	py.test -v # --doctest-modules  # --cov --cov-report term-missing 
 
 env-create:
 	conda env create -f environment.yml
