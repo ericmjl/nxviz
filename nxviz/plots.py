@@ -71,7 +71,7 @@ class BasePlot(object):
         super(BasePlot, self).__init__()
         # Set graph object
         self.graph = graph
-        self.nodes = graph.nodes()  # keep track of nodes separately.
+        self.nodes = list(graph.nodes())  # keep track of nodes separately.
 
         # Set node arrangement
         self.node_order = node_order
