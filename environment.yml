@@ -6,7 +6,7 @@ channels:
 dependencies:
 - python=3.6
 - matplotlib
-- networkx
+- networkx=2.0
 - numpy
 - pip
 - setuptools
