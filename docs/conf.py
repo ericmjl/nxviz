@@ -19,6 +19,12 @@
 #
 import os
 import sys
+
+# Use Agg backend to make builds on ReadTheDocs work.
+import matplotlib  # noqa
+
+matplotlib.use('agg')
+
 # sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('../'))
 
@@ -173,8 +179,3 @@ texinfo_documents = [
      author, 'nxviz', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-# Use Agg backend to make builds on ReadTheDocs work.
-import matplotlib  # noqa
-matplotlib.use('agg')
