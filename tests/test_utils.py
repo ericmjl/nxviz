@@ -1,9 +1,7 @@
-from nxviz.utils import (infer_data_type,
-                         is_data_diverging,
-                         is_data_homogenous,
-                         is_groupable,
-                         num_discrete_groups)
 import pytest
+
+from nxviz.utils import (infer_data_type, is_data_diverging,
+                         is_data_homogenous, is_groupable, num_discrete_groups)
 
 categorical = ['sun', 'moon', 'light']
 ordinal = [1, 2, 3, 4, 5]

@@ -2,10 +2,12 @@
 Displays a NetworkX barbell graph to screen using a ArcPlot.
 """
 
-from nxviz.plots import ArcPlot
 from random import choice
-import networkx as nx
+
 import matplotlib.pyplot as plt
+import networkx as nx
+
+from nxviz.plots import ArcPlot
 
 G = nx.barbell_graph(m1=10, m2=3)
 for n, d in G.nodes(data=True):

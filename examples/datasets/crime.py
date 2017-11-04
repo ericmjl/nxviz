@@ -1,8 +1,11 @@
-import pandas as pd
-import networkx as nx
-import matplotlib.pyplot as plt
 from os import path as osp
+
+import matplotlib.pyplot as plt
+import networkx as nx
+import pandas as pd
+
 from nxviz.plots import CircosPlot
+
 curr_path = osp.dirname(osp.abspath(__file__))
 
 

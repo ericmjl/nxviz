@@ -7,9 +7,9 @@ the following issue:
     https://github.com/ericmjl/nxviz/issues/160
 """
 
-from nxviz import CircosPlot, MatrixPlot, ArcPlot
 import networkx as nx
 
+from nxviz import ArcPlot, CircosPlot, MatrixPlot
 
 G = nx.erdos_renyi_graph(n=20, p=0.2)
 

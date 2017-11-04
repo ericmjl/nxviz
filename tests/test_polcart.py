@@ -1,8 +1,7 @@
-from hypothesis import assume, given
-from hypothesis.strategies import floats
-
 import numpy as np
 
+from hypothesis import assume, given
+from hypothesis.strategies import floats
 from nxviz.polcart import (to_cartesian, to_degrees, to_polar,
                            to_proper_degrees, to_proper_radians, to_radians)
 

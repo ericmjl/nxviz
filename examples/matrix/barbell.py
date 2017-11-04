@@ -6,9 +6,10 @@ Features of this example:
 - Styling matrix plot with different colormap.
 """
 
-from nxviz.plots import MatrixPlot
-import networkx as nx
 import matplotlib.pyplot as plt
+import networkx as nx
+
+from nxviz.plots import MatrixPlot
 
 G = nx.barbell_graph(m1=10, m2=3)
 

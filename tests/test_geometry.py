@@ -1,12 +1,10 @@
-from hypothesis import assume, given
-from hypothesis.strategies import floats, integers, lists
-
 import numpy as np
 
 import nxviz.polcart as polcart
-
+from hypothesis import assume, given
+from hypothesis.strategies import floats, integers, lists
 from nxviz.geometry import (circos_radius, correct_negative_angle,
-                            get_cartesian, node_theta,)
+                            get_cartesian, node_theta)
 
 
 def test_circos_radius():
