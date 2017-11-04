@@ -1,4 +1,3 @@
-import logging
 
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
@@ -9,6 +8,8 @@ from matplotlib.path import Path
 from .geometry import circos_radius, get_cartesian, node_theta
 from .utils import (cmaps, infer_data_type, is_data_diverging,
                     num_discrete_groups)
+
+import logging
 
 logging.basicConfig(level=logging.INFO)
 
