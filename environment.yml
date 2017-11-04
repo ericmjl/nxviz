@@ -27,3 +27,4 @@ dependencies:
 - pip:
     - sphinxcontrib-fulltoc
     - pipreqs
+    - isort
