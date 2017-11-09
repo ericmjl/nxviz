@@ -49,6 +49,9 @@ class BasePlot(object):
     :param node_color: The node attribute on which to specify the colour of nodes.
     :type node_color: `dict_key` (often `str`)
 
+    :param node_labels: Boolean, whether to use node objects as labels or not.
+    :type node_labels: `bool`
+
     :param edge_width: The edge attribute on which to specify the width of edges.
     :type edge_with: `dict_key` (often `str`)
 
@@ -65,9 +68,9 @@ class BasePlot(object):
     :type edgeprops: `dict`
     """  # noqa
     def __init__(self, graph, node_order=None, node_size=None,
-                 node_grouping=None, node_color=None, edge_width=None,
-                 edge_color=None, data_types=None, nodeprops=None,
-                 edgeprops=None):
+                 node_grouping=None, node_color=None, node_labels=None,
+                 edge_width=None, edge_color=None, data_types=None,
+                 nodeprops=None, edgeprops=None):
         super(BasePlot, self).__init__()
         # Set graph object
         self.graph = graph
@@ -90,6 +93,7 @@ class BasePlot(object):
             self.compute_node_colors()
         else:
             self.node_colors = ['blue'] * len(self.nodes)
+        self.node_labels = node_labels
 
         # Set edge properties
         self.edge_width = edge_width
@@ -122,6 +126,9 @@ class BasePlot(object):
 
         # Compute each node's positions.
         self.compute_node_positions()
+
+        # Conditionally compute node label positions.
+        self.compute_node_label_positions()
 
     def check_data_types(self, data_types):
         """
@@ -192,6 +199,16 @@ class BasePlot(object):
         """
         pass
 
+    def compute_node_label_positions(self):
+        """
+        Computes the positions of each node's labels on the plot. The
+        horizontal and vertical alignment of the text varies according to the
+        location.
+
+        Needs to be implemented for each plot type.
+        """
+        pass
+
     def draw_nodes(self):
         """
         Renders the nodes to the plot or screen.
@@ -235,15 +252,16 @@ class CircosPlot(BasePlot):
     Plotting object for CircosPlot.
     """
     def __init__(self, graph, node_order=None, node_size=None,
-                 node_grouping=None, node_color=None, edge_width=None,
-                 edge_color=None, data_types=None, nodeprops=None,
-                 edgeprops=None):
+                 node_grouping=None, node_color=None, node_labels=None,
+                 edge_width=None, edge_color=None, data_types=None,
+                 nodeprops=None, edgeprops=None):
 
         # Initialize using BasePlot
         BasePlot.__init__(self, graph, node_order=node_order,
                           node_size=node_size, node_grouping=node_grouping,
-                          node_color=node_color, edge_width=edge_width,
-                          edge_color=edge_color, data_types=data_types,
+                          node_color=node_color, node_labels=node_labels,
+                          edge_width=edge_width, edge_color=edge_color,
+                          data_types=data_types,
                           nodeprops=nodeprops, edgeprops=edgeprops)
 
     def compute_node_positions(self):
@@ -263,6 +281,44 @@ class CircosPlot(BasePlot):
             ys.append(y)
         self.node_coords = {'x': xs, 'y': ys}
 
+    def compute_node_label_positions(self):
+        """
+        Uses the get_cartesian function to compute the positions of each node
+        label in the Circos plot.
+
+        This method is always called after the compute_node_positions
+        method, so that the plot_radius is pre-computed.
+        """
+        xs = []
+        ys = []
+        has = []
+        vas = []
+        for node in self.nodes:
+            theta = node_theta(self.nodes, node)
+            radius = self.plot_radius + self.nodeprops['radius']
+
+            x, y = get_cartesian(r=radius, theta=theta)
+
+            # Computes the text alignment
+            if x == 0:
+                ha = 'center'
+            elif x > 0:
+                ha = 'left'
+            else:
+                ha = 'right'
+            if y == 0:
+                va = 'middle'
+            elif y > 0:
+                va = 'bottom'
+            else:
+                va = 'top'
+            xs.append(x)
+            ys.append(y)
+            has.append(ha)
+            vas.append(va)
+        self.node_label_coords = {'x': xs, 'y': ys}  # node label coordinates
+        self.node_label_aligns = {'has': has, 'vas': vas}  # node label alignments  # noqa
+
     def draw_nodes(self):
         """
         Renders nodes to the figure.
@@ -277,6 +333,14 @@ class CircosPlot(BasePlot):
                                         lw=lw, color=color,
                                         zorder=2)
             self.ax.add_patch(node_patch)
+            if self.node_labels:
+                label_x = self.node_label_coords['x'][i]
+                label_y = self.node_label_coords['y'][i]
+                label_ha = self.node_label_aligns['has'][i]
+                label_va = self.node_label_aligns['vas'][i]
+                self.ax.text(s=node,
+                             x=label_x, y=label_y,
+                             ha=label_ha, va=label_va)
 
     def draw_edges(self):
         """
