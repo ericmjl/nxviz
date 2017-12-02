@@ -251,18 +251,6 @@ class CircosPlot(BasePlot):
     """
     Plotting object for CircosPlot.
     """
-    def __init__(self, graph, node_order=None, node_size=None,
-                 node_grouping=None, node_color=None, node_labels=None,
-                 edge_width=None, edge_color=None, data_types=None,
-                 nodeprops=None, edgeprops=None):
-
-        # Initialize using BasePlot
-        BasePlot.__init__(self, graph, node_order=node_order,
-                          node_size=node_size, node_grouping=node_grouping,
-                          node_color=node_color, node_labels=node_labels,
-                          edge_width=edge_width, edge_color=edge_color,
-                          data_types=data_types,
-                          nodeprops=nodeprops, edgeprops=edgeprops)
 
     def compute_node_positions(self):
         """
@@ -539,17 +527,6 @@ class ArcPlot(BasePlot):
     """
     Plotting object for ArcPlot.
     """
-    def __init__(self, graph, node_order=None, node_size=None,
-                 node_grouping=None, node_color=None, edge_width=None,
-                 edge_color=None, data_types=None, nodeprops=None,
-                 edgeprops=None):
-
-        # Initialize using BasePlot
-        BasePlot.__init__(self, graph, node_order=node_order,
-                          node_size=node_size, node_grouping=node_grouping,
-                          node_color=node_color, edge_width=edge_width,
-                          edge_color=edge_color, data_types=data_types,
-                          nodeprops=nodeprops, edgeprops=edgeprops)
 
     def compute_node_positions(self):
         """
