@@ -1,7 +1,7 @@
 hypothesis==3.42.2
 pytest==3.3.1
 cryptography==2.1.4
-pandas==0.21.0
+pandas==0.21.1
 matplotlib==2.1.0
 palettable==3.1.0
 networkx==2.0
