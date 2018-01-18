@@ -70,7 +70,7 @@ class BasePlot(object):
     def __init__(self, graph, node_order=None, node_size=None,
                  node_grouping=None, node_color=None, node_labels=None,
                  edge_width=None, edge_color=None, data_types=None,
-                 nodeprops=None, edgeprops=None):
+                 nodeprops=None, edgeprops=None, **kwargs):
         super(BasePlot, self).__init__()
         # Set graph object
         self.graph = graph
@@ -106,7 +106,10 @@ class BasePlot(object):
             self.check_data_types(data_types)
             self.data_types = data_types
 
-        self.figure = plt.figure(figsize=(6, 6))
+        figsize = (6, 6)
+        if 'figsize' in kwargs.keys():
+            figsize = kwargs['figsize']
+        self.figure = plt.figure(figsize=figsize)
         self.ax = self.figure.add_subplot(1, 1, 1)
         despine(self.ax)
 

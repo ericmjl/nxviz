@@ -24,3 +24,7 @@ def test_matrix_plot():
 
 def test_arc_plot():
     a = ArcPlot(G)
+
+
+def test_plot_size():
+    c = CircosPlot(G, figsize=(3, 3))
