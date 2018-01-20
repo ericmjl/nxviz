@@ -22,6 +22,7 @@ def test_circos_radius():
     assert np.allclose(circ_r, circos_radius(n_nodes, node_r))
 
 
+@settings(perform_health_check=False)
 @given(lists(integers()), integers())
 def test_node_theta(nodelist, node):
     """
