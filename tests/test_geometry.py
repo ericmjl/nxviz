@@ -1,7 +1,7 @@
 import numpy as np
 
 import nxviz.polcart as polcart
-from hypothesis import assume, given
+from hypothesis import assume, given, settings
 from hypothesis.strategies import floats, integers, lists
 from nxviz.geometry import (circos_radius, correct_negative_angle,
                             get_cartesian, node_theta)
@@ -49,6 +49,7 @@ def test_get_cartesian(r, theta):
     assert get_cartesian(r, theta) == polcart.to_cartesian(r, theta)
 
 
+@settings(perform_health_check=False)
 @given(floats())
 def test_correct_negative_angle(angle):
 

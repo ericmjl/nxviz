@@ -1,11 +1,12 @@
 import numpy as np
 
-from hypothesis import assume, given
+from hypothesis import assume, given, settings
 from hypothesis.strategies import floats
 from nxviz.polcart import (to_cartesian, to_degrees, to_polar,
                            to_proper_degrees, to_proper_radians, to_radians)
 
 
+@settings(perform_health_check=False)
 @given(floats(), floats())
 def test_convert_xy(x, y):
     assume(x != 0 and y != 0)
@@ -26,6 +27,7 @@ def test_convert_xy(x, y):
     assert np.allclose(y, y_new)
 
 
+@settings(perform_health_check=False)
 @given(floats(), floats())
 def test_convert_rt(r, theta):
     assume(r > 0.01 and r < 1E6)
