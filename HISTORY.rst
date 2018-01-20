@@ -2,6 +2,14 @@
 History
 =======
 
+0.3.5 (2018-01-20)
+------------------
+
+* Disabled health checks on certain tests.
+* Added ability to configure plot size.
+* Added docs on preparing a new release.
+* Updated dependencies.
+
 0.3.2 (2017-09-18)
 ------------------
 
