@@ -30,6 +30,29 @@ def make_graph_for_grouping():
     return G
 
 
+def make_graph_for_edges():
+
+    nodelist = [('a'),
+                ('b'),
+                ('c'),
+                ('d'),
+                ('e'),
+                ('f')
+                ]
+    edgelist = [('a', 'b', {'weight': 0.1}),
+                ('a', 'c', {'weight': 0.2}),
+                ('b', 'd', {'weight': 0.6}),
+                ('c', 'd', {'weight': 0.7}),
+                ('e', 'd', {'weight': 0.8}),
+                ('e', 'f', {'weight': 1.0}),
+                ]
+
+    G = nx.Graph()  # noqa
+    G.add_nodes_from(nodelist)
+    G.add_edges_from(edgelist)
+    return G
+
+
 def test_init_group_nodes():
     """
     Tests initialization with grouping of nodes.
@@ -114,3 +137,20 @@ def test_init_node_colors():
     G = make_graph_for_grouping()  # noqa
     b = BasePlot(graph=G)
     assert len(set(b.node_colors)) == 1
+
+
+def test_init_edge_colors():
+    """
+    Does two checks:
+    1. If edge_color is not passed in as a keyword argument, check that
+       self.edge_colors is a list of 'blue', of length (number of nodes).
+    2. If edge_color is passed in as a keyword argument, check that
+       self.node_colors is a list with more than one element.
+    """
+    G = make_graph_for_edges()  # noqa
+    b = BasePlot(graph=G, edge_color="weight")
+    assert len(set(b.edge_colors)) > 1
+
+    G = make_graph_for_grouping()  # noqa
+    b = BasePlot(graph=G)
+    assert len(set(b.edge_colors)) == 1
