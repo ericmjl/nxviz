@@ -24,6 +24,7 @@ dependencies:
 - cryptography
 - pyyaml
 - twine
+- seaborn
 - pip:
     - sphinxcontrib-fulltoc
     - pipreqs

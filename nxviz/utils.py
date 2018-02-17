@@ -1,4 +1,5 @@
 from palettable.colorbrewer import diverging, qualitative, sequential
+from seaborn import cubehelix_palette
 
 
 def is_data_homogenous(data_container):
@@ -130,4 +131,6 @@ cmaps = {
     'Accent_8': qualitative.Accent_8,
     'continuous': sequential.YlGnBu_9,
     'diverging': diverging.RdBu_11,
+    'weights': cubehelix_palette(50, hue=0.05, rot=0, light=0.9, dark=0,
+                                 as_cmap=True)
 }
