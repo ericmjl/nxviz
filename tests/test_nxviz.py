@@ -154,3 +154,5 @@ def test_init_edge_colors():
     G = make_graph_for_grouping()  # noqa
     b = BasePlot(graph=G)
     assert len(set(b.edge_colors)) == 1
+
+    
