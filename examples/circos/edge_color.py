@@ -11,7 +11,7 @@ nodelist = [('a'),
             ('d'),
             ('e'),
             ('f')
-            ]
+           ]
 edgelist1 = [('a', 'b', {'weight': 0.1}),
              ('a', 'c', {'weight': 0.2}),
              ('b', 'd', {'weight': 0.6}),
