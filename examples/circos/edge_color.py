@@ -6,12 +6,12 @@ import networkx as nx
 from nxviz.plots import CircosPlot
 
 nodelist = [('a'),
-                ('b'),
-                ('c'),
-                ('d'),
-                ('e'),
-                ('f')
-                ]
+            ('b'),
+            ('c'),
+            ('d'),
+            ('e'),
+            ('f')
+            ]
 edgelist1 = [('a', 'b', {'weight': 0.1}),
              ('a', 'c', {'weight': 0.2}),
              ('b', 'd', {'weight': 0.6}),
