@@ -25,7 +25,8 @@ dependencies:
 - pyyaml
 - twine
 - seaborn
+- pipreqs
+- isort
+- bumpversion
 - pip:
     - sphinxcontrib-fulltoc
-    - pipreqs
-    - isort
