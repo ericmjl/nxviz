@@ -75,7 +75,7 @@ class BasePlot(object):
         # Set graph object
         self.graph = graph
         self.nodes = list(graph.nodes())  # keep track of nodes separately.
-
+        self.edges = list(graph.edges())
         # Set node arrangement
         self.node_order = node_order
         self.node_grouping = node_grouping
@@ -98,6 +98,11 @@ class BasePlot(object):
         # Set edge properties
         self.edge_width = edge_width
         self.edge_color = edge_color
+        if self.edge_color:
+            self.edge_colors = []
+            self.compute_edge_colors()
+        else:
+            self.edge_colors = ['black'] * len(self.edges)
 
         # Set data_types dictionary
         if not data_types:
@@ -183,6 +188,33 @@ class BasePlot(object):
             idx = data_reduced.index(d) / n_grps
             self.node_colors.append(cmap(idx))
 
+        # Add colorbar if required.
+        logging.debug('length of data_reduced: {0}'.format(len(data_reduced)))
+        logging.debug('dtype: {0}'.format(dtype))
+        if len(data_reduced) > 1 and dtype == 'continuous':
+            self.sm = plt.cm.ScalarMappable(cmap=cmap,
+                                            norm=plt.Normalize(vmin=min(data_reduced),  # noqa
+                                                               vmax=max(data_reduced)   # noqa
+                                                               )
+                                            )
+            self.sm._A = []
+
+    def compute_edge_colors(self):
+        """Compute the edge colors."""
+        data = [self.graph.edges[n][self.edge_color] for n in self.edges]
+        data_reduced = sorted(list(set(data)))
+        dtype = infer_data_type(data)
+        n_grps = num_discrete_groups(data)
+        if dtype == 'categorical' or dtype == 'ordinal':
+            cmap = get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
+        elif dtype == 'continuous' and not is_data_diverging(data):
+            cmap = get_cmap(cmaps['weights'])
+        #elif dtype == 'continuous' and is_data_diverging(data):
+            # cmap = get_cmap(cmaps['diverging'].mpl_colormap)
+
+        for d in data:
+            idx = data_reduced.index(d) / n_grps
+            self.edge_colors.append(cmap(idx))
         # Add colorbar if required.
         logging.debug('length of data_reduced: {0}'.format(len(data_reduced)))
         logging.debug('dtype: {0}'.format(dtype))
@@ -343,10 +375,11 @@ class CircosPlot(BasePlot):
             verts = [get_cartesian(self.plot_radius, start_theta),
                      (0, 0),
                      get_cartesian(self.plot_radius, end_theta)]
+            color = self.edge_colors[i]
             codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
-
             path = Path(verts, codes)
-            patch = patches.PathPatch(path, lw=1, **self.edgeprops, zorder=1)
+            patch = patches.PathPatch(path, lw=1, **self.edgeprops,
+                                      edgecolor=color, zorder=1)
             self.ax.add_patch(patch)
 
 
