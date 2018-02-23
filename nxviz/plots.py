@@ -75,7 +75,7 @@ class BasePlot(object):
         # Set graph object
         self.graph = graph
         self.nodes = list(graph.nodes())  # keep track of nodes separately.
-        self.edges = list(graph.edges())
+        self.edges = list(graph.edges())  # keep track of edges separately.
         # Set node arrangement
         self.node_order = node_order
         self.node_grouping = node_grouping

@@ -142,10 +142,10 @@ def test_init_node_colors():
 def test_init_edge_colors():
     """
     Does two checks:
-    1. If edge_color is not passed in as a keyword argument, check that
-       self.edge_colors is a list of 'blue', of length (number of nodes).
-    2. If edge_color is passed in as a keyword argument, check that
-       self.node_colors is a list with more than one element.
+    1. If edge_color is passed in as a keyword argument, check that
+       self.edge_colors is a list with more than one element.
+    2. If edge_color is not passed in as a keyword argument, check that
+       self.edge_colors is a list of 'black', of length 0.
     """
     G = make_graph_for_edges()  # noqa
     b = BasePlot(graph=G, edge_color="weight")
@@ -153,4 +153,4 @@ def test_init_edge_colors():
 
     G = make_graph_for_grouping()  # noqa
     b = BasePlot(graph=G)
-    assert len(set(b.edge_colors)) == 1
+    assert len(set(b.edge_colors)) == 0
