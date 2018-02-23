@@ -2,6 +2,11 @@
 History
 =======
 
+0.3.6 (2018-02-20)
+------------------
+
+* Implemented edge colours, thanks to @noragak.
+
 0.3.5 (2018-01-20)
 ------------------
 
