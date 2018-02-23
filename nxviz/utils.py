@@ -141,5 +141,5 @@ cmaps = {
     'continuous': sequential.YlGnBu_9,
     'diverging': diverging.RdBu_11,
     'weights': sns.cubehelix_palette(50, hue=0.05, rot=0, light=0.9, dark=0,
-                                 as_cmap=True)
+                                     as_cmap=True)
 }
