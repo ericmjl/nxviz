@@ -9,7 +9,7 @@ from matplotlib.path import Path
 
 from .geometry import circos_radius, get_cartesian, node_theta
 from .utils import (cmaps, infer_data_type, is_data_diverging,
-                    num_discrete_groups, n_group_colorpallet)
+                    num_discrete_groups)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -75,7 +75,7 @@ class BasePlot(object):
         # Set graph object
         self.graph = graph
         self.nodes = list(graph.nodes())  # keep track of nodes separately.
-        self.edges = list(graph.edges())  # keep track of edges separately.
+        self.edges = list(graph.edges())
         # Set node arrangement
         self.node_order = node_order
         self.node_grouping = node_grouping
@@ -178,11 +178,7 @@ class BasePlot(object):
         n_grps = num_discrete_groups(data)
 
         if dtype == 'categorical' or dtype == 'ordinal':
-            if n_grps <= 8:
-                cmap = \
-                    get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
-            else:
-                cmap = n_group_colorpallet(n_grps)
+            cmap = get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
         elif dtype == 'continuous' and not is_data_diverging(data):
             cmap = get_cmap(cmaps['continuous'].mpl_colormap)
         elif dtype == 'continuous' and is_data_diverging(data):
@@ -210,14 +206,10 @@ class BasePlot(object):
         dtype = infer_data_type(data)
         n_grps = num_discrete_groups(data)
         if dtype == 'categorical' or dtype == 'ordinal':
-            if n_grps <= 8:
-                cmap = \
-                    get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
-            else:
-                cmap = n_group_colorpallet(n_grps)
+            cmap = get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
         elif dtype == 'continuous' and not is_data_diverging(data):
             cmap = get_cmap(cmaps['weights'])
-        # elif dtype == 'continuous' and is_data_diverging(data):
+        #elif dtype == 'continuous' and is_data_diverging(data):
             # cmap = get_cmap(cmaps['diverging'].mpl_colormap)
 
         for d in data:
@@ -327,7 +319,7 @@ class CircosPlot(BasePlot):
         for node in self.nodes:
             theta = node_theta(self.nodes, node)
             radius = self.plot_radius + self.nodeprops['radius']
-
+            radius = radius*1.2
             x, y = get_cartesian(r=radius, theta=theta)
 
             # Computes the text alignment
@@ -364,14 +356,14 @@ class CircosPlot(BasePlot):
                                         lw=lw, color=color,
                                         zorder=2)
             self.ax.add_patch(node_patch)
-            if self.node_labels:
+            if self.node_labels[i]:
                 label_x = self.node_label_coords['x'][i]
                 label_y = self.node_label_coords['y'][i]
                 label_ha = self.node_label_aligns['has'][i]
                 label_va = self.node_label_aligns['vas'][i]
                 self.ax.text(s=node,
                              x=label_x, y=label_y,
-                             ha=label_ha, va=label_va)
+                             ha=label_ha, va=label_va, fontsize=10)
 
     def draw_edges(self):
         """
