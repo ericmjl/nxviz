@@ -178,7 +178,11 @@ class BasePlot(object):
         n_grps = num_discrete_groups(data)
 
         if dtype == 'categorical' or dtype == 'ordinal':
-            cmap = get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
+            if n_grps <= 8:
+                cmap = \
+                    get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
+            else:
+                cmap = n_group_colorpallet(n_grps)
         elif dtype == 'continuous' and not is_data_diverging(data):
             cmap = get_cmap(cmaps['continuous'].mpl_colormap)
         elif dtype == 'continuous' and is_data_diverging(data):
@@ -188,7 +192,7 @@ class BasePlot(object):
             idx = data_reduced.index(d) / n_grps
             self.node_colors.append(cmap(idx))
 
-        # Add colorbar if required.
+        # Add colorbar if required.ListedColormap
         logging.debug('length of data_reduced: {0}'.format(len(data_reduced)))
         logging.debug('dtype: {0}'.format(dtype))
         if len(data_reduced) > 1 and dtype == 'continuous':
@@ -206,11 +210,13 @@ class BasePlot(object):
         dtype = infer_data_type(data)
         n_grps = num_discrete_groups(data)
         if dtype == 'categorical' or dtype == 'ordinal':
-            cmap = get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
+            if n_grps <= 8:
+                cmap = \
+                    get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
+            else:
+                cmap = n_group_colorpallet(n_grps)
         elif dtype == 'continuous' and not is_data_diverging(data):
             cmap = get_cmap(cmaps['weights'])
-        #elif dtype == 'continuous' and is_data_diverging(data):
-            # cmap = get_cmap(cmaps['diverging'].mpl_colormap)
 
         for d in data:
             idx = data_reduced.index(d) / n_grps
