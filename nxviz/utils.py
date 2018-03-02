@@ -1,5 +1,6 @@
 from palettable.colorbrewer import diverging, qualitative, sequential
-from seaborn import cubehelix_palette
+import seaborn as sns
+from matplotlib.colors import ListedColormap
 
 
 def is_data_homogenous(data_container):
@@ -121,6 +122,14 @@ def num_discrete_groups(data_container):
     return len(set(data_container))
 
 
+def n_group_colorpallet(n):
+    """If more then 8 categorical groups of nodes or edges this function
+    creats the matching color_palette
+    """
+    cmap = ListedColormap(sns.color_palette("hls", n))
+    return cmap
+
+
 cmaps = {
     'Accent_2': qualitative.Accent_3,
     'Accent_3': qualitative.Accent_3,
@@ -131,6 +140,6 @@ cmaps = {
     'Accent_8': qualitative.Accent_8,
     'continuous': sequential.YlGnBu_9,
     'diverging': diverging.RdBu_11,
-    'weights': cubehelix_palette(50, hue=0.05, rot=0, light=0.9, dark=0,
-                                 as_cmap=True)
+    'weights': sns.cubehelix_palette(50, hue=0.05, rot=0, light=0.9, dark=0,
+                                     as_cmap=True)
 }

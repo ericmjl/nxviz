@@ -37,6 +37,24 @@ nxviz
 
 * This is free software distributed under the MIT License.
 
+Installation
+------------
+
+We recommend using conda_.
+
+.. code:: bash
+
+    $ conda install nxviz
+
+Alternatively, it is also available on PyPI_.
+
+.. code:: bash
+
+    $ pip install nxviz
+
+.. _conda: https://www.anaconda.com/download/
+.. _PyPI: https://pypi.python.org/pypi/nxviz
+
 Requirements
 ------------
 
@@ -45,7 +63,7 @@ For requirements, consult the `requirements.txt` file in the GitHub repository. 
 Features
 --------
 
-* Declarative API. 
+* Declarative API.
 * Works with NetworkX, one of the more popular graph libraries in Python.
 
 Feature Requests

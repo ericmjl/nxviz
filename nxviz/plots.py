@@ -9,7 +9,7 @@ from matplotlib.path import Path
 
 from .geometry import circos_radius, get_cartesian, node_theta
 from .utils import (cmaps, infer_data_type, is_data_diverging,
-                    num_discrete_groups)
+                    num_discrete_groups, n_group_colorpallet)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -75,7 +75,7 @@ class BasePlot(object):
         # Set graph object
         self.graph = graph
         self.nodes = list(graph.nodes())  # keep track of nodes separately.
-        self.edges = list(graph.edges())
+        self.edges = list(graph.edges())  # keep track of edges separately.
         # Set node arrangement
         self.node_order = node_order
         self.node_grouping = node_grouping
@@ -178,7 +178,11 @@ class BasePlot(object):
         n_grps = num_discrete_groups(data)
 
         if dtype == 'categorical' or dtype == 'ordinal':
-            cmap = get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
+            if n_grps <= 8:
+                cmap = \
+                    get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
+            else:
+                cmap = n_group_colorpallet(n_grps)
         elif dtype == 'continuous' and not is_data_diverging(data):
             cmap = get_cmap(cmaps['continuous'].mpl_colormap)
         elif dtype == 'continuous' and is_data_diverging(data):
@@ -206,10 +210,14 @@ class BasePlot(object):
         dtype = infer_data_type(data)
         n_grps = num_discrete_groups(data)
         if dtype == 'categorical' or dtype == 'ordinal':
-            cmap = get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
+            if n_grps <= 8:
+                cmap = \
+                    get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
+            else:
+                cmap = n_group_colorpallet(n_grps)
         elif dtype == 'continuous' and not is_data_diverging(data):
             cmap = get_cmap(cmaps['weights'])
-        #elif dtype == 'continuous' and is_data_diverging(data):
+        # elif dtype == 'continuous' and is_data_diverging(data):
             # cmap = get_cmap(cmaps['diverging'].mpl_colormap)
 
         for d in data:
