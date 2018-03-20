@@ -2,6 +2,12 @@
 History
 =======
 
+0.3.7 (2018-XX-XX)
+------------------
+
+* Node labels in CircosPlot can now be rotated with the `rotate_labels`
+  argument.
+
 0.3.6 (2018-02-20)
 ------------------
 
