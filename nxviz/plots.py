@@ -7,9 +7,9 @@ import networkx as nx
 from matplotlib.cm import get_cmap
 from matplotlib.path import Path
 
-import numpy as np
 
 from .geometry import circos_radius, get_cartesian, node_theta
+from .polcart import to_degrees
 from .utils import (cmaps, infer_data_type, is_data_diverging,
                     num_discrete_groups)
 
@@ -324,6 +324,11 @@ class CircosPlot(BasePlot):
 
         This method is always called after the compute_node_positions
         method, so that the plot_radius is pre-computed.
+
+        This will also add a new attribute, `node_label_rotation` to the object
+        which contains the rotation angles for each of the nodes. Together with
+        the node coordinates this can be used to add additional annotations
+        with rotated text.
         """
         xs = []
         ys = []
@@ -332,7 +337,7 @@ class CircosPlot(BasePlot):
         rotations = []
         for node in self.nodes:
             theta = node_theta(self.nodes, node)
-            radius = 1.01 * (self.plot_radius + self.nodeprops['radius'])
+            radius = 1.02 * (self.plot_radius + self.nodeprops['radius'])
 
             x, y = get_cartesian(r=radius, theta=theta)
 
@@ -353,10 +358,11 @@ class CircosPlot(BasePlot):
             if self.rotate:
                 va = "center"
             # Computes the text rotation
-            if theta >= -np.pi / 2 and theta < np.pi / 2:   # left side
-                rot = theta / np.pi * 180
-            else:  # right side
-                rot = theta / np.pi * 180 - 180
+            theta_deg = to_degrees(theta)
+            if theta_deg >= -90 and theta_deg < 90:   # right side
+                rot = theta_deg
+            else:  # left side
+                rot = theta_deg - 180
 
             xs.append(x)
             ys.append(y)
