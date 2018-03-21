@@ -330,7 +330,6 @@ class CircosPlot(BasePlot):
         for node in self.nodes:
             theta = node_theta(self.nodes, node)
             radius = self.plot_radius + self.nodeprops['radius']
-            radius = radius*1.2
             x, y = get_cartesian(r=radius, theta=theta)
 
             # Computes the text alignment
