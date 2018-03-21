@@ -9,7 +9,7 @@ from matplotlib.path import Path
 
 from .geometry import circos_radius, get_cartesian, node_theta
 from .utils import (cmaps, infer_data_type, is_data_diverging,
-                    num_discrete_groups)
+                    num_discrete_groups, n_group_colorpallet)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -384,8 +384,8 @@ class CircosPlot(BasePlot):
             color = self.edge_colors[i]
             codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
             path = Path(verts, codes)
-            patch = patches.PathPatch(path, lw=1, **self.edgeprops,
-                                      edgecolor=color, zorder=1)
+            patch = patches.PathPatch(path, lw=1, edgecolor=color,
+                                      zorder=1, **self.edgeprops)
             self.ax.add_patch(patch)
 
 
@@ -626,7 +626,7 @@ class ArcPlot(BasePlot):
             codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
 
             path = Path(verts, codes)
-            patch = patches.PathPatch(path, lw=1, **self.edgeprops, zorder=1)
+            patch = patches.PathPatch(path, lw=1, zorder=1, **self.edgeprops)
             self.ax.add_patch(patch)
 
     def draw(self):
