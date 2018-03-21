@@ -70,7 +70,8 @@ class BasePlot(object):
     def __init__(self, graph, node_order=None, node_size=None,
                  node_grouping=None, node_color=None, node_labels=None,
                  edge_width=None, edge_color=None, data_types=None,
-                 nodeprops=None, edgeprops=None, **kwargs):
+                 nodeprops=None, edgeprops=None, node_label_color=False,
+                 **kwargs):
         super(BasePlot, self).__init__()
         # Set graph object
         self.graph = graph
@@ -131,6 +132,10 @@ class BasePlot(object):
         else:
             self.edgeprops = {'facecolor': 'none',
                               'alpha': 0.2}
+        if node_label_color:
+            self.node_label_color = self.node_colors
+        else:
+            self.node_label_color = ['black'] * len(self.nodes)
 
         # Compute each node's positions.
         self.compute_node_positions()
@@ -367,9 +372,11 @@ class CircosPlot(BasePlot):
                 label_y = self.node_label_coords['y'][i]
                 label_ha = self.node_label_aligns['has'][i]
                 label_va = self.node_label_aligns['vas'][i]
+
                 self.ax.text(s=node,
                              x=label_x, y=label_y,
-                             ha=label_ha, va=label_va, fontsize=10)
+                             ha=label_ha, va=label_va,
+                             color=self.node_label_colors[i], fontsize=10)
 
     def draw_edges(self):
         """
