@@ -376,7 +376,7 @@ class CircosPlot(BasePlot):
                 self.ax.text(s=node,
                              x=label_x, y=label_y,
                              ha=label_ha, va=label_va,
-                             color=self.node_label_colors[i], fontsize=10)
+                             color=self.node_label_color[i], fontsize=10)
 
     def draw_edges(self):
         """
