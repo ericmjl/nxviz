@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from setuptools import setup
 
 with open('README.rst') as readme_file:
@@ -9,51 +6,31 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [
-    'Click>=6.0',
-    # TODO: put package requirements here
-]
-
-test_requirements = [
-    # TODO: put package test requirements here
-]
+requirements = []
+with open('requirements.txt') as rqmts:
+    for r in rqmts:
+        requirements.append(r.strip('\n'))
 
 setup(
     name='nxviz',
-    version='0.1.0',
+    version="0.3.6",
     description="Graph Visualization Package",
     long_description=readme + '\n\n' + history,
     author="Eric J. Ma",
-    author_email='ericmajinglong@gmail.com',
+    author_email="ericmajinglong@gmail.com",
     url='https://github.com/ericmjl/nxviz',
     packages=[
         'nxviz',
     ],
-    package_dir={'nxviz':
-                 'nxviz'},
-    entry_points={
-        'console_scripts': [
-            'nxviz=nxviz.cli:main'
-        ]
-    },
+    package_dir={'nxviz': 'nxviz'},
     include_package_data=True,
     install_requires=requirements,
     license="MIT license",
-    zip_safe=False,
     keywords='nxviz',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        "Programming Language :: Python :: 2",
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
     ],
-    test_suite='tests',
-    tests_require=test_requirements
 )

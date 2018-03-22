@@ -6,16 +6,17 @@
 Welcome to nxviz's documentation!
 ======================================
 
-Contents:
+.. include:: ../README.rst
 
 .. toctree::
    :maxdepth: 2
 
-   readme
    installation
    usage
    contributing
-   authorshistory
+   authors
+   history
+   modules
 
 Indices and tables
 ==================
