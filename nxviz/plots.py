@@ -8,6 +8,7 @@ from matplotlib.cm import get_cmap
 from matplotlib.path import Path
 
 from .geometry import circos_radius, get_cartesian, node_theta
+from .polcart import to_degrees
 from .utils import (cmaps, infer_data_type, is_data_diverging,
                     num_discrete_groups, n_group_colorpallet)
 
@@ -298,6 +299,18 @@ class CircosPlot(BasePlot):
     Plotting object for CircosPlot.
     """
 
+    def __init__(self, graph, **kwargs):
+        """Create the CircosPlot.
+
+        Accepts the following additional arguments apart from the ones in
+        `BasePlot`:
+
+        :param rotate_labels: Whether to rotate node labels.
+        :type node_color: `bool`
+        """
+        self.rotate = kwargs.pop("rotate_labels", False)
+        super(CircosPlot, self).__init__(graph, **kwargs)
+
     def compute_node_positions(self):
         """
         Uses the get_cartesian function to compute the positions of each node
@@ -322,14 +335,19 @@ class CircosPlot(BasePlot):
 
         This method is always called after the compute_node_positions
         method, so that the plot_radius is pre-computed.
+        This will also add a new attribute, `node_label_rotation` to the object
+        which contains the rotation angles for each of the nodes. Together with
+        the node coordinates this can be used to add additional annotations
+        with rotated text.
         """
         xs = []
         ys = []
         has = []
         vas = []
+        rotations = []
         for node in self.nodes:
             theta = node_theta(self.nodes, node)
-            radius = self.plot_radius + self.nodeprops['radius']
+            radius = 1.02*(self.plot_radius + self.nodeprops['radius'])
             x, y = get_cartesian(r=radius, theta=theta)
 
             # Computes the text alignment
@@ -340,17 +358,31 @@ class CircosPlot(BasePlot):
             else:
                 ha = 'right'
             if y == 0:
-                va = 'middle'
+                va = 'center'
             elif y > 0:
                 va = 'bottom'
             else:
                 va = 'top'
+
+            if self.rotate:
+                va = "center"
+
+            # Computes the text rotation
+            theta_deg = to_degrees(theta)
+            if theta_deg >= -90 and theta_deg < 90:   # right side
+                rot = theta_deg
+            else:  # left side
+                rot = theta_deg - 180
+
             xs.append(x)
             ys.append(y)
             has.append(ha)
             vas.append(va)
+            rotations.append(rot)
+
         self.node_label_coords = {'x': xs, 'y': ys}  # node label coordinates
         self.node_label_aligns = {'has': has, 'vas': vas}  # node label alignments  # noqa
+        self.node_label_rotation = rotations
 
     def draw_nodes(self):
         """
@@ -371,10 +403,14 @@ class CircosPlot(BasePlot):
                 label_y = self.node_label_coords['y'][i]
                 label_ha = self.node_label_aligns['has'][i]
                 label_va = self.node_label_aligns['vas'][i]
+                rot = 0
+                if self.rotate:
+                    rot = self.node_label_rotation[i]
 
                 self.ax.text(s=node,
                              x=label_x, y=label_y,
-                             ha=label_ha, va=label_va,
+                             ha=label_ha, va=label_va, rotation=rot,
+                             rotation_mode="anchor",
                              color=self.node_label_color[i], fontsize=10)
 
     def draw_edges(self):
