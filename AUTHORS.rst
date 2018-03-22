@@ -10,4 +10,5 @@ Development Lead
 Contributors
 ------------
 
-None yet. Why not be the first?
+* Nora Kassner <nora.kassner@t-online.de>
+* Christian Diener <mail (at) cdiener.com>

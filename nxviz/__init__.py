@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
+from nxviz.plots import ArcPlot, CircosPlot, MatrixPlot  # NOQA
 
-__author__ = 'Eric J. Ma'
-__email__ = 'ericmajinglong@gmail.com'
-__version__ = '0.1.0'
+__version__ = "0.3.6"
