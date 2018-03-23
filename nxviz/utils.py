@@ -123,7 +123,7 @@ def num_discrete_groups(data_container):
     return len(set(data_container))
 
 
-def itemes_in_groups(data_container):
+def items_in_groups(data_container):
     """
     Returns discrete groups present in a data container and the number items
     per group.
