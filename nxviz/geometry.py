@@ -31,7 +31,7 @@ def group_theta(node_length, node_idx):
     Intended to be used for placing node group labels at the correct spot.
 
     :param float node_length: total number of nodes in the graph.
-    :param int node_idx: The index of the node of interest.
+    :param int node_idx: the index of the node of interest.
     :returns: theta -- the angle of the node of interest in radians.
     """
     theta = -np.pi + node_idx*2*np.pi/node_length
