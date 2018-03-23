@@ -9,10 +9,10 @@ from matplotlib.cm import get_cmap
 from matplotlib.path import Path
 
 from .geometry import (circos_radius, get_cartesian, node_theta, group_theta,
-                       text_alignement)
+                       text_alignment)
 from .polcart import to_degrees
 from .utils import (cmaps, infer_data_type, is_data_diverging,
-                    num_discrete_groups, n_group_colorpallet, itemes_in_groups)
+                    num_discrete_groups, n_group_colorpallet, items_in_groups)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -224,8 +224,7 @@ class BasePlot(object):
             self.sm._A = []
 
     def compute_group_colors(self):
-        """Computes the group colors according to node colors
-        """
+        """Computes the group colors according to node colors"""
         seen = set()
         self.group_label_color = \
             [x for x in self.node_colors if not (x in seen or seen.add(x))]
@@ -355,7 +354,7 @@ class CircosPlot(BasePlot):
         assert self.group_label_position in ["beginning", "middle", "end"]
         data = [self.graph.node[n][self.node_grouping] for n in self.nodes]
         node_length = len(data)
-        groups = itemes_in_groups(data)
+        groups = items_in_groups(data)
         radius = 1.02 * (self.plot_radius + self.nodeprops['radius'])
         xs = []
         ys = []
@@ -367,7 +366,7 @@ class CircosPlot(BasePlot):
             for idx in node_idcs[:-1]:
                 x, y = get_cartesian(r=radius, theta=group_theta(node_length,
                                                                  idx))
-                ha, va = text_alignement(x, y)
+                ha, va = text_alignment(x, y)
                 xs.append(x)
                 ys.append(y)
                 has.append(ha)
@@ -380,7 +379,7 @@ class CircosPlot(BasePlot):
                 theta1 = group_theta(node_length, idx[0])
                 theta2 = group_theta(node_length, idx[1]-1)
                 x, y = get_cartesian(r=radius, theta=(theta1+theta2)/2)
-                ha, va = text_alignement(x, y)
+                ha, va = text_alignment(x, y)
                 xs.append(x)
                 ys.append(y)
                 has.append(ha)
@@ -390,7 +389,7 @@ class CircosPlot(BasePlot):
             for idx in node_idcs[1::]:
                 x, y = get_cartesian(r=radius, theta=group_theta(node_length,
                                                                  idx-1))
-                ha, va = text_alignement(x, y)
+                ha, va = text_alignment(x, y)
                 xs.append(x)
                 ys.append(y)
                 has.append(ha)
