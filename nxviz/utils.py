@@ -1,7 +1,7 @@
 from palettable.colorbrewer import diverging, qualitative, sequential
 import seaborn as sns
 from matplotlib.colors import ListedColormap
-
+from collections import Counter
 
 def is_data_homogenous(data_container):
     """
@@ -120,6 +120,17 @@ def num_discrete_groups(data_container):
     :type data_container: `iterable`
     """
     return len(set(data_container))
+
+
+def itemes_in_groups(data_container):
+    """
+    Returns discrete groups present in a data container and the number items
+    per group.
+
+    :param data_container: A generic container of data points.
+    :type data_container: `iterable`
+    """
+    return Counter(data_container)
 
 
 def n_group_colorpallet(n):

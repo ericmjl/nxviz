@@ -24,6 +24,30 @@ def node_theta(nodelist, node):
     return theta
 
 
+def group_theta(node_length, node_idx):
+
+    theta = -np.pi + node_idx*2*np.pi/node_length
+    return theta
+
+
+def text_alignement(x, y):
+
+    if x == 0:
+        ha = 'center'
+    elif x > 0:
+        ha = 'left'
+    else:
+        ha = 'right'
+    if y == 0:
+        va = 'center'
+    elif y > 0:
+        va = 'bottom'
+    else:
+        va = 'top'
+
+    return ha, va
+
+
 def get_cartesian(r, theta):
     """
     Returns the cartesian (x,y) coordinates of (r, theta).
