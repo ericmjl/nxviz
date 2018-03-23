@@ -4,14 +4,15 @@ import logging
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import networkx as nx
+import numpy as np
 from matplotlib.cm import get_cmap
 from matplotlib.path import Path
 
-
-from .geometry import circos_radius, get_cartesian, node_theta
+from .geometry import (circos_radius, get_cartesian, node_theta, group_theta,
+                       text_alignment)
 from .polcart import to_degrees
 from .utils import (cmaps, infer_data_type, is_data_diverging,
-                    num_discrete_groups)
+                    num_discrete_groups, n_group_colorpallet, items_in_groups)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -72,12 +73,13 @@ class BasePlot(object):
     def __init__(self, graph, node_order=None, node_size=None,
                  node_grouping=None, node_color=None, node_labels=None,
                  edge_width=None, edge_color=None, data_types=None,
-                 nodeprops=None, edgeprops=None, **kwargs):
+                 nodeprops=None, edgeprops=None, node_label_color=False,
+                 group_label_position=None, group_label_color=False, **kwargs):
         super(BasePlot, self).__init__()
         # Set graph object
         self.graph = graph
         self.nodes = list(graph.nodes())  # keep track of nodes separately.
-        self.edges = list(graph.edges())  # keep track of edges separately.
+        self.edges = list(graph.edges())
         # Set node arrangement
         self.node_order = node_order
         self.node_grouping = node_grouping
@@ -133,12 +135,26 @@ class BasePlot(object):
         else:
             self.edgeprops = {'facecolor': 'none',
                               'alpha': 0.2}
+        if node_label_color:
+            self.node_label_color = self.node_colors
+        else:
+            self.node_label_color = ['black'] * len(self.nodes)
 
         # Compute each node's positions.
         self.compute_node_positions()
 
         # Conditionally compute node label positions.
         self.compute_node_label_positions()
+
+        # set group properties
+        self.group_label_position = group_label_position
+        if group_label_position:
+            self.groups = []
+            self.compute_group_label_positions()
+            if group_label_color:
+                self.compute_group_colors()
+            else:
+                self.group_label_color = ['black'] * len(self.nodes)
 
     def check_data_types(self, data_types):
         """
@@ -163,6 +179,8 @@ class BasePlot(object):
         """
         self.draw_nodes()
         self.draw_edges()
+        if self.groups:
+            self.draw_group_labels()
         logging.debug('DRAW: {0}'.format(self.sm))
         if self.sm:
             self.figure.subplots_adjust(right=0.8)
@@ -180,7 +198,11 @@ class BasePlot(object):
         n_grps = num_discrete_groups(data)
 
         if dtype == 'categorical' or dtype == 'ordinal':
-            cmap = get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
+            if n_grps <= 8:
+                cmap = \
+                    get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
+            else:
+                cmap = n_group_colorpallet(n_grps)
         elif dtype == 'continuous' and not is_data_diverging(data):
             cmap = get_cmap(cmaps['continuous'].mpl_colormap)
         elif dtype == 'continuous' and is_data_diverging(data):
@@ -190,7 +212,7 @@ class BasePlot(object):
             idx = data_reduced.index(d) / n_grps
             self.node_colors.append(cmap(idx))
 
-        # Add colorbar if required.
+        # Add colorbar if required.ListedColormap
         logging.debug('length of data_reduced: {0}'.format(len(data_reduced)))
         logging.debug('dtype: {0}'.format(dtype))
         if len(data_reduced) > 1 and dtype == 'continuous':
@@ -201,6 +223,12 @@ class BasePlot(object):
                                             )
             self.sm._A = []
 
+    def compute_group_colors(self):
+        """Computes the group colors according to node colors"""
+        seen = set()
+        self.group_label_color = \
+            [x for x in self.node_colors if not (x in seen or seen.add(x))]
+
     def compute_edge_colors(self):
         """Compute the edge colors."""
         data = [self.graph.edges[n][self.edge_color] for n in self.edges]
@@ -208,11 +236,13 @@ class BasePlot(object):
         dtype = infer_data_type(data)
         n_grps = num_discrete_groups(data)
         if dtype == 'categorical' or dtype == 'ordinal':
-            cmap = get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
+            if n_grps <= 8:
+                cmap = \
+                    get_cmap(cmaps['Accent_{0}'.format(n_grps)].mpl_colormap)
+            else:
+                cmap = n_group_colorpallet(n_grps)
         elif dtype == 'continuous' and not is_data_diverging(data):
             cmap = get_cmap(cmaps['weights'])
-        # elif dtype == 'continuous' and is_data_diverging(data):
-            # cmap = get_cmap(cmaps['diverging'].mpl_colormap)
 
         for d in data:
             idx = data_reduced.index(d) / n_grps
@@ -227,6 +257,14 @@ class BasePlot(object):
                                                                )
                                             )
             self.sm._A = []
+
+    def compute_group_label_positions(self):
+        """Computes the position of each group label according to the wanted
+        position ("beginning", "middle", "end")
+
+        Needs to be implemented for each plot type
+        """
+        pass
 
     def compute_node_positions(self):
         """
@@ -262,6 +300,14 @@ class BasePlot(object):
         """
         pass
 
+    def draw_group_labels(self):
+        """
+        Renders the group labels to the plot or screen.
+
+        Needs to be implemented for each plot type.
+        """
+        pass
+
     def group_and_sort_nodes(self):
         """
         Groups and then sorts the nodes according to the criteria passed into
@@ -288,6 +334,7 @@ class CircosPlot(BasePlot):
     """
     Plotting object for CircosPlot.
     """
+
     def __init__(self, graph, **kwargs):
         """Create the CircosPlot.
 
@@ -299,6 +346,58 @@ class CircosPlot(BasePlot):
         """
         self.rotate = kwargs.pop("rotate_labels", False)
         super(CircosPlot, self).__init__(graph, **kwargs)
+
+    def compute_group_label_positions(self):
+        """
+        Computes the x,y positions of the group labels.
+        """
+        assert self.group_label_position in ["beginning", "middle", "end"]
+        data = [self.graph.node[n][self.node_grouping] for n in self.nodes]
+        node_length = len(data)
+        groups = items_in_groups(data)
+        radius = 1.02 * (self.plot_radius + self.nodeprops['radius'])
+        xs = []
+        ys = []
+        has = []
+        vas = []
+        node_idcs = np.cumsum(list(groups.values()))
+        node_idcs = np.insert(node_idcs, 0, 0)
+        if self.group_label_position == "beginning":
+            for idx in node_idcs[:-1]:
+                x, y = get_cartesian(r=radius, theta=group_theta(node_length,
+                                                                 idx))
+                ha, va = text_alignment(x, y)
+                xs.append(x)
+                ys.append(y)
+                has.append(ha)
+                vas.append(va)
+
+        elif self.group_label_position == "middle":
+            node_idcs = node_idcs.reshape(len(node_idcs), 1)
+            node_idcs = np.concatenate((node_idcs[:-1], node_idcs[1:]), axis=1)
+            for idx in node_idcs:
+                theta1 = group_theta(node_length, idx[0])
+                theta2 = group_theta(node_length, idx[1]-1)
+                x, y = get_cartesian(r=radius, theta=(theta1+theta2)/2)
+                ha, va = text_alignment(x, y)
+                xs.append(x)
+                ys.append(y)
+                has.append(ha)
+                vas.append(va)
+
+        elif self.group_label_position == "end":
+            for idx in node_idcs[1::]:
+                x, y = get_cartesian(r=radius, theta=group_theta(node_length,
+                                                                 idx-1))
+                ha, va = text_alignment(x, y)
+                xs.append(x)
+                ys.append(y)
+                has.append(ha)
+                vas.append(va)
+
+        self.group_label_coords = {'x': xs, 'y': ys}
+        self.group_label_aligns = {'has': has, 'vas': vas}
+        self.groups = groups.keys()
 
     def compute_node_positions(self):
         """
@@ -324,7 +423,6 @@ class CircosPlot(BasePlot):
 
         This method is always called after the compute_node_positions
         method, so that the plot_radius is pre-computed.
-
         This will also add a new attribute, `node_label_rotation` to the object
         which contains the rotation angles for each of the nodes. Together with
         the node coordinates this can be used to add additional annotations
@@ -338,7 +436,6 @@ class CircosPlot(BasePlot):
         for node in self.nodes:
             theta = node_theta(self.nodes, node)
             radius = 1.02 * (self.plot_radius + self.nodeprops['radius'])
-
             x, y = get_cartesian(r=radius, theta=theta)
 
             # Computes the text alignment
@@ -357,6 +454,7 @@ class CircosPlot(BasePlot):
 
             if self.rotate:
                 va = "center"
+
             # Computes the text rotation
             theta_deg = to_degrees(theta)
             if theta_deg >= -90 and theta_deg < 90:   # right side
@@ -369,6 +467,7 @@ class CircosPlot(BasePlot):
             has.append(ha)
             vas.append(va)
             rotations.append(rot)
+
         self.node_label_coords = {'x': xs, 'y': ys}  # node label coordinates
         self.node_label_aligns = {'has': has, 'vas': vas}  # node label alignments  # noqa
         self.node_label_rotation = rotations
@@ -395,10 +494,12 @@ class CircosPlot(BasePlot):
                 rot = 0
                 if self.rotate:
                     rot = self.node_label_rotation[i]
+
                 self.ax.text(s=node,
                              x=label_x, y=label_y,
                              ha=label_ha, va=label_va, rotation=rot,
-                             rotation_mode="anchor")
+                             rotation_mode="anchor",
+                             color=self.node_label_color[i], fontsize=10)
 
     def draw_edges(self):
         """
@@ -413,10 +514,24 @@ class CircosPlot(BasePlot):
             color = self.edge_colors[i]
             codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
             path = Path(verts, codes)
-            patch = patches.PathPatch(path, lw=1, **self.edgeprops,
-                                      edgecolor=color, zorder=1)
+            patch = patches.PathPatch(path, lw=1, edgecolor=color,
+                                      zorder=1, **self.edgeprops)
             self.ax.add_patch(patch)
 
+    def draw_group_labels(self):
+        """
+        Renders group labels to the figure.
+        """
+        for i, label in enumerate(self.groups):
+            label_x = self.group_label_coords['x'][i]
+            label_y = self.group_label_coords['y'][i]
+            label_ha = self.group_label_aligns['has'][i]
+            label_va = self.group_label_aligns['vas'][i]
+            color = self.group_label_color[i]
+            self.ax.text(s=label,
+                         x=label_x, y=label_y,
+                         ha=label_ha, va=label_va,
+                         color=color)
 
 # class HivePlot(BasePlot):
 #     """
@@ -655,7 +770,7 @@ class ArcPlot(BasePlot):
             codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
 
             path = Path(verts, codes)
-            patch = patches.PathPatch(path, lw=1, **self.edgeprops, zorder=1)
+            patch = patches.PathPatch(path, lw=1, zorder=1, **self.edgeprops)
             self.ax.add_patch(patch)
 
     def draw(self):
