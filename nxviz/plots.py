@@ -1,4 +1,3 @@
-
 import logging
 
 import matplotlib.patches as patches
@@ -13,8 +12,6 @@ from .geometry import (circos_radius, get_cartesian, node_theta, group_theta,
 from .polcart import to_degrees
 from .utils import (cmaps, infer_data_type, is_data_diverging,
                     num_discrete_groups, n_group_colorpallet, items_in_groups)
-
-logging.basicConfig(level=logging.INFO)
 
 
 def despine(ax):
