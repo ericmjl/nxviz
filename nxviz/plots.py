@@ -145,8 +145,8 @@ class BasePlot(object):
 
         # set group properties
         self.group_label_position = group_label_position
+        self.groups = []
         if group_label_position:
-            self.groups = []
             self.compute_group_label_positions()
             if group_label_color:
                 self.compute_group_colors()
