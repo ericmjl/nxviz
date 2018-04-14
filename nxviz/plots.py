@@ -176,7 +176,7 @@ class BasePlot(object):
         """
         self.draw_nodes()
         self.draw_edges()
-        if self.groups:
+        if hasattr(self, 'groups') and self.groups:
             self.draw_group_labels()
         logging.debug('DRAW: {0}'.format(self.sm))
         if self.sm:
@@ -341,7 +341,14 @@ class CircosPlot(BasePlot):
         :param rotate_labels: Whether to rotate node labels.
         :type node_color: `bool`
         """
-        self.rotate = kwargs.pop("rotate_labels", False)
+
+        # Store node layout
+        specified_layout = kwargs.pop("node_layout", False)
+        valid_node_layouts = (None, 'rotation', 'numbers')
+        assert specified_layout in valid_node_layouts
+        self.node_layout = specified_layout
+
+        #
         super(CircosPlot, self).__init__(graph, **kwargs)
 
     def compute_group_label_positions(self):
@@ -425,32 +432,36 @@ class CircosPlot(BasePlot):
         the node coordinates this can be used to add additional annotations
         with rotated text.
         """
-        xs = []
-        ys = []
-        has = []
-        vas = []
-        rotations = []
+        self._init_node_label_meta()
+
         for node in self.nodes:
+
+            # Define radius 'radius' and circumference 'theta'
             theta = node_theta(self.nodes, node)
-            radius = 1.02 * (self.plot_radius + self.nodeprops['radius'])
-            x, y = get_cartesian(r=radius, theta=theta)
+            # multiplication factor 1.02 moved below
+            radius = self.plot_radius + self.nodeprops['radius']
 
-            # Computes the text alignment
-            if x == 0:
-                ha = 'center'
-            elif x > 0:
-                ha = 'left'
-            else:
-                ha = 'right'
-            if y == 0:
-                va = 'center'
-            elif y > 0:
-                va = 'bottom'
-            else:
-                va = 'top'
+            # Coordinates of text inside nodes
+            radius_adjustment = 0.96 if self.node_layout == 'numbers' else 1.02
+            x, y = get_cartesian(r=radius * radius_adjustment, theta=theta)
 
-            if self.rotate:
-                va = "center"
+            # For numbered nodes
+
+            # Node description x
+            tx, _ = get_cartesian(r=radius, theta=theta)
+            # Create the quasi-circular positioning on the x axis
+            tx *= 1 - np.log(np.cos(theta) * np.sign(np.cos(theta)))
+            # Move each node a little further away from the circos
+            tx += np.sign(x)
+
+            # Node description y numerator
+            numer = radius * (theta % (np.sign(y) * np.sign(x) * np.pi))
+            # Node description y denominator
+            denom = (np.sign(x) * np.pi)
+            # Scale by factor 2 as pi = 2*radius
+            ty = 2 * (numer / denom)
+
+            # For rotated nodes
 
             # Computes the text rotation
             theta_deg = to_degrees(theta)
@@ -459,15 +470,64 @@ class CircosPlot(BasePlot):
             else:  # left side
                 rot = theta_deg - 180
 
-            xs.append(x)
-            ys.append(y)
-            has.append(ha)
-            vas.append(va)
-            rotations.append(rot)
+            # Store values
+            self._store_node_label_meta(x, y, tx, ty, rot)
 
-        self.node_label_coords = {'x': xs, 'y': ys}  # node label coordinates
-        self.node_label_aligns = {'has': has, 'vas': vas}  # node label alignments  # noqa
-        self.node_label_rotation = rotations
+    def _init_node_label_meta(self):
+        """
+        This function ensures that self.node_label_coords
+        exist with the correct keys and empty entries
+        This function should is not to be called by the user
+        """
+
+        # Reset node label coorc/align dictionaries
+        self.node_label_coords = {'x': [], 'y': [], 'tx': [], 'ty': []}
+        self.node_label_aligns = {'has': [], 'vas': []}
+        self.node_label_rotation = []
+
+    def _store_node_label_meta(self, x, y, tx, ty, rot):
+        """
+        This function stored coordinates-related metadate for a node
+        This function should is not to be called by the user
+
+        :param x: x location of node to be stored
+        :type x: np.float64
+
+        :param y: y location of node to be stored
+        :type y: np.float64
+
+        :param tx: text location x of node to be stored
+        (in case of node numbering).
+        :type tx: np.float64
+
+        :param ty: text location y of node to be stored
+        (in case of node numbering).
+        :type ty: np.float64
+        """
+
+        # Store computed values
+        self.node_label_coords['x'].append(x)
+        self.node_label_coords['y'].append(y)
+        self.node_label_coords['tx'].append(tx)
+        self.node_label_coords['ty'].append(ty)
+
+        # Computes the text alignment for x
+        if x == 0:
+            self.node_label_aligns['has'].append('center')
+        elif x > 0:
+            self.node_label_aligns['has'].append('left')
+        else:
+            self.node_label_aligns['has'].append('right')
+
+        # Computes the text alignment for y
+        if self.node_layout == 'rotate' or y == 0:
+            self.node_label_aligns['vas'].append('center')
+        elif y > 0:
+            self.node_label_aligns['vas'].append('bottom')
+        else:
+            self.node_label_aligns['vas'].append('top')
+
+        self.node_label_rotation.append(rot)
 
     def draw_nodes(self):
         """
@@ -486,17 +546,38 @@ class CircosPlot(BasePlot):
             if self.node_labels:
                 label_x = self.node_label_coords['x'][i]
                 label_y = self.node_label_coords['y'][i]
+                label_tx = self.node_label_coords['tx'][i]
+                label_ty = self.node_label_coords['ty'][i]
                 label_ha = self.node_label_aligns['has'][i]
                 label_va = self.node_label_aligns['vas'][i]
-                rot = 0
-                if self.rotate:
+
+                if self.node_layout == 'rotation':
                     rot = self.node_label_rotation[i]
 
-                self.ax.text(s=node,
-                             x=label_x, y=label_y,
-                             ha=label_ha, va=label_va, rotation=rot,
-                             rotation_mode="anchor",
-                             color=self.node_label_color[i], fontsize=10)
+                    self.ax.text(s=node,
+                                 x=label_x, y=label_y,
+                                 ha=label_ha, va=label_va, rotation=rot,
+                                 rotation_mode="anchor",
+                                 color=self.node_label_color[i], fontsize=10)
+
+                # Node numbering layout
+                elif self.node_layout == 'numbers':
+
+                    # Draw descriptions for labels
+                    desc = '%s - %s' % ((i, node) if (x > 0) else (node, i))
+                    self.ax.text(s=desc, x=label_tx,
+                                 y=label_ty, ha=label_ha, va=label_va)
+
+                    # Add numbers to nodes
+                    self.ax.text(s=i, x=label_x, y=label_y,
+                                 ha='center', va='center')
+
+                # Standard node layout
+                else:
+
+                    # Draw node text straight from the nodes
+                    self.ax.text(s=node, x=label_x,
+                                 y=label_y, ha=label_ha, va=label_va)
 
     def draw_edges(self):
         """
