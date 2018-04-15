@@ -176,6 +176,8 @@ class BasePlot(object):
         """
         self.draw_nodes()
         self.draw_edges()
+        # note that self.groups only exists on condition
+        # that group_label_position was given!
         if hasattr(self, 'groups') and self.groups:
             self.draw_group_labels()
         logging.debug('DRAW: {0}'.format(self.sm))
@@ -338,12 +340,13 @@ class CircosPlot(BasePlot):
         Accepts the following additional arguments apart from the ones in
         `BasePlot`:
 
-        :param rotate_labels: Whether to rotate node labels.
-        :type node_color: `bool`
+        :param node_layout: which/whether (a) node layout is used,
+            either 'rotation', 'numbers' or None
+        :type node_layout: `string`
         """
 
         # Store node layout
-        specified_layout = kwargs.pop("node_layout", False)
+        specified_layout = kwargs.pop("node_layout", None)
         valid_node_layouts = (None, 'rotation', 'numbers')
         assert specified_layout in valid_node_layouts
         self.node_layout = specified_layout
@@ -458,7 +461,6 @@ class CircosPlot(BasePlot):
             numer = radius * (theta % (np.sign(y) * np.sign(x) * np.pi))
             # Node description y denominator
             denom = (np.sign(x) * np.pi)
-            # Scale by factor 2 as pi = 2*radius
             ty = 2 * (numer / denom)
 
             # For rotated nodes
@@ -477,7 +479,7 @@ class CircosPlot(BasePlot):
         """
         This function ensures that self.node_label_coords
         exist with the correct keys and empty entries
-        This function should is not to be called by the user
+        This function should not be called by the user
         """
 
         # Reset node label coorc/align dictionaries
@@ -488,7 +490,7 @@ class CircosPlot(BasePlot):
     def _store_node_label_meta(self, x, y, tx, ty, rot):
         """
         This function stored coordinates-related metadate for a node
-        This function should is not to be called by the user
+        This function should not be called by the user
 
         :param x: x location of node to be stored
         :type x: np.float64
@@ -551,6 +553,7 @@ class CircosPlot(BasePlot):
                 label_ha = self.node_label_aligns['has'][i]
                 label_va = self.node_label_aligns['vas'][i]
 
+                # Node rotation layout
                 if self.node_layout == 'rotation':
                     rot = self.node_label_rotation[i]
 
