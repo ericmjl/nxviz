@@ -436,8 +436,6 @@ class CircosPlot(BasePlot):
         with rotated text.
         """
         self._init_node_label_meta()
-        # sign function without 0
-        sign = lambda x: (1, -1)[x < 0]
 
         for node in self.nodes:
 
@@ -455,14 +453,15 @@ class CircosPlot(BasePlot):
             # Node description x
             tx, _ = get_cartesian(r=radius, theta=theta)
             # Create the quasi-circular positioning on the x axis
-            tx *= 1 - np.log(np.cos(theta) * sign(np.cos(theta)))
+            tx *= 1 - np.log(np.cos(theta) * self.nz_sign(np.cos(theta)))
             # Move each node a little further away from the circos
-            tx += sign(x)
+            tx += self.nz_sign(x)
 
             # Node description y numerator
-            numer = radius * (theta % (sign(y) * sign(x) * np.pi))
+            numer = \
+                radius * (theta % (self.nz_sign(y) * self.nz_sign(x) * np.pi))
             # Node description y denominator
-            denom = (sign(x) * np.pi)
+            denom = (self.nz_sign(x) * np.pi)
             ty = 2 * (numer / denom)
 
             # For rotated nodes
@@ -476,6 +475,10 @@ class CircosPlot(BasePlot):
 
             # Store values
             self._store_node_label_meta(x, y, tx, ty, rot)
+
+    @staticmethod
+    def nz_sign(xy):
+        return -1 if xy < 0 else 1
 
     def _init_node_label_meta(self):
         """
