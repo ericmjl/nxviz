@@ -578,7 +578,6 @@ class CircosPlot(BasePlot):
                                  ha=label_ha, va=label_va, rotation=rot,
                                  rotation_mode="anchor",
                                  color=self.node_label_color[i], fontsize=10)
-                    print(self.node_label_color[i])
 
                 # ----- Node label numbering layout -----
 
