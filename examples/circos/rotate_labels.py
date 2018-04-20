@@ -13,7 +13,7 @@ G = nx.relabel_nodes(G,
                      {i: "long name " + str(i) for i in range(len(G))}
                      )
 
-# try it `node_label_layout` to see how the long names overlap each other
+# try it `node_label_layout=False` to see how the long names overlap each other
 c = CircosPlot(G, node_labels=True, node_label_layout='rotation')
 c.draw()
 # the rotated labels take up more space, so we will have to increase the

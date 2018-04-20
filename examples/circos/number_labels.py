@@ -13,7 +13,7 @@ G = nx.relabel_nodes(G,
                      {i: "long name #" + str(i) for i in range(len(G))}
                      )
 
-# try it `node_label_layout` to see how the long names overlap each other
+# try it `node_label_layout=False` to see how the long names overlap each other
 c = CircosPlot(G, node_labels=True, node_label_layout='numbers')
 c.node_colors = ['skyblue' for node_color in c.node_colors]
 c.draw()
