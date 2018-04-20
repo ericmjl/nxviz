@@ -332,17 +332,17 @@ class BasePlot(object):
 class CircosPlot(BasePlot):
     """
     Plotting object for CircosPlot.
+
+    Accepts the following additional arguments apart from the ones in
+    `BasePlot`:
+
+    :param node_label_layout: which/whether (a) node layout is used,
+        either 'rotation', 'numbers' or None
+    :type node_label_layout: `string`
     """
 
     def __init__(self, graph, **kwargs):
         """Create the CircosPlot.
-
-        Accepts the following additional arguments apart from the ones in
-        `BasePlot`:
-
-        :param node_label_layout: which/whether (a) node layout is used,
-            either 'rotation', 'numbers' or None
-        :type node_label_layout: `string`
         """
 
         # Node labels are specified in the node_label_layout argument
@@ -437,7 +437,7 @@ class CircosPlot(BasePlot):
         the node coordinates this can be used to add additional annotations
         with rotated text.
         """
-        self._init_node_label_meta()
+        self.init_node_label_meta()
 
         for node in self.nodes:
 
@@ -458,15 +458,15 @@ class CircosPlot(BasePlot):
             # Node label x-axis coordinate
             tx, _ = get_cartesian(r=radius, theta=theta)
             # Create the quasi-circular positioning on the x axis
-            tx *= 1 - np.log(np.cos(theta) * self._nonzero_sign(np.cos(theta)))
+            tx *= 1 - np.log(np.cos(theta) * self.nonzero_sign(np.cos(theta)))
             # Move each node a little further away from the circos
-            tx += self._nonzero_sign(x)
+            tx += self.nonzero_sign(x)
 
             # Node label y-axis coordinate numerator
             numerator = radius * \
-                (theta % (self._nonzero_sign(y)*self._nonzero_sign(x)*np.pi))
+                (theta % (self.nonzero_sign(y)*self.nonzero_sign(x)*np.pi))
             # Node label y-axis coordinate denominator
-            denominator = (self._nonzero_sign(x)*np.pi)
+            denominator = (self.nonzero_sign(x)*np.pi)
             # Node label y-axis coordinate
             ty = 2 * (numerator / denominator)
 
@@ -480,16 +480,16 @@ class CircosPlot(BasePlot):
                 rot = theta_deg - 180
 
             # Store values
-            self._store_node_label_meta(x, y, tx, ty, rot)
+            self.store_node_label_meta(x, y, tx, ty, rot)
 
     @staticmethod
-    def _nonzero_sign(xy):
+    def nonzero_sign(xy):
         """
         A sign function that won't return 0
         """
         return -1 if xy < 0 else 1
 
-    def _init_node_label_meta(self):
+    def init_node_label_meta(self):
         """
         This function ensures that self.node_label_coords
         exist with the correct keys and empty entries
@@ -501,24 +501,25 @@ class CircosPlot(BasePlot):
         self.node_label_aligns = {'has': [], 'vas': []}
         self.node_label_rotation = []
 
-    def _store_node_label_meta(self, x, y, tx, ty, rot):
+    def store_node_label_meta(self, x, y, tx, ty, rot):
         """
         This function stored coordinates-related metadate for a node
         This function should not be called by the user
 
-        :param x: x location of node to be stored
+        :param x: x location of node label or number
         :type x: np.float64
 
-        :param y: y location of node to be stored
+        :param y: y location of node label or number
         :type y: np.float64
 
-        :param tx: text location x of node to be stored
-        (in case of node numbering).
+        :param tx: text location x of node label (numbers)
         :type tx: np.float64
 
-        :param ty: text location y of node to be stored
-        (in case of node numbering).
+        :param ty: text location y of node label (numbers)
         :type ty: np.float64
+
+        :param rot: rotation angle of the text (rotation)
+        :type rot: float
         """
 
         # Store computed values
