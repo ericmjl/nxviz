@@ -70,6 +70,11 @@ Ready to contribute? Here's how to set up `nxviz` for local development.
     $ cd nxviz/
     $ python setup.py develop
 
+4. (Optionally) Build the docs::
+
+    $ cd docs/
+    $ make html  # docs will found in _build/html/. Open `index.html` to view the docs; macOS users can do `open _build/html/index.html` to open the docs in your default browser.
+
 4. Create a branch for local development::
 
     $ git checkout -b name-of-your-bugfix-or-feature
