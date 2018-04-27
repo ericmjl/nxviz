@@ -4,6 +4,7 @@ import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
+from more_itertools import unique_everseen
 from matplotlib.cm import get_cmap
 from matplotlib.path import Path
 
@@ -68,10 +69,12 @@ class BasePlot(object):
     :type edgeprops: `dict`
     """  # noqa
     def __init__(self, graph, node_order=None, node_size=None,
-                 node_grouping=None, node_color=None, node_labels=None,
-                 edge_width=None, edge_color=None, data_types=None,
-                 nodeprops=None, edgeprops=None, node_label_color=False,
-                 group_label_position=None, group_label_color=False, **kwargs):
+                 node_grouping=None, group_order="alphabetically",
+                 node_color=None, node_labels=None, edge_width=None,
+                 edge_color=None, data_types=None, nodeprops=None,
+                 edgeprops=None, node_label_color=False,
+                 group_label_position=None, group_label_color=False,
+                 **kwargs):
         super(BasePlot, self).__init__()
         # Set graph object
         self.graph = graph
@@ -80,6 +83,7 @@ class BasePlot(object):
         # Set node arrangement
         self.node_order = node_order
         self.node_grouping = node_grouping
+        self.group_order = group_order
         self.group_and_sort_nodes()
 
         # Set node radius
@@ -192,7 +196,12 @@ class BasePlot(object):
     def compute_node_colors(self):
         """Compute the node colors. Also computes the colorbar."""
         data = [self.graph.node[n][self.node_color] for n in self.nodes]
-        data_reduced = sorted(list(set(data)))
+
+        if self.group_order == "alphabetically":
+            data_reduced = sorted(list(set(data)))
+        elif self.group_order == "default":
+            data_reduced = list(unique_everseen(data))
+
         dtype = infer_data_type(data)
         n_grps = num_discrete_groups(data)
 
@@ -231,7 +240,12 @@ class BasePlot(object):
     def compute_edge_colors(self):
         """Compute the edge colors."""
         data = [self.graph.edges[n][self.edge_color] for n in self.edges]
-        data_reduced = sorted(list(set(data)))
+
+        if self.group_order == "alphabetically":
+            data_reduced = sorted(list(set(data)))
+        elif self.group_order == "default":
+            data_reduced = list(unique_everseen(data))
+
         dtype = infer_data_type(data)
         n_grps = num_discrete_groups(data)
         if dtype == 'categorical' or dtype == 'ordinal':
@@ -313,9 +327,20 @@ class BasePlot(object):
         the Plot constructor.
         """
         if self.node_grouping and not self.node_order:
-            self.nodes = [n for n, d in
-                          sorted(self.graph.nodes(data=True),
-                                 key=lambda x: x[1][self.node_grouping])]
+            if self.group_order == "alphabetically":
+                self.nodes = [n for n, d in
+                              sorted(self.graph.nodes(data=True),
+                                     key=lambda x: x[1][self.node_grouping])]
+
+            elif self.group_order == "default":
+                grp = [d[self.node_grouping] for _, d
+                       in self.graph.nodes(data=True)]
+                grp_name = list(unique_everseen(grp))
+                nodes = []
+                for key in grp_name:
+                    nodes.extend([n for n, d in self.graph.nodes(data=True)
+                                  if key in d.values()])
+                self.nodes = nodes
 
         elif self.node_order and not self.node_grouping:
             self.nodes = [n for n, _ in
@@ -323,10 +348,22 @@ class BasePlot(object):
                                  key=lambda x: x[1][self.node_order])]
 
         elif self.node_grouping and self.node_order:
-            self.nodes = [n for n, d in
-                          sorted(self.graph.nodes(data=True),
-                                 key=lambda x: (x[1][self.node_grouping],
-                                                x[1][self.node_order]))]
+            if self.group_order == "alphabetically":
+                self.nodes = [n for n, d in
+                              sorted(self.graph.nodes(data=True),
+                                     key=lambda x: (x[1][self.node_grouping],
+                                                    x[1][self.node_order]))]
+            elif self.group_order == "default":
+                grp = [d[self.node_grouping] for _, d
+                       in self.graph.nodes(data=True)]
+                grp_name = list(unique_everseen(grp))
+                nodes = []
+                for key in grp_name:
+                    nodes.extend([n for n, d in
+                                  sorted(self.graph.nodes(data=True),
+                                         key=lambda x:x[1][self.node_order])
+                                  if key in d.values()])
+                self.nodes = nodes
 
 
 class CircosPlot(BasePlot):
