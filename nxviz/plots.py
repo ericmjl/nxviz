@@ -47,6 +47,15 @@ class BasePlot(object):
     :param node_grouping: The node attribute on which to specify the grouping position of nodes.
     :type node_grouping: `dict_key` (often `str`)
 
+    :param group_order: The order in which the groups should be plotted.
+    :type group_order: `dict_key` ('alphabetically', 'default')
+
+    :param group_label_position: The position of the group label.
+    :type group_label_position: `dict_key` ('beginning', 'middle', 'end')
+
+    :param group_label_position: Boolean, whether the group labels should be the same color as the nodes.
+    :type group_label_position: `bool`
+
     :param node_color: The node attribute on which to specify the colour of nodes.
     :type node_color: `dict_key` (often `str`)
 
@@ -240,11 +249,7 @@ class BasePlot(object):
     def compute_edge_colors(self):
         """Compute the edge colors."""
         data = [self.graph.edges[n][self.edge_color] for n in self.edges]
-
-        if self.group_order == "alphabetically":
-            data_reduced = sorted(list(set(data)))
-        elif self.group_order == "default":
-            data_reduced = list(unique_everseen(data))
+        data_reduced = sorted(list(set(data)))
 
         dtype = infer_data_type(data)
         n_grps = num_discrete_groups(data)
