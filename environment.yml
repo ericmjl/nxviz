@@ -28,5 +28,6 @@ dependencies:
 - pipreqs
 - isort
 - bumpversion
+- more-itertools
 - pip:
     - sphinxcontrib-fulltoc
