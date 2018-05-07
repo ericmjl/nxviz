@@ -4,6 +4,7 @@ import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
+from more_itertools import unique_everseen
 from matplotlib.cm import get_cmap
 from matplotlib.path import Path
 
@@ -46,6 +47,15 @@ class BasePlot(object):
     :param node_grouping: The node attribute on which to specify the grouping position of nodes.
     :type node_grouping: `dict_key` (often `str`)
 
+    :param group_order: The order in which the groups should be plotted.
+    :type group_order: `dict_key` ('alphabetically', 'default')
+
+    :param group_label_position: The position of the group label.
+    :type group_label_position: `dict_key` ('beginning', 'middle', 'end')
+
+    :param group_label_position: Boolean, whether the group labels should be the same color as the nodes.
+    :type group_label_position: `bool`
+
     :param node_color: The node attribute on which to specify the colour of nodes.
     :type node_color: `dict_key` (often `str`)
 
@@ -68,10 +78,12 @@ class BasePlot(object):
     :type edgeprops: `dict`
     """  # noqa
     def __init__(self, graph, node_order=None, node_size=None,
-                 node_grouping=None, node_color=None, node_labels=None,
-                 edge_width=None, edge_color=None, data_types=None,
-                 nodeprops=None, edgeprops=None, node_label_color=False,
-                 group_label_position=None, group_label_color=False, **kwargs):
+                 node_grouping=None, group_order="alphabetically",
+                 node_color=None, node_labels=None, edge_width=None,
+                 edge_color=None, data_types=None, nodeprops=None,
+                 edgeprops=None, node_label_color=False,
+                 group_label_position=None, group_label_color=False,
+                 **kwargs):
         super(BasePlot, self).__init__()
         # Set graph object
         self.graph = graph
@@ -80,6 +92,7 @@ class BasePlot(object):
         # Set node arrangement
         self.node_order = node_order
         self.node_grouping = node_grouping
+        self.group_order = group_order
         self.group_and_sort_nodes()
 
         # Set node radius
@@ -176,7 +189,9 @@ class BasePlot(object):
         """
         self.draw_nodes()
         self.draw_edges()
-        if self.groups:
+        # note that self.groups only exists on condition
+        # that group_label_position was given!
+        if hasattr(self, 'groups') and self.groups:
             self.draw_group_labels()
         logging.debug('DRAW: {0}'.format(self.sm))
         if self.sm:
@@ -190,7 +205,12 @@ class BasePlot(object):
     def compute_node_colors(self):
         """Compute the node colors. Also computes the colorbar."""
         data = [self.graph.node[n][self.node_color] for n in self.nodes]
-        data_reduced = sorted(list(set(data)))
+
+        if self.group_order == "alphabetically":
+            data_reduced = sorted(list(set(data)))
+        elif self.group_order == "default":
+            data_reduced = list(unique_everseen(data))
+
         dtype = infer_data_type(data)
         n_grps = num_discrete_groups(data)
 
@@ -230,6 +250,7 @@ class BasePlot(object):
         """Compute the edge colors."""
         data = [self.graph.edges[n][self.edge_color] for n in self.edges]
         data_reduced = sorted(list(set(data)))
+
         dtype = infer_data_type(data)
         n_grps = num_discrete_groups(data)
         if dtype == 'categorical' or dtype == 'ordinal':
@@ -311,9 +332,20 @@ class BasePlot(object):
         the Plot constructor.
         """
         if self.node_grouping and not self.node_order:
-            self.nodes = [n for n, d in
-                          sorted(self.graph.nodes(data=True),
-                                 key=lambda x: x[1][self.node_grouping])]
+            if self.group_order == "alphabetically":
+                self.nodes = [n for n, d in
+                              sorted(self.graph.nodes(data=True),
+                                     key=lambda x: x[1][self.node_grouping])]
+
+            elif self.group_order == "default":
+                grp = [d[self.node_grouping] for _, d
+                       in self.graph.nodes(data=True)]
+                grp_name = list(unique_everseen(grp))
+                nodes = []
+                for key in grp_name:
+                    nodes.extend([n for n, d in self.graph.nodes(data=True)
+                                  if key in d.values()])
+                self.nodes = nodes
 
         elif self.node_order and not self.node_grouping:
             self.nodes = [n for n, _ in
@@ -321,27 +353,49 @@ class BasePlot(object):
                                  key=lambda x: x[1][self.node_order])]
 
         elif self.node_grouping and self.node_order:
-            self.nodes = [n for n, d in
-                          sorted(self.graph.nodes(data=True),
-                                 key=lambda x: (x[1][self.node_grouping],
-                                                x[1][self.node_order]))]
+            if self.group_order == "alphabetically":
+                self.nodes = [n for n, d in
+                              sorted(self.graph.nodes(data=True),
+                                     key=lambda x: (x[1][self.node_grouping],
+                                                    x[1][self.node_order]))]
+            elif self.group_order == "default":
+                grp = [d[self.node_grouping] for _, d
+                       in self.graph.nodes(data=True)]
+                grp_name = list(unique_everseen(grp))
+                nodes = []
+                for key in grp_name:
+                    nodes.extend([n for n, d in
+                                  sorted(self.graph.nodes(data=True),
+                                         key=lambda x:x[1][self.node_order])
+                                  if key in d.values()])
+                self.nodes = nodes
 
 
 class CircosPlot(BasePlot):
     """
     Plotting object for CircosPlot.
+
+    Accepts the following additional arguments apart from the ones in
+    `BasePlot`:
+
+    :param node_label_layout: which/whether (a) node layout is used,
+        either 'rotation', 'numbers' or None
+    :type node_label_layout: `string`
     """
 
     def __init__(self, graph, **kwargs):
         """Create the CircosPlot.
-
-        Accepts the following additional arguments apart from the ones in
-        `BasePlot`:
-
-        :param rotate_labels: Whether to rotate node labels.
-        :type node_color: `bool`
         """
-        self.rotate = kwargs.pop("rotate_labels", False)
+
+        # Node labels are specified in the node_label_layout argument
+        specified_layout = kwargs.pop("node_label_layout", None)
+        # Verify that the provided input is legitimate
+        valid_node_label_layouts = (None, 'rotation', 'numbers')
+        assert specified_layout in valid_node_label_layouts
+        # Store the noda label layout
+        self.node_label_layout = specified_layout
+
+        #
         super(CircosPlot, self).__init__(graph, **kwargs)
 
     def compute_group_label_positions(self):
@@ -425,32 +479,40 @@ class CircosPlot(BasePlot):
         the node coordinates this can be used to add additional annotations
         with rotated text.
         """
-        xs = []
-        ys = []
-        has = []
-        vas = []
-        rotations = []
+        self.init_node_label_meta()
+
         for node in self.nodes:
+
+            # Define radius 'radius' and circumference 'theta'
             theta = node_theta(self.nodes, node)
-            radius = 1.02 * (self.plot_radius + self.nodeprops['radius'])
-            x, y = get_cartesian(r=radius, theta=theta)
+            # multiplication factor 1.02 moved below
+            radius = self.plot_radius + self.nodeprops['radius']
 
-            # Computes the text alignment
-            if x == 0:
-                ha = 'center'
-            elif x > 0:
-                ha = 'left'
+            # Coordinates of text inside nodes
+            if self.node_label_layout == 'numbers':
+                radius_adjustment = (1.0 - (1.0/radius))
             else:
-                ha = 'right'
-            if y == 0:
-                va = 'center'
-            elif y > 0:
-                va = 'bottom'
-            else:
-                va = 'top'
+                radius_adjustment = 1.02
+            x, y = get_cartesian(r=radius * radius_adjustment, theta=theta)
 
-            if self.rotate:
-                va = "center"
+            # ----- For numbered nodes -----
+
+            # Node label x-axis coordinate
+            tx, _ = get_cartesian(r=radius, theta=theta)
+            # Create the quasi-circular positioning on the x axis
+            tx *= 1 - np.log(np.cos(theta) * self.nonzero_sign(np.cos(theta)))
+            # Move each node a little further away from the circos
+            tx += self.nonzero_sign(x)
+
+            # Node label y-axis coordinate numerator
+            numerator = radius * \
+                (theta % (self.nonzero_sign(y)*self.nonzero_sign(x)*np.pi))
+            # Node label y-axis coordinate denominator
+            denominator = (self.nonzero_sign(x)*np.pi)
+            # Node label y-axis coordinate
+            ty = 2 * (numerator / denominator)
+
+            # ----- For rotated nodes -----
 
             # Computes the text rotation
             theta_deg = to_degrees(theta)
@@ -459,15 +521,72 @@ class CircosPlot(BasePlot):
             else:  # left side
                 rot = theta_deg - 180
 
-            xs.append(x)
-            ys.append(y)
-            has.append(ha)
-            vas.append(va)
-            rotations.append(rot)
+            # Store values
+            self.store_node_label_meta(x, y, tx, ty, rot)
 
-        self.node_label_coords = {'x': xs, 'y': ys}  # node label coordinates
-        self.node_label_aligns = {'has': has, 'vas': vas}  # node label alignments  # noqa
-        self.node_label_rotation = rotations
+    @staticmethod
+    def nonzero_sign(xy):
+        """
+        A sign function that won't return 0
+        """
+        return -1 if xy < 0 else 1
+
+    def init_node_label_meta(self):
+        """
+        This function ensures that self.node_label_coords
+        exist with the correct keys and empty entries
+        This function should not be called by the user
+        """
+
+        # Reset node label coorc/align dictionaries
+        self.node_label_coords = {'x': [], 'y': [], 'tx': [], 'ty': []}
+        self.node_label_aligns = {'has': [], 'vas': []}
+        self.node_label_rotation = []
+
+    def store_node_label_meta(self, x, y, tx, ty, rot):
+        """
+        This function stored coordinates-related metadate for a node
+        This function should not be called by the user
+
+        :param x: x location of node label or number
+        :type x: np.float64
+
+        :param y: y location of node label or number
+        :type y: np.float64
+
+        :param tx: text location x of node label (numbers)
+        :type tx: np.float64
+
+        :param ty: text location y of node label (numbers)
+        :type ty: np.float64
+
+        :param rot: rotation angle of the text (rotation)
+        :type rot: float
+        """
+
+        # Store computed values
+        self.node_label_coords['x'].append(x)
+        self.node_label_coords['y'].append(y)
+        self.node_label_coords['tx'].append(tx)
+        self.node_label_coords['ty'].append(ty)
+
+        # Computes the text alignment for x
+        if x == 0:
+            self.node_label_aligns['has'].append('center')
+        elif x > 0:
+            self.node_label_aligns['has'].append('left')
+        else:
+            self.node_label_aligns['has'].append('right')
+
+        # Computes the text alignment for y
+        if self.node_label_layout == 'rotate' or y == 0:
+            self.node_label_aligns['vas'].append('center')
+        elif y > 0:
+            self.node_label_aligns['vas'].append('bottom')
+        else:
+            self.node_label_aligns['vas'].append('top')
+
+        self.node_label_rotation.append(rot)
 
     def draw_nodes(self):
         """
@@ -486,17 +605,43 @@ class CircosPlot(BasePlot):
             if self.node_labels:
                 label_x = self.node_label_coords['x'][i]
                 label_y = self.node_label_coords['y'][i]
+                label_tx = self.node_label_coords['tx'][i]
+                label_ty = self.node_label_coords['ty'][i]
                 label_ha = self.node_label_aligns['has'][i]
                 label_va = self.node_label_aligns['vas'][i]
-                rot = 0
-                if self.rotate:
+
+                # ----- Node label rotation layout -----
+
+                if self.node_label_layout == 'rotation':
                     rot = self.node_label_rotation[i]
 
-                self.ax.text(s=node,
-                             x=label_x, y=label_y,
-                             ha=label_ha, va=label_va, rotation=rot,
-                             rotation_mode="anchor",
-                             color=self.node_label_color[i], fontsize=10)
+                    self.ax.text(s=node,
+                                 x=label_x, y=label_y,
+                                 ha=label_ha, va=label_va, rotation=rot,
+                                 rotation_mode="anchor",
+                                 color=self.node_label_color[i], fontsize=10)
+
+                # ----- Node label numbering layout -----
+
+                elif self.node_label_layout == 'numbers':
+
+                    # Draw descriptions for labels
+                    desc = '%s - %s' % ((i, node) if (x > 0) else (node, i))
+                    self.ax.text(s=desc, x=label_tx,
+                                 y=label_ty, ha=label_ha,
+                                 va=label_va, color=self.node_label_color[i])
+
+                    # Add numbers to nodes
+                    self.ax.text(s=i, x=label_x, y=label_y,
+                                 ha='center', va='center')
+
+                # Standard node label layout
+                else:
+
+                    # Draw node text straight from the nodes
+                    self.ax.text(s=node, x=label_x,
+                                 y=label_y, ha=label_ha,
+                                 va=label_va, color=self.node_label_color[i])
 
     def draw_edges(self):
         """
