@@ -28,10 +28,15 @@ def graph_from_dataframe(
     else:
         # otherwise, compute with thresholds based on the contents of the dataframe
         if(threshold_by_count_unique):
-            node_criterion = lambda col: dataframe[col].nunique() <= threshold_by_count_unique
+            node_columns = sorted([
+                    col for col in dataframe.columns
+                    if dataframe[col].nunique() <= threshold_by_count_unique
+                ])
         else:
-            node_criterion = lambda col: dataframe[col].nunique() / dataframe.shape[0] <= threshold_by_percent_unique
-        node_columns = sorted([col for col in dataframe.columns if node_criterion(col)])
+            node_columns = sorted([
+                    col for col in dataframe.columns if
+                    dataframe[col].nunique() / dataframe.shape[0] <= threshold_by_percent_unique
+                ])
 
     # use the unique values for each node column as node types
     for node_type in node_columns:
