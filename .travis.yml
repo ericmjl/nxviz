@@ -29,7 +29,7 @@ install:
 
 script:
   # Your test script goes here
-  - pycodestyle . --max-line-length=120
+  - pycodestyle .
   - py.test
 
 after_success:
