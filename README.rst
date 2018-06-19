@@ -64,6 +64,7 @@ Features
 
 * Declarative API.
 * Works with NetworkX, one of the more popular graph libraries in Python.
+* Can build NetworkX graphs from a pandas DataFrame
 
 Feature Requests
 ----------------
