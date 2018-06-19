@@ -15,11 +15,11 @@ def node_theta(nodelist, node):
     :param node: The node of interest. Must be in the nodelist.
     :returns: theta -- the angle of the node in radians.
     """
-    assert len(nodelist) > 0, 'nodelist must be a list of items.'
-    assert node in nodelist, 'node must be inside nodelist.'
+    assert len(nodelist) > 0, "nodelist must be a list of items."
+    assert node in nodelist, "node must be inside nodelist."
 
     i = nodelist.index(node)
-    theta = -np.pi + i*2*np.pi/len(nodelist)
+    theta = -np.pi + i * 2 * np.pi / len(nodelist)
 
     return theta
 
@@ -34,7 +34,7 @@ def group_theta(node_length, node_idx):
     :param int node_idx: the index of the node of interest.
     :returns: theta -- the angle of the node of interest in radians.
     """
-    theta = -np.pi + node_idx*2*np.pi/node_length
+    theta = -np.pi + node_idx * 2 * np.pi / node_length
     return theta
 
 
@@ -54,17 +54,17 @@ def text_alignment(x, y):
         respectively.
     """
     if x == 0:
-        ha = 'center'
+        ha = "center"
     elif x > 0:
-        ha = 'left'
+        ha = "left"
     else:
-        ha = 'right'
+        ha = "right"
     if y == 0:
-        va = 'center'
+        va = "center"
     elif y > 0:
-        va = 'bottom'
+        va = "bottom"
     else:
-        va = 'top'
+        va = "top"
 
     return ha, va
 

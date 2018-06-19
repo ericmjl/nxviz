@@ -3,8 +3,12 @@ import numpy as np
 import nxviz.polcart as polcart
 from hypothesis import assume, given, settings
 from hypothesis.strategies import floats, integers, lists
-from nxviz.geometry import (circos_radius, correct_negative_angle,
-                            get_cartesian, node_theta)
+from nxviz.geometry import (
+    circos_radius,
+    correct_negative_angle,
+    get_cartesian,
+    node_theta,
+)
 
 
 def test_circos_radius():
@@ -33,7 +37,7 @@ def test_node_theta(nodelist, node):
     theta_obs = node_theta(nodelist, node)
 
     i = nodelist.index(node)
-    theta_exp = -np.pi + i*2*np.pi/len(nodelist)
+    theta_exp = -np.pi + i * 2 * np.pi / len(nodelist)
     if theta_exp > np.pi:
         theta_exp = np.pi - theta_exp
     assert np.allclose(theta_obs, theta_exp)

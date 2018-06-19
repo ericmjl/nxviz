@@ -6,8 +6,10 @@ def to_cartesian(r, theta, theta_units="radians"):
     """
     Converts polar r, theta to cartesian x, y.
     """
-    assert theta_units in ['radians', 'degrees'],\
-        "kwarg theta_units must specified in radians or degrees"
+    assert theta_units in [
+        "radians",
+        "degrees",
+    ], "kwarg theta_units must specified in radians or degrees"
 
     # Convert to radians
     if theta_units == "degrees":
@@ -24,11 +26,13 @@ def to_polar(x, y, theta_units="radians"):
     """
     Converts cartesian x, y to polar r, theta.
     """
-    assert theta_units in ['radians', 'degrees'],\
-        "kwarg theta_units must specified in radians or degrees"
+    assert theta_units in [
+        "radians",
+        "degrees",
+    ], "kwarg theta_units must specified in radians or degrees"
 
     theta = atan2(y, x)
-    r = sqrt(x**2 + y**2)
+    r = sqrt(x ** 2 + y ** 2)
 
     if theta_units == "degrees":
         theta = to_degrees(theta)
