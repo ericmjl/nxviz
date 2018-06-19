@@ -47,7 +47,9 @@ def infer_data_type(data_container):
         len(set(data_container)) > 1
     ), "There should be more than one value in the data container."
     # 2. Don't want to deal with mixed data.
-    assert is_data_homogenous(data_container), "Data are not of a homogenous type!"
+    assert is_data_homogenous(
+        data_container
+    ), "Data are not of a homogenous type!"
 
     # Once we check that the data type of the container is homogenous, we only
     # need to check the first element in the data container for its type.

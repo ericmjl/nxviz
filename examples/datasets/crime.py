@@ -22,7 +22,8 @@ def load_crime_network():
 
     # Read in the role metadata
     roles = pd.read_csv(
-        curr_path + "/moreno_crime/rel.moreno_crime_crime.person.role", header=None
+        curr_path + "/moreno_crime/rel.moreno_crime_crime.person.role",
+        header=None,
     )
     roles.columns = ["roles"]
     roles.index += 1
@@ -38,7 +39,8 @@ def load_crime_network():
 
     # Read in the gender metadata
     gender = pd.read_csv(
-        curr_path + "/moreno_crime/ent.moreno_crime_crime.person.sex", header=None
+        curr_path + "/moreno_crime/ent.moreno_crime_crime.person.sex",
+        header=None,
     )
     gender.index += 1
     for n, gender_code in gender.iterrows():
@@ -57,7 +59,10 @@ for n in G.nodes():
 
 # Make a CircosPlot of the bipartite graph
 c = CircosPlot(
-    G, node_grouping="bipartite", node_order="connectivity", node_color="bipartite"
+    G,
+    node_grouping="bipartite",
+    node_order="connectivity",
+    node_color="bipartite",
 )
 c.draw()
 
