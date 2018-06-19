@@ -39,15 +39,15 @@ def infer_data_type(data_container):
     """
     # Defensive programming checks.
     # 0. Ensure that we are dealing with lists or tuples, and nothing else.
-    assert isinstance(data_container, list) or \
-        isinstance(data_container, tuple), \
-        "data_container should be a list or tuple."
+    assert isinstance(data_container, list) or isinstance(
+        data_container, tuple
+    ), "data_container should be a list or tuple."
     # 1. Don't want to deal with only single values.
-    assert len(set(data_container)) > 1, \
-        "There should be more than one value in the data container."
+    assert (
+        len(set(data_container)) > 1
+    ), "There should be more than one value in the data container."
     # 2. Don't want to deal with mixed data.
-    assert is_data_homogenous(data_container), \
-        "Data are not of a homogenous type!"
+    assert is_data_homogenous(data_container), "Data are not of a homogenous type!"
 
     # Once we check that the data type of the container is homogenous, we only
     # need to check the first element in the data container for its type.
@@ -57,19 +57,19 @@ def infer_data_type(data_container):
     # treat binomial data as categorical
     # TODO: make tests for this.
     if len(set(data_container)) == 2:
-        return 'categorical'
+        return "categorical"
 
     elif isinstance(datum, str):
-        return 'categorical'
+        return "categorical"
 
     elif isinstance(datum, int):
-        return 'ordinal'
+        return "ordinal"
 
     elif isinstance(datum, float):
-        return 'continuous'
+        return "continuous"
 
     else:
-        raise ValueError('Not possible to tell what the data type is.')
+        raise ValueError("Not possible to tell what the data type is.")
 
 
 def is_data_diverging(data_container):
@@ -81,8 +81,10 @@ def is_data_diverging(data_container):
     :param data_container: A generic container of data points.
     :type data_container: `iterable`
     """
-    assert infer_data_type(data_container) in ['ordinal', 'continuous'], \
-        "Data type should be ordinal or continuous"
+    assert infer_data_type(data_container) in [
+        "ordinal",
+        "continuous",
+    ], "Data type should be ordinal or continuous"
 
     # Check whether the data contains negative and positive values.
     has_negative = False
@@ -108,7 +110,7 @@ def is_groupable(data_container):
     :type data_container: `iterable`
     """
     is_groupable = False
-    if infer_data_type(data_container) in ['categorical', 'ordinal']:
+    if infer_data_type(data_container) in ["categorical", "ordinal"]:
         is_groupable = True
     return is_groupable
 
@@ -143,15 +145,16 @@ def n_group_colorpallet(n):
 
 
 cmaps = {
-    'Accent_2': qualitative.Accent_3,
-    'Accent_3': qualitative.Accent_3,
-    'Accent_4': qualitative.Accent_4,
-    'Accent_5': qualitative.Accent_5,
-    'Accent_6': qualitative.Accent_6,
-    'Accent_7': qualitative.Accent_7,
-    'Accent_8': qualitative.Accent_8,
-    'continuous': sequential.YlGnBu_9,
-    'diverging': diverging.RdBu_11,
-    'weights': sns.cubehelix_palette(50, hue=0.05, rot=0, light=0.9, dark=0,
-                                     as_cmap=True)
+    "Accent_2": qualitative.Accent_3,
+    "Accent_3": qualitative.Accent_3,
+    "Accent_4": qualitative.Accent_4,
+    "Accent_5": qualitative.Accent_5,
+    "Accent_6": qualitative.Accent_6,
+    "Accent_7": qualitative.Accent_7,
+    "Accent_8": qualitative.Accent_8,
+    "continuous": sequential.YlGnBu_9,
+    "diverging": diverging.RdBu_11,
+    "weights": sns.cubehelix_palette(
+        50, hue=0.05, rot=0, light=0.9, dark=0, as_cmap=True
+    ),
 }

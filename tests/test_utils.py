@@ -1,16 +1,21 @@
 import pytest
 
-from nxviz.utils import (infer_data_type, is_data_diverging,
-                         is_data_homogenous, is_groupable, num_discrete_groups)
+from nxviz.utils import (
+    infer_data_type,
+    is_data_diverging,
+    is_data_homogenous,
+    is_groupable,
+    num_discrete_groups,
+)
 
-categorical = ['sun', 'moon', 'light']
+categorical = ["sun", "moon", "light"]
 ordinal = [1, 2, 3, 4, 5]
-mixed = ['sun', 1, 2.5]
+mixed = ["sun", 1, 2.5]
 continuous = [1.0, 1.1, 1.2]
 diverging_ordinal = [1, 2, 3, 4, -1, -2, -3, -4]
 diverging_continuous = [0.0, 0.1, 0.2, 0.3, -0.1, -0.2, -0.3]
 unknown_type = [(1, 2), (2, 3), (3, 4)]
-binomial = ['hello', 'interesting']
+binomial = ["hello", "interesting"]
 binomial_integer = [0, 1]
 binomial_float = [0.1, 0.2]
 
@@ -23,9 +28,9 @@ def test_is_data_homogenous():
 
 
 def test_infer_data_type():
-    assert infer_data_type(categorical) == 'categorical'
-    assert infer_data_type(ordinal) == 'ordinal'
-    assert infer_data_type(continuous) == 'continuous'
+    assert infer_data_type(categorical) == "categorical"
+    assert infer_data_type(ordinal) == "ordinal"
+    assert infer_data_type(continuous) == "continuous"
 
 
 def test_is_data_diverging():
@@ -53,6 +58,6 @@ def test_num_discrete_groups():
 
 
 def test_binomial():
-    assert infer_data_type(binomial) == 'categorical'
-    assert infer_data_type(binomial_float) == 'categorical'
-    assert infer_data_type(binomial_integer) == 'categorical'
+    assert infer_data_type(binomial) == "categorical"
+    assert infer_data_type(binomial_float) == "categorical"
+    assert infer_data_type(binomial_integer) == "categorical"

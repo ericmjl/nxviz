@@ -17,6 +17,6 @@ G = nx.barbell_graph(m1=10, m2=3)
 m = MatrixPlot(G)
 
 # Change the cmap prior to drawing.
-m.cmap = plt.cm.get_cmap('Greens')
+m.cmap = plt.cm.get_cmap("Greens")
 m.draw()
 plt.show()

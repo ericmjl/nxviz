@@ -9,13 +9,11 @@ from nxviz import CircosPlot
 
 G = nx.barbell_graph(m1=5, m2=3)
 # let's give the nodes some longer labels
-G = nx.relabel_nodes(G,
-                     {i: "long name #" + str(i) for i in range(len(G))}
-                     )
+G = nx.relabel_nodes(G, {i: "long name #" + str(i) for i in range(len(G))})
 
 # try it `node_label_layout=False` to see how the long names overlap each other
-c = CircosPlot(G, node_labels=True, node_label_layout='numbers')
-c.node_colors = ['skyblue' for node_color in c.node_colors]
+c = CircosPlot(G, node_labels=True, node_label_layout="numbers")
+c.node_colors = ["skyblue" for node_color in c.node_colors]
 c.draw()
 # the rotated labels take up more space, so we will have to increase the
 # padding a bit. 15% on all sides works well here.

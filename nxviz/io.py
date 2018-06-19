@@ -3,17 +3,18 @@ from networkx import Graph, MultiGraph
 
 
 def graph_from_dataframe(
-        dataframe,
-        threshold_by_percent_unique=0.1,
-        threshold_by_count_unique=None,
-        node_id_columns=[],
-        node_property_columns=[],
-        edge_property_columns=[],
-        node_type_key='type',
-        edge_type_key='type',
-        collapse_edges=True,
-        edge_agg_key='weight'):
-    '''
+    dataframe,
+    threshold_by_percent_unique=0.1,
+    threshold_by_count_unique=None,
+    node_id_columns=[],
+    node_property_columns=[],
+    edge_property_columns=[],
+    node_type_key="type",
+    edge_type_key="type",
+    collapse_edges=True,
+    edge_agg_key="weight",
+):
+    """
     Build an undirected graph from a pandas dataframe.
 
     This function attempts to infer which cells should become nodes
@@ -43,10 +44,11 @@ def graph_from_dataframe(
     :param bool collapse_edges: Graphs are instantiated as a 'MultiGraph' (allow multiple edges between nodes) and then collapsed into a 'Graph' which only has a single edge between any two nodes. Information is preserved by aggregating the count of those edges as a 'weight' value. Set this value to False to return the MultiGraph. Note: this can cause the size of the graph to expand significantly since each row can potentially have n! edges where n is the number of columns in the dataframe.
     :param str edge_agg_key: A string that sets the key the edge count will be assigned to when edges are aggregated.
     :returns: A networkx Graph (or MultiGraph if collapse_edges is set to False).
-    '''
+    """
 
-    assert isinstance(dataframe, pd.DataFrame), \
-        "{} is not a pandas DataFrame".format(dataframe)
+    assert isinstance(dataframe, pd.DataFrame), "{} is not a pandas DataFrame".format(
+        dataframe
+    )
 
     M = MultiGraph()
 
@@ -55,21 +57,32 @@ def graph_from_dataframe(
         node_columns = node_id_columns
     else:
         # otherwise, compute with thresholds based on the dataframe
-        if(threshold_by_count_unique):
-            node_columns = sorted([
-                    col for col in dataframe.columns
+        if threshold_by_count_unique:
+            node_columns = sorted(
+                [
+                    col
+                    for col in dataframe.columns
                     if dataframe[col].nunique() <= threshold_by_count_unique
-                ])
+                ]
+            )
         else:
-            node_columns = sorted([
-                    col for col in dataframe.columns if
-                    dataframe[col].nunique() / dataframe.shape[0] <= threshold_by_percent_unique  # NOQA to preserve meaningful variable names
-                ])
+            node_columns = sorted(
+                [
+                    col
+                    for col in dataframe.columns
+                    if dataframe[col].nunique() / dataframe.shape[0]
+                    <= threshold_by_percent_unique  # NOQA to preserve meaningful variable names
+                ]
+            )
 
     # use the unique values for each node column as node types
     for node_type in node_columns:
-        M.add_nodes_from([(node, {node_type_key: node_type})
-                          for node in dataframe[node_type].unique()])
+        M.add_nodes_from(
+            [
+                (node, {node_type_key: node_type})
+                for node in dataframe[node_type].unique()
+            ]
+        )
 
     # iterate over the rows and generate an edge for each pair of node columns
     for i, row in dataframe.iterrows():
@@ -95,7 +108,7 @@ def graph_from_dataframe(
             # build edges using precomputed edge properties
             for other_node_id, other_node_type in node_buffer:
                 # sort node_type so undirected edges all share the same type
-                ordered_name = '_'.join(sorted([node_type, other_node_type]))
+                ordered_name = "_".join(sorted([node_type, other_node_type]))
                 edge_properties[edge_type_key] = ordered_name
                 M.add_edge(node_id, other_node_id, **edge_properties)
 
