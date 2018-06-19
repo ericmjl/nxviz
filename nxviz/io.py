@@ -9,18 +9,42 @@ def graph_from_dataframe(
         node_id_columns=[],
         node_property_columns=[],
         edge_property_columns=[],
+        node_type_key='type',
+        edge_type_key='type',
         collapse_edges=True,
         edge_agg_key='weight'):
     '''
     Build an undirected graph from a pandas dataframe.
+
     This function attempts to infer which cells should become nodes
     based on either:
-        a) what percentage of the column are unique values (defaults to 10%)
-        b) an explicit count of unique values
-            (i.e. any column with 10 unique columns or less)
-        c) an explicit list of column keys
-            (i.e. ['employee_id', 'location_code'])
+
+        a. what percentage of the column are unique values (defaults to 10%)
+        b. an explicit count of unique values (i.e. any column with 7 unique values or less)
+        c. an explicit list of column keys (i.e. ['employee_id', 'location_code'])
+
+    Column headers are preserved as node and edge 'types'. By default, this is
+    stored using the key 'type' which is used by some graph import processes
+    but can be reconfigured.
+
+    This function uses a MultiGraph structure during the build phase so that it
+    is possible to make multiple connections between nodes. By default, at the
+    end of the build phase, the MultiGraph is converted to a Graph and the
+    count of edges between each node-pair is written as a 'weight' property.
+
+    :param pandas.DataFrame dataframe: A pandas dataframe containing the data to be converted into a graph.
+    :param float threshold_by_percent_unique: A percent value used to determine whether a column should be used to generate nodes based on its cardinality (i.e. in a dataframe with 100 rows, treat any column with 10 or less unique values as a node)
+    :param int threshold_by_count_unique: A numeric value used to determine whether a column should be used to generate nodes based on its cardinality (i.e. if 7 is supplied, treat any column with 7 or less unique values as a node) - supplying a value will take priority over percent_unique
+    :param list node_id_columns: A list of column headers to use for generating nodes. Suppyling any value will take precedence over threshold_by_percent_unique or threshold_by_count_unique. Note: this can cause the size of the graph to expand significantly since every unique value in a column will become a node.
+    :param list node_property_columns: A list of column headers to use for generating properties of nodes. These can include the same column headers used for the node id.
+    :param list edge_property_columns: A list of column headers to use for generating properties of edges.
+    :param str node_type_key: A string that sets the key will be used to preserve the column name as node property (this is useful for importing networkx graphs to databases that distinguish between node 'types' or for visually encoding those types in plots).
+    :param str edge_type_key: A string that sets the key will be used to keep track of edge relationships an 'types' (this is useful for importing networkx graphs to databases that distinguish between edge'types' or for visually encoding those types in plots). Edge type values are automatically set to <node_a_id>_<node_b_id>.
+    :param bool collapse_edges: Graphs are instantiated as a 'MultiGraph' (allow multiple edges between nodes) and then collapsed into a 'Graph' which only has a single edge between any two nodes. Information is preserved by aggregating the count of those edges as a 'weight' value. Set this value to False to return the MultiGraph. Note: this can cause the size of the graph to expand significantly since each row can potentially have n! edges where n is the number of columns in the dataframe.
+    :param str edge_agg_key: A string that sets the key the edge count will be assigned to when edges are aggregated.
+    :returns: A networkx Graph (or MultiGraph if collapse_edges is set to False).
     '''
+
     assert isinstance(dataframe, pd.DataFrame), \
         "{} is not a pandas DataFrame".format(dataframe)
 
@@ -44,7 +68,7 @@ def graph_from_dataframe(
 
     # use the unique values for each node column as node types
     for node_type in node_columns:
-        M.add_nodes_from([(node, {'type': node_type})
+        M.add_nodes_from([(node, {node_type_key: node_type})
                           for node in dataframe[node_type].unique()])
 
     # iterate over the rows and generate an edge for each pair of node columns
@@ -72,7 +96,7 @@ def graph_from_dataframe(
             for other_node_id, other_node_type in node_buffer:
                 # sort node_type so undirected edges all share the same type
                 ordered_name = '_'.join(sorted([node_type, other_node_type]))
-                edge_properties['type'] = ordered_name
+                edge_properties[edge_type_key] = ordered_name
                 M.add_edge(node_id, other_node_id, **edge_properties)
 
             # store the node from this column in the buffer for future edges
