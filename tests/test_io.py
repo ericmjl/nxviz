@@ -14,7 +14,9 @@ data_generator = (
         i % 10,
         choice(["red", "green", "blue"]),
         choice(["A", "B"]),
-        choice(["New York", "San Francisco", "Chicago", "LA", "Austin", "Boston"]),
+        choice(
+            ["New York", "San Francisco", "Chicago", "LA", "Austin", "Boston"]
+        ),
     )
     for i in range(0, n_nodes)
 )
@@ -61,7 +63,10 @@ def test_node_properties():
 
     assert g.number_of_nodes() == 5
     assert g.number_of_edges() == 6
-    assert g.nodes["A"] == {"ten_things": "4|6|7|8|0|1|2|3|5|9", "type": "group"}
+    assert g.nodes["A"] == {
+        "ten_things": "4|6|7|8|0|1|2|3|5|9",
+        "type": "group",
+    }
 
 
 def test_edge_properties():
