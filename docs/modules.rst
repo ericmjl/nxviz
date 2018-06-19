@@ -12,6 +12,12 @@ This is the most important part of nxviz - all of the plot objects are defined h
 .. automodule:: nxviz.plots
    :members:
 
+io
+--
+
+.. automodule:: nxviz.io
+   :members:
+
 geometry
 --------
 
