@@ -1,4 +1,4 @@
-hypothesis==3.64.2
+hypothesis==3.65.0
 pytest==3.6.1
 cryptography==2.2.2
 pandas==0.23.1
