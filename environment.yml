@@ -31,5 +31,7 @@ dependencies:
 - bumpversion
 - more-itertools
 - jupyterlab
+- seaborn
+- pyyaml
 - pip:
     - sphinxcontrib-fulltoc
