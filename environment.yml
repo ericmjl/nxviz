@@ -30,5 +30,6 @@ dependencies:
 - isort
 - bumpversion
 - more-itertools
+- jupyterlab
 - pip:
     - sphinxcontrib-fulltoc
