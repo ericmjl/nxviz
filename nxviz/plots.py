@@ -2,28 +2,21 @@ import logging
 
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
-import networkx as nx
-import numpy as np
-from more_itertools import unique_everseen
 from matplotlib.cm import get_cmap
 from matplotlib.path import Path
+from matplotlib.lines import Line2D
 
-from .geometry import (
-    circos_radius,
-    get_cartesian,
-    node_theta,
-    group_theta,
-    text_alignment,
-)
+from more_itertools import unique_everseen
+
+import networkx as nx
+
+import numpy as np
+
+from .geometry import (circos_radius, get_cartesian, group_theta, node_theta,
+                       text_alignment)
 from .polcart import to_degrees
-from .utils import (
-    cmaps,
-    infer_data_type,
-    is_data_diverging,
-    num_discrete_groups,
-    n_group_colorpallet,
-    items_in_groups,
-)
+from .utils import (cmaps, infer_data_type, is_data_diverging, items_in_groups,
+                    n_group_colorpallet, num_discrete_groups)
 
 
 def despine(ax):
@@ -1026,3 +1019,93 @@ class ArcPlot(BasePlot):
         xlimits = (-1, len(self.nodes) + 1)
         self.ax.set_xlim(*xlimits)
         self.ax.set_ylim(*xlimits)
+
+
+class GeoPlot(BasePlot):
+    """
+    Plotting object for GeoPlot.
+
+    User only has to specify the keyword arguments that specify the longitude
+    and latittude of a node.
+    """
+
+    def __init__(self, graph, node_lat: str, node_lon: str,
+                 backend: str = 'matplotlib', **kwargs):
+        """
+        Create the GeoPlot.
+
+        :param graph: The graph object.
+        :param node_lat: Node attribute that describes latitutde.
+        :param node_lon: Node attribute that describes longitude.
+        :param backend: Which backend to use - either `matplotlib` or `altair`.
+        """
+        self.graph = graph
+        self.node_lat = node_lat
+        self.node_lon = node_lon
+        # Set backend: matplotlib or altair
+        assert backend in ['matplotlib', 'altair']
+        self.backend == backend
+
+        # If the user chooses the altair backend, then we have to convert the
+        # graph data back into a nodelist and edgelist dataframes.
+        if self.backend == 'altair':
+            node_df = to_pandas_nodes(self.graph)
+            edge_df = to_pandas_edges(self.graph)
+
+        super(GeoPlot, self).__init__(graph, **kwargs)
+
+    def compute_node_positions(self):
+        """
+        Extracts the node positions based on the specified longitude and
+        latitude keyword arguments.
+        """
+        xs = []
+        ys = []
+        self.locs = dict()
+
+        for node in self.nodes:
+            x = self.graph.node[node][self.node_lon]
+            y = self.graph.node[node][self.node_lat]
+            xs.append(x)
+            ys.append(y)
+            self.locs[node] = (x, y)
+
+        self.node_coords = {'x': xs, 'y': ys}
+
+    def draw_nodes(self):
+        """
+        Draws nodes to the screen.
+
+        GeoPlot is the first plot kind to support an Altair backend in addition
+        to the usual matplotlib backend.
+        """
+        if self.backend == 'matplotlib':
+            node_r = 0.005  # temporarily hardcoded.
+            for i, node in enumerate(self.nodes):
+                x = self.node_coords["x"][i]
+                y = self.node_coords["y"][i]
+                color = self.node_colors[i]
+                node_patch = patches.Ellipse(
+                    (x, y), node_r, node_r, lw=0, color=color, zorder=2
+                )
+                self.ax.add_patch(node_patch)
+        elif self.backend == 'altair':
+            pass
+
+    def draw_edges(self, backend='matplotlib'):
+        """
+        Draws edges to screen.
+        """
+        if self.backend == 'matplotlib':
+            for i, (n1, n2) in enumerate(self.edges):
+                x1, y1 = self.locs[n1]
+                x2, y2 = self.locs[n2]
+                color = self.edge_colors[i]
+                line = Line2D(xdata=[x1, x2], ydata=[y1, y2], color=color,
+                              zorder=0, alpha=0.3)
+                self.ax.add_line(line)
+        elif self.backend == 'altair':
+            pass
+
+    def draw(self):
+        super(GeoPlot, self).draw()
