@@ -1,7 +1,9 @@
-import seaborn as sns
-from palettable.colorbrewer import diverging, qualitative, sequential
-from matplotlib.colors import ListedColormap
 from collections import Counter
+
+import pandas as pd
+import seaborn as sns
+from matplotlib.colors import ListedColormap
+from palettable.colorbrewer import diverging, qualitative, sequential
 
 
 def is_data_homogenous(data_container):
