@@ -12,6 +12,7 @@ dependencies:
 - setuptools
 - pycodestyle
 - pydocstyle
+- black
 - click
 - pandas
 - coverage
