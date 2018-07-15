@@ -1,22 +1,21 @@
 import logging
 
+import altair as alt
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
-from matplotlib.cm import get_cmap
-from matplotlib.path import Path
-from matplotlib.lines import Line2D
-
-from more_itertools import unique_everseen
-
 import networkx as nx
-
 import numpy as np
+from matplotlib.cm import get_cmap
+from matplotlib.lines import Line2D
+from matplotlib.path import Path
+from more_itertools import unique_everseen
 
 from .geometry import (circos_radius, get_cartesian, group_theta, node_theta,
                        text_alignment)
 from .polcart import to_degrees
 from .utils import (cmaps, infer_data_type, is_data_diverging, items_in_groups,
-                    n_group_colorpallet, num_discrete_groups)
+                    n_group_colorpallet, num_discrete_groups, to_pandas_edges,
+                    to_pandas_nodes)
 
 
 def despine(ax):
@@ -1044,13 +1043,15 @@ class GeoPlot(BasePlot):
         self.node_lon = node_lon
         # Set backend: matplotlib or altair
         assert backend in ['matplotlib', 'altair']
-        self.backend == backend
+        self.backend = backend
 
         # If the user chooses the altair backend, then we have to convert the
         # graph data back into a nodelist and edgelist dataframes.
         if self.backend == 'altair':
-            node_df = to_pandas_nodes(self.graph)
-            edge_df = to_pandas_edges(self.graph)
+            self.node_df = to_pandas_nodes(self.graph)
+            self.edge_df = to_pandas_edges(self.graph,
+                                           x_kw=self.node_lon,
+                                           y_kw=self.node_lat)
 
         super(GeoPlot, self).__init__(graph, **kwargs)
 
@@ -1090,9 +1091,18 @@ class GeoPlot(BasePlot):
                 )
                 self.ax.add_patch(node_patch)
         elif self.backend == 'altair':
-            pass
+            self.node_chart = (alt.Chart(self.node_df)
+                                  .mark_point()
+                                  .encode(alt.X(f'{self.node_lon}:Q',
+                                                scale=alt.Scale(zero=False)
+                                                ),
+                                          alt.Y(f'{self.node_lat}:Q',
+                                                scale=alt.Scale(zero=False)
+                                                )
+                                          )
+                               )
 
-    def draw_edges(self, backend='matplotlib'):
+    def draw_edges(self):
         """
         Draws edges to screen.
         """
@@ -1105,7 +1115,20 @@ class GeoPlot(BasePlot):
                               zorder=0, alpha=0.3)
                 self.ax.add_line(line)
         elif self.backend == 'altair':
-            pass
+            marker_attrs = dict()
+            marker_attrs['color'] = 'black'  # MAGICNUMBER
+            marker_attrs['strokeWidth'] = 1  # MAGICNUMBER
+            self.edge_chart = (alt.Chart(self.edge_df)
+                                  .mark_line(**marker_attrs)
+                                  .encode(alt.X(f'{self.node_lon}:Q'),
+                                          alt.Y(f'{self.node_lat}:Q'),
+                                          detail='edge'))
 
     def draw(self):
-        super(GeoPlot, self).draw()
+        if self.backend == 'matplotlib':
+            super(GeoPlot, self).draw()
+        elif self.backend == 'altair':
+            self.draw_nodes()
+            self.draw_edges()
+            self.viz = self.node_chart + self.edge_chart
+            return self.viz.interactive()
