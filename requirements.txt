@@ -1,4 +1,4 @@
-hypothesis==3.66.1
+hypothesis==3.66.6
 pytest==3.6.3
 cryptography==2.2.2
 pandas==0.23.3
@@ -9,5 +9,5 @@ setuptools==40.0.0
 numpy==1.14.5
 PyYAML==3.13
 sphinxcontrib-fulltoc==1.2.0
-seaborn==0.8.1
+seaborn==0.9.0
 more-itertools==4.2.0
