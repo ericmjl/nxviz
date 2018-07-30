@@ -1,12 +1,12 @@
-hypothesis==3.66.11
 pytest==3.6.4
-cryptography==2.2.2
+hypothesis==3.66.14
+cryptography==2.3
 pandas==0.23.3
 matplotlib==2.2.2
 palettable==3.1.1
 networkx==2.1
 setuptools==40.0.0
-numpy==1.14.5
+numpy==1.15.0
 PyYAML==3.13
 sphinxcontrib-fulltoc==1.2.0
 seaborn==0.9.0
