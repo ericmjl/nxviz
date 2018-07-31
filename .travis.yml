@@ -5,9 +5,17 @@ before_script:
   - sleep 5 # give xvfb some time to start
 
 language: python
-python:
-  # We don't actually use the Travis Python, but this keeps it organized.
-  - "3.5"
+matrix:
+  include:
+    - python: 3.5  # we don't actually use this
+      env: PYTHON_VERSION=3.5
+
+    - python: 3.5  # we don't actually use this
+      env: PYTHON_VERSION=3.6
+
+    - python: 3.5  # we don't actually use this
+      env: PYTHON_VERSION=3.7
+
 install:
   # We do this conditionally because it saves us some downloading if the
   # version is the same.
@@ -22,8 +30,9 @@ install:
   # Useful for debugging any issues with conda
   - conda info -a
 
-  # Install Python, py.text, and required packages.
+  # Install Python, py.test, and required packages.
   - conda env create -f environment.yml
+  - conda install python=$PYTHON_VERSION
   - source activate nxviz
   - python setup.py install
 
