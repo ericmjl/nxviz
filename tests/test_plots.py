@@ -9,22 +9,28 @@ the following issue:
 
 import networkx as nx
 
-from nxviz import ArcPlot, CircosPlot, MatrixPlot
+from nxviz import ArcPlot, CircosPlot, GeoPlot, MatrixPlot
 
 G = nx.erdos_renyi_graph(n=20, p=0.2)
 
 
 def test_circos_plot():
-    c = CircosPlot(G)
+    c = CircosPlot(G)  # noqa: F841
 
 
 def test_matrix_plot():
-    m = MatrixPlot(G)
+    m = MatrixPlot(G)  # noqa: F841
 
 
 def test_arc_plot():
-    a = ArcPlot(G)
+    a = ArcPlot(G)  # noqa: F841
+
+
+def test_geo_plot():
+    G = nx.read_gpickle('data/divvy.pkl')  # noqa: N806
+    g = GeoPlot(G, node_lat='latitude', node_lon='longitude',  # noqa: F841
+                color='dpcapacity')
 
 
 def test_plot_size():
-    c = CircosPlot(G, figsize=(3, 3))
+    c = CircosPlot(G, figsize=(3, 3))  # noqa: F841
