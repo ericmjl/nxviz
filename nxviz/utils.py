@@ -1,7 +1,9 @@
-import seaborn as sns
-from palettable.colorbrewer import diverging, qualitative, sequential
-from matplotlib.colors import ListedColormap
 from collections import Counter
+
+import pandas as pd
+import seaborn as sns
+from matplotlib.colors import ListedColormap
+from palettable.colorbrewer import diverging, qualitative, sequential
 
 
 def is_data_homogenous(data_container):
@@ -160,3 +162,63 @@ cmaps = {
         50, hue=0.05, rot=0, light=0.9, dark=0, as_cmap=True
     ),
 }
+
+
+def to_pandas_nodes(G):  # noqa: N803
+    """
+    Convert nodes in the graph into a pandas DataFrame.
+    """
+    data = []
+    for n, meta in G.nodes(data=True):
+        d = dict()
+        d['node'] = n
+        d.update(meta)
+        data.append(d)
+    return pd.DataFrame(data)
+
+
+def to_pandas_edges(G, x_kw, y_kw, **kwargs):  # noqa: N803
+    """
+    Convert Graph edges to pandas DataFrame that's readable to Altair.
+    """
+    # Get all attributes in nodes
+    attributes = ['source', 'target', 'x', 'y', 'edge', 'pair']
+    for e in G.edges():
+        attributes += list(G.edges[e].keys())
+    attributes = list(set(attributes))
+
+    # Build a dataframe for all edges and their attributes
+    df = pd.DataFrame(
+        index=range(G.size()*2),
+        columns=attributes
+    )
+
+    # Add node data to dataframe.
+    for i, (n1, n2, d) in enumerate(G.edges(data=True)):
+        idx = i*2
+        x = G.node[n1][x_kw]
+        y = G.node[n1][y_kw]
+        data1 = dict(
+            edge=i,
+            source=n1,
+            target=n2,
+            pair=(n1, n2),
+            x=x,
+            y=y,
+            **d
+        )
+
+        data2 = dict(
+            edge=i,
+            source=n1,
+            target=n2,
+            pair=(n1, n2),
+            x=x,
+            y=y,
+            **d
+        )
+
+        df.loc[idx] = data1
+        df.loc[idx+1] = data2
+
+    return df

@@ -12,6 +12,7 @@ dependencies:
 - setuptools
 - pycodestyle
 - pydocstyle
+- black
 - click
 - pandas
 - coverage
@@ -29,5 +30,8 @@ dependencies:
 - isort
 - bumpversion
 - more-itertools
+- jupyterlab
+- seaborn
+- pyyaml
 - pip:
     - sphinxcontrib-fulltoc
