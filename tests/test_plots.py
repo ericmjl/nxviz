@@ -8,10 +8,19 @@ the following issue:
 """
 
 import networkx as nx
+from random import random
 
 from nxviz import ArcPlot, CircosPlot, GeoPlot, MatrixPlot
+from pathlib import Path
+import os.path as osp
 
 G = nx.erdos_renyi_graph(n=20, p=0.2)
+
+G_geo = G.copy()
+for n, d in G_geo.nodes(data=True):
+    G_geo.node[n]['latitude'] = random()
+    G_geo.node[n]['longitude'] = random()
+    G_geo.node[n]['dpcapacity'] = random()
 
 
 def test_circos_plot():
@@ -27,8 +36,7 @@ def test_arc_plot():
 
 
 def test_geo_plot():
-    G = nx.read_gpickle('data/divvy.pkl')  # noqa: N806
-    g = GeoPlot(G, node_lat='latitude', node_lon='longitude',  # noqa: F841
+    g = GeoPlot(G_geo, node_lat='latitude', node_lon='longitude',  # noqa: F841
                 color='dpcapacity')
 
 
