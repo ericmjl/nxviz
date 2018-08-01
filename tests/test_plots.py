@@ -7,12 +7,11 @@ the following issue:
     https://github.com/ericmjl/nxviz/issues/160
 """
 
-import networkx as nx
 from random import random
 
+import networkx as nx
+
 from nxviz import ArcPlot, CircosPlot, GeoPlot, MatrixPlot
-from pathlib import Path
-import os.path as osp
 
 G = nx.erdos_renyi_graph(n=20, p=0.2)
 
