@@ -1,7 +1,7 @@
 import logging
 from warnings import warn
 
-import altair as alt
+# import altair as alt
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import networkx as nx
