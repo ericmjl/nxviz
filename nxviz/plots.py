@@ -1,4 +1,5 @@
 import logging
+from warnings import warn
 
 import altair as alt
 import matplotlib.patches as patches
@@ -1128,7 +1129,8 @@ class GeoPlot(BasePlot):
         if self.backend == 'matplotlib':
             super(GeoPlot, self).draw()
         elif self.backend == 'altair':
-            self.draw_nodes()
-            self.draw_edges()
-            self.viz = self.node_chart + self.edge_chart
-            return self.viz.interactive()
+            warn('altair backend still in development, please use matplotlib.')
+            # self.draw_nodes()
+            # self.draw_edges()
+            # self.viz = self.edge_chart + self.node_chart
+            # return self.viz.interactive()
