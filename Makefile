@@ -11,3 +11,8 @@ env-remove:
 
 docs:
 	make -f docs/Makefile html
+
+release:
+	rm dist/*
+	python setup.py sdist bdist_wheel
+	twine upload dist/*
