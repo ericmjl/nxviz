@@ -41,3 +41,22 @@ def test_geo_plot():
 
 def test_plot_size():
     c = CircosPlot(G, figsize=(3, 3))  # noqa: F841
+
+
+def test_edge_widths():
+    # add weight as attribute and fill with random numbers
+    edges = G.edges()
+    for u, v in edges:
+        G[u][v]['weight'] = random()
+    # also extract list for testing
+    weights = [G[u][v]['weight'] for u, v in edges]
+    # add weights as proptery
+    c = CircosPlot(G, edge_width="weight")
+    assert(c.edge_widths == weights)
+    a = ArcPlot(G, edge_width="weight")
+    assert(a.edge_widths == weights)
+    # add weights as list
+    c = CircosPlot(G, edge_width=weights)
+    assert(c.edge_widths == weights)
+    a = ArcPlot(G, edge_width=weights)
+    assert(a.edge_widths == weights)
