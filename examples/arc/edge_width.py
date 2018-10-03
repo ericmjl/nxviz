@@ -31,9 +31,9 @@ G.add_weighted_edges_from(
 edges = G.edges()
 
 c = ArcPlot(G, node_labels=True,
-                     node_size='n_visitors',
-                     node_color='n_visitors',
-                     edge_width='weight')
+            node_size='n_visitors',
+            node_color='n_visitors',
+            edge_width='weight')
 
 c.draw()
 plt.show()
