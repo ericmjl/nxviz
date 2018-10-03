@@ -130,6 +130,12 @@ class BasePlot(object):
 
         # Set edge properties
         self.edge_width = edge_width
+        if self.edge_width:
+            self.edge_widths = []
+            self.compute_edge_widths()
+        else:
+            self.edge_widths = [1] * len(self.edges)
+
         self.edge_color = edge_color
         if self.edge_color:
             self.edge_colors = []
@@ -300,6 +306,14 @@ class BasePlot(object):
                 ),
             )
             self.sm._A = []
+
+    def compute_edge_widths(self):
+        """Compute the edge widths."""
+        if type(self.edge_width) is str:
+            edges = self.graph.edges
+            self.edge_widths = [edges[n][self.edge_width] for n in self.edges]
+        else:
+            self.edge_widths = self.edge_width
 
     def compute_group_label_positions(self):
         """Computes the position of each group label according to the wanted
@@ -731,9 +745,10 @@ class CircosPlot(BasePlot):
             ]
             color = self.edge_colors[i]
             codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
+            lw = self.edge_widths[i]
             path = Path(verts, codes)
             patch = patches.PathPatch(
-                path, lw=1, edgecolor=color, zorder=1, **self.edgeprops
+                path, lw=lw, edgecolor=color, zorder=1, **self.edgeprops
             )
             self.ax.add_patch(patch)
 
@@ -1009,9 +1024,9 @@ class ArcPlot(BasePlot):
             verts = [(start_x, start_y), (middle_x, middle_y), (end_x, end_y)]
 
             codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
-
+            lw = self.edge_widths[i]
             path = Path(verts, codes)
-            patch = patches.PathPatch(path, lw=1, zorder=1, **self.edgeprops)
+            patch = patches.PathPatch(path, lw=lw, zorder=1, **self.edgeprops)
             self.ax.add_patch(patch)
 
     def draw(self):
