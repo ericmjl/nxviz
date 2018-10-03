@@ -310,10 +310,10 @@ class BasePlot(object):
     def compute_edge_widths(self):
         """Compute the edge widths."""
         if type(self.edge_width) is str:
-            self.edge_widths = [self.graph.edges[n][self.edge_width] for n in self.edges]
+            edges = self.graph.edges
+            self.edge_widths = [edges[n][self.edge_width] for n in self.edges]
         else:
             self.edge_widths = self.edge_width
-
 
     def compute_group_label_positions(self):
         """Computes the position of each group label according to the wanted

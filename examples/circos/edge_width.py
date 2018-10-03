@@ -11,7 +11,7 @@ edgelist1 = [
     ("b", "c"),
     ("c", "d"),
     ("d", "e"),
-    ("e", "f"),]
+    ("e", "f")]
 
 weights = list(range(6))
 
