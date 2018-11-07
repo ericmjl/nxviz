@@ -15,3 +15,4 @@ Contributors
 * Thijs Hermans <hermansthijs91@gmail.com>
 * R. M. Keelan Downton <keelan.downton@gmail.com>
 * Maximilian T. Strauss <straussmaximilian (at) gmail.com>
+* Andreas Hoechner <ahoechner (at) gmail.com>
