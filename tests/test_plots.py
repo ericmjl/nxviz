@@ -7,17 +7,13 @@ the following issue:
     https://github.com/ericmjl/nxviz/issues/160
 """
 
-import os
+from .test_utils import diff_plots
 
 from random import random
 
 import networkx as nx
 
 from nxviz import ArcPlot, CircosPlot, GeoPlot, MatrixPlot
-
-import matplotlib.pyplot as plt
-
-from matplotlib.testing.compare import compare_images
 
 from matplotlib.testing.decorators import _image_directories
 
@@ -34,31 +30,30 @@ baseline_dir, result_dir = _image_directories(lambda: 'dummy func')
 
 def test_circos_plot():
     c = CircosPlot(G)  # noqa: F841
-    c.draw()
-    img_fn = "circos.png"
-    baseline_img_path = os.path.join(baseline_dir,img_fn)
-    result_img_path = os.path.join(result_dir, img_fn)
-    plt.savefig(result_img_path)
-    diff = compare_images(baseline_img_path, result_img_path, tol=0)
+    diff = diff_plots(c, "circos.png", baseline_dir, result_dir)
     assert diff is None
-
 
 def test_matrix_plot():
     m = MatrixPlot(G)  # noqa: F841
-
+    diff = diff_plots(m, "matrix.png", baseline_dir, result_dir)
+    assert diff is None
 
 def test_arc_plot():
     a = ArcPlot(G)  # noqa: F841
-
+    diff = diff_plots(a, "arc.png", baseline_dir, result_dir)
+    assert diff is None
 
 def test_geo_plot():
     g = GeoPlot(G_geo, node_lat='latitude', node_lon='longitude',  # noqa: F841
                 color='dpcapacity')
+    diff = diff_plots(g, "geo.png", baseline_dir, result_dir)
+    assert diff is None
 
 
 def test_plot_size():
     c = CircosPlot(G, figsize=(3, 3))  # noqa: F841
-
+    diff = diff_plots(c, "circos33.png", baseline_dir, result_dir)
+    assert diff is None
 
 def test_edge_widths():
     # add weight as attribute and fill with random numbers
