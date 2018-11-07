@@ -153,7 +153,12 @@ class BasePlot(object):
         figsize = (6, 6)
         if "figsize" in kwargs.keys():
             figsize = kwargs["figsize"]
-        self.figure = plt.figure(figsize=figsize)
+        if "fig" in kwargs.keys():
+            self.figure = plt.figure(kwargs["fig"], figsize=figsize)
+        else:
+            self.figure = plt.figure(figsize=figsize)
+        if "sub" in kwargs.keys():
+            self.ax = self.figure.add_subplot(*kwargs["sub"])
         self.ax = self.figure.add_subplot(1, 1, 1)
         despine(self.ax)
 
