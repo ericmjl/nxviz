@@ -224,9 +224,10 @@ class BasePlot(object):
             self.draw_group_labels()
         logging.debug("DRAW: {0}".format(self.sm))
         if self.sm:
-            self.figure.subplots_adjust(right=0.8)
-            cax = self.figure.add_axes([0.85, 0.2, 0.05, 0.6])
-            self.figure.colorbar(self.sm, cax=cax)
+            #self.figure.subplots_adjust(right=0.8)
+            #cax = self.figure.add_axes([0.85, 0.2, 0.05, 0.6])
+            #self.figure.colorbar(self.sm, cax=cax)
+            self.figure.colorbar(self.sm, ax=self.ax)
         self.ax.relim()
         self.ax.autoscale_view()
         self.ax.set_aspect("equal")
