@@ -1,0 +1,15 @@
+# update schedule
+# default: empty
+# allowed: "every day", "every week", ..
+schedule: "every week"
+
+# add a label to pull requests, default is not set
+# requires private repo permissions, even on public repos
+# default: empty
+label_prs: update
+
+# assign users to pull requests, default is not set
+# requires private repo permissions, even on public repos
+# default: empty
+assignees:
+ - ericmjl
