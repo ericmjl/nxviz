@@ -72,7 +72,7 @@ def test_binomial():
 def diff_plots(plot, plot_fn, baseline_dir, result_dir):
     plot.draw()
     img_fn = plot_fn
-    baseline_img_path = os.path.join(baseline_dir,img_fn)
+    baseline_img_path = os.path.join(baseline_dir, img_fn)
     result_img_path = os.path.join(result_dir, img_fn)
     plt.savefig(result_img_path)
     diff = compare_images(baseline_img_path, result_img_path, tol=0)
