@@ -33,15 +33,18 @@ def test_circos_plot():
     diff = diff_plots(c, "circos.png", baseline_dir, result_dir)
     assert diff is None
 
+
 def test_matrix_plot():
     m = MatrixPlot(G)  # noqa: F841
     diff = diff_plots(m, "matrix.png", baseline_dir, result_dir)
     assert diff is None
 
+
 def test_arc_plot():
     a = ArcPlot(G)  # noqa: F841
     diff = diff_plots(a, "arc.png", baseline_dir, result_dir)
     assert diff is None
+
 
 def test_geo_plot():
     g = GeoPlot(G_geo, node_lat='latitude', node_lon='longitude',  # noqa: F841
@@ -54,6 +57,7 @@ def test_plot_size():
     c = CircosPlot(G, figsize=(3, 3))  # noqa: F841
     diff = diff_plots(c, "circos33.png", baseline_dir, result_dir)
     assert diff is None
+
 
 def test_edge_widths():
     # add weight as attribute and fill with random numbers
