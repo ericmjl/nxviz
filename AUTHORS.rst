@@ -5,13 +5,14 @@ Credits
 Development Lead
 ----------------
 
-* Eric J. Ma <ericmajinglong@gmail.com>
+* Eric J. Ma <ericmajinglong (at) gmail.com>
 
 Contributors
 ------------
 
-* Nora Kassner <nora.kassner@t-online.de>
-* Christian Diener <mail (at) cdiener.com>
-* Thijs Hermans <hermansthijs91@gmail.com>
-* R. M. Keelan Downton <keelan.downton@gmail.com>
-* Maximilian T. Strauss <straussmaximilian (at) gmail.com>
+- Nora Kassner <nora.kassner (at) t-online.de>
+- Christian Diener <mail (at) cdiener.com>
+- Thijs Hermans <hermansthijs91 (at) gmail.com>
+- R. M. Keelan Downton <keelan.downton (at) gmail.com>
+- Maximilian T. Strauss <straussmaximilian (at) gmail.com>
+- Brian Cajes @bcajes
