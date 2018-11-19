@@ -1,5 +1,11 @@
 import pytest
 
+import os
+
+import matplotlib.pyplot as plt
+
+from matplotlib.testing.compare import compare_images
+
 from nxviz.utils import (
     infer_data_type,
     is_data_diverging,
@@ -61,3 +67,13 @@ def test_binomial():
     assert infer_data_type(binomial) == "categorical"
     assert infer_data_type(binomial_float) == "categorical"
     assert infer_data_type(binomial_integer) == "categorical"
+
+
+def diff_plots(plot, plot_fn, baseline_dir, result_dir):
+    plot.draw()
+    img_fn = plot_fn
+    baseline_img_path = os.path.join(baseline_dir, img_fn)
+    result_img_path = os.path.join(result_dir, img_fn)
+    plt.savefig(result_img_path)
+    diff = compare_images(baseline_img_path, result_img_path, tol=0)
+    return diff
