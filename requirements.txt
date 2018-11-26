@@ -1,6 +1,6 @@
-pytest==4.0.0
+pytest==4.0.1
 hypothesis==3.82.1
-cryptography==2.4.1
+cryptography==2.4.2
 pandas==0.23.4
 matplotlib==3.0.2
 palettable==3.1.1
