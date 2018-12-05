@@ -123,7 +123,7 @@ class BasePlot(object):
         logging.debug("INIT: {0}".format(self.sm))
         if self.node_color:
             self.node_colors = []
-            self.compute_node_colors()
+            self.compute_node_colors(**kwargs)
         else:
             self.node_colors = ["blue"] * len(self.nodes)
         self.node_labels = node_labels
@@ -153,7 +153,12 @@ class BasePlot(object):
         figsize = (6, 6)
         if "figsize" in kwargs.keys():
             figsize = kwargs["figsize"]
-        self.figure = plt.figure(figsize=figsize)
+        if "fig" in kwargs.keys():
+            self.figure = plt.figure(kwargs["fig"], figsize=figsize)
+        else:
+            self.figure = plt.figure(figsize=figsize)
+        if "sub" in kwargs.keys():
+            self.ax = self.figure.add_subplot(*kwargs["sub"])
         self.ax = self.figure.add_subplot(1, 1, 1)
         despine(self.ax)
 
@@ -219,14 +224,15 @@ class BasePlot(object):
             self.draw_group_labels()
         logging.debug("DRAW: {0}".format(self.sm))
         if self.sm:
-            self.figure.subplots_adjust(right=0.8)
-            cax = self.figure.add_axes([0.85, 0.2, 0.05, 0.6])
-            self.figure.colorbar(self.sm, cax=cax)
+            #self.figure.subplots_adjust(right=0.8)
+            #cax = self.figure.add_axes([0.85, 0.2, 0.05, 0.6])
+            #self.figure.colorbar(self.sm, cax=cax)
+            self.figure.colorbar(self.sm, ax=self.ax)
         self.ax.relim()
         self.ax.autoscale_view()
         self.ax.set_aspect("equal")
 
-    def compute_node_colors(self):
+    def compute_node_colors(self, **kwargs):
         """Compute the node colors. Also computes the colorbar."""
         data = [self.graph.node[n][self.node_color] for n in self.nodes]
 
@@ -249,6 +255,9 @@ class BasePlot(object):
             cmap = get_cmap(cmaps["continuous"].mpl_colormap)
         elif dtype == "continuous" and is_data_diverging(data):
             cmap = get_cmap(cmaps["diverging"].mpl_colormap)
+
+        if "cmap" in kwargs.keys():
+            cmap = get_cmap(kwargs["cmap"].mpl_colormap)
 
         for d in data:
             idx = data_reduced.index(d) / n_grps
