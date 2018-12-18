@@ -80,6 +80,12 @@ class BasePlot(object):
 
     :param edgeprops: A `matplotlib-compatible `props` dictioanry.
     :type edgeprops: `dict`
+
+    :param fontsize: A text property for editing size of labels in graph
+    :type fontsize: int
+
+    :param fontfamily: A text property to define font family
+    :type fontfamily: string
     """  # noqa
 
     def __init__(
@@ -99,6 +105,8 @@ class BasePlot(object):
         node_label_color=False,
         group_label_position=None,
         group_label_color=False,
+        fontsize=10,
+        fontfamily = "serif", # Valid inputs ('serif', 'sans-serif', 'fantasy', 'monospace')
         **kwargs
     ):
         super(BasePlot, self).__init__()
@@ -189,6 +197,10 @@ class BasePlot(object):
                 self.compute_group_colors()
             else:
                 self.group_label_color = ["black"] * len(self.nodes)
+
+        # set text properties
+        self.fontfamily = fontfamily
+        self.fontsize = fontsize
 
     def check_data_types(self, data_types):
         """
@@ -695,7 +707,8 @@ class CircosPlot(BasePlot):
                         rotation=rot,
                         rotation_mode="anchor",
                         color=self.node_label_color[i],
-                        fontsize=10,
+                        fontsize=self.fontsize,
+                        family=self.fontfamily
                     )
 
                 # ----- Node label numbering layout -----
@@ -711,6 +724,8 @@ class CircosPlot(BasePlot):
                         ha=label_ha,
                         va=label_va,
                         color=self.node_label_color[i],
+                        fontsize=self.fontsize,
+                        family=self.fontfamily
                     )
 
                     # Add numbers to nodes
@@ -729,6 +744,8 @@ class CircosPlot(BasePlot):
                         ha=label_ha,
                         va=label_va,
                         color=self.node_label_color[i],
+                        fontsize=self.fontsize,
+                        family=self.fontfamily
                     )
 
     def draw_edges(self):
@@ -769,6 +786,8 @@ class CircosPlot(BasePlot):
                 ha=label_ha,
                 va=label_va,
                 color=color,
+                fontsize=self.fontsize,
+                family=self.fontfamily
             )
 
 
