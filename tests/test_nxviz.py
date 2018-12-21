@@ -155,8 +155,8 @@ def test_init_edge_colors():
 
 def test_init_font():
     """
-    Checks if the passed value for font and fontfamily 
-    is set 
+    Checks if the passed value for font and fontfamily
+    is set
     """
     G = make_graph_for_edges()
     fontfamily = "fantasy"
