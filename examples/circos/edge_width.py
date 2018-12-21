@@ -6,12 +6,7 @@ import networkx as nx
 from nxviz.plots import CircosPlot
 
 nodelist = [("a"), ("b"), ("c"), ("d"), ("e"), ("f")]
-edgelist1 = [
-    ("a", "b"),
-    ("b", "c"),
-    ("c", "d"),
-    ("d", "e"),
-    ("e", "f")]
+edgelist1 = [("a", "b"), ("b", "c"), ("c", "d"), ("d", "e"), ("e", "f")]
 
 weights = list(range(6))
 

@@ -17,7 +17,7 @@ from nxviz.polcart import (
 def test_convert_xy(x, y):
     assume(x != 0 and y != 0)
     assume(np.isfinite(x) and np.isfinite(y))
-    assume(abs(x) < 1E6 and abs(y) < 1E6)
+    assume(abs(x) < 1e6 and abs(y) < 1e6)
     assume(abs(x) > 0.01 and abs(y) > 0.01)
 
     # Test radians
@@ -36,7 +36,7 @@ def test_convert_xy(x, y):
 @settings(perform_health_check=False)
 @given(floats(), floats())
 def test_convert_rt(r, theta):
-    assume(r > 0.01 and r < 1E6)
+    assume(r > 0.01 and r < 1e6)
     assume(np.isfinite(r) and np.isfinite(theta))
     assume(theta <= np.pi and theta >= -np.pi)
 
