@@ -11,12 +11,24 @@ from matplotlib.lines import Line2D
 from matplotlib.path import Path
 from more_itertools import unique_everseen
 
-from .geometry import (circos_radius, get_cartesian, group_theta, node_theta,
-                       text_alignment)
+from .geometry import (
+    circos_radius,
+    get_cartesian,
+    group_theta,
+    node_theta,
+    text_alignment,
+)
 from .polcart import to_degrees
-from .utils import (cmaps, infer_data_type, is_data_diverging, items_in_groups,
-                    n_group_colorpallet, num_discrete_groups, to_pandas_edges,
-                    to_pandas_nodes)
+from .utils import (
+    cmaps,
+    infer_data_type,
+    is_data_diverging,
+    items_in_groups,
+    n_group_colorpallet,
+    num_discrete_groups,
+    to_pandas_edges,
+    to_pandas_nodes,
+)
 
 
 def despine(ax):
@@ -106,8 +118,8 @@ class BasePlot(object):
         group_label_position=None,
         group_label_color=False,
         fontsize=10,
-        fontfamily = "serif",
-        **kwargs
+        fontfamily="serif",
+        **kwargs,
     ):
         super(BasePlot, self).__init__()
         # Set graph object
@@ -199,9 +211,9 @@ class BasePlot(object):
                 self.group_label_color = ["black"] * len(self.nodes)
 
         # set text properties
-        valid_fonts = ['serif', 'sans-serif', 'fantasy', 'monospace']
+        valid_fonts = ["serif", "sans-serif", "fantasy", "monospace"]
         if fontfamily not in valid_fonts:
-            raise ValueError(f'fontfamily should be one of {valid_fonts}')
+            raise ValueError(f"fontfamily should be one of {valid_fonts}")
         self.fontfamily = fontfamily
         self.fontsize = fontsize
 
@@ -711,7 +723,7 @@ class CircosPlot(BasePlot):
                         rotation_mode="anchor",
                         color=self.node_label_color[i],
                         fontsize=self.fontsize,
-                        family=self.fontfamily
+                        family=self.fontfamily,
                     )
 
                 # ----- Node label numbering layout -----
@@ -728,7 +740,7 @@ class CircosPlot(BasePlot):
                         va=label_va,
                         color=self.node_label_color[i],
                         fontsize=self.fontsize,
-                        family=self.fontfamily
+                        family=self.fontfamily,
                     )
 
                     # Add numbers to nodes
@@ -748,7 +760,7 @@ class CircosPlot(BasePlot):
                         va=label_va,
                         color=self.node_label_color[i],
                         fontsize=self.fontsize,
-                        family=self.fontfamily
+                        family=self.fontfamily,
                     )
 
     def draw_edges(self):
@@ -790,7 +802,7 @@ class CircosPlot(BasePlot):
                 va=label_va,
                 color=color,
                 fontsize=self.fontsize,
-                family=self.fontfamily
+                family=self.fontfamily,
             )
 
 
@@ -1066,8 +1078,14 @@ class GeoPlot(BasePlot):
     and latittude of a node.
     """
 
-    def __init__(self, graph, node_lat: str, node_lon: str,
-                 backend: str = 'matplotlib', **kwargs):
+    def __init__(
+        self,
+        graph,
+        node_lat: str,
+        node_lon: str,
+        backend: str = "matplotlib",
+        **kwargs,
+    ):
         """
         Create the GeoPlot.
 
@@ -1080,16 +1098,16 @@ class GeoPlot(BasePlot):
         self.node_lat = node_lat
         self.node_lon = node_lon
         # Set backend: matplotlib or altair
-        assert backend in ['matplotlib', 'altair']
+        assert backend in ["matplotlib", "altair"]
         self.backend = backend
 
         # If the user chooses the altair backend, then we have to convert the
         # graph data back into a nodelist and edgelist dataframes.
-        if self.backend == 'altair':
+        if self.backend == "altair":
             self.node_df = to_pandas_nodes(self.graph)
-            self.edge_df = to_pandas_edges(self.graph,
-                                           x_kw=self.node_lon,
-                                           y_kw=self.node_lat)
+            self.edge_df = to_pandas_edges(
+                self.graph, x_kw=self.node_lon, y_kw=self.node_lat
+            )
 
         super(GeoPlot, self).__init__(graph, **kwargs)
 
@@ -1109,7 +1127,7 @@ class GeoPlot(BasePlot):
             ys.append(y)
             self.locs[node] = (x, y)
 
-        self.node_coords = {'x': xs, 'y': ys}
+        self.node_coords = {"x": xs, "y": ys}
 
     def draw_nodes(self):
         """
@@ -1118,7 +1136,7 @@ class GeoPlot(BasePlot):
         GeoPlot is the first plot kind to support an Altair backend in addition
         to the usual matplotlib backend.
         """
-        if self.backend == 'matplotlib':
+        if self.backend == "matplotlib":
             node_r = 0.005  # temporarily hardcoded.
             for i, node in enumerate(self.nodes):
                 x = self.node_coords["x"][i]
@@ -1128,45 +1146,52 @@ class GeoPlot(BasePlot):
                     (x, y), node_r, node_r, lw=0, color=color, zorder=2
                 )
                 self.ax.add_patch(node_patch)
-        elif self.backend == 'altair':
-            self.node_chart = (alt.Chart(self.node_df)
-                                  .mark_point()
-                                  .encode(alt.X(f'{self.node_lon}:Q',
-                                                scale=alt.Scale(zero=False)
-                                                ),
-                                          alt.Y(f'{self.node_lat}:Q',
-                                                scale=alt.Scale(zero=False)
-                                                )
-                                          )
-                               )
+        elif self.backend == "altair":
+            self.node_chart = (
+                alt.Chart(self.node_df)
+                .mark_point()
+                .encode(
+                    alt.X(f"{self.node_lon}:Q", scale=alt.Scale(zero=False)),
+                    alt.Y(f"{self.node_lat}:Q", scale=alt.Scale(zero=False)),
+                )
+            )
 
     def draw_edges(self):
         """
         Draws edges to screen.
         """
-        if self.backend == 'matplotlib':
+        if self.backend == "matplotlib":
             for i, (n1, n2) in enumerate(self.edges):
                 x1, y1 = self.locs[n1]
                 x2, y2 = self.locs[n2]
                 color = self.edge_colors[i]
-                line = Line2D(xdata=[x1, x2], ydata=[y1, y2], color=color,
-                              zorder=0, alpha=0.3)
+                line = Line2D(
+                    xdata=[x1, x2],
+                    ydata=[y1, y2],
+                    color=color,
+                    zorder=0,
+                    alpha=0.3,
+                )
                 self.ax.add_line(line)
-        elif self.backend == 'altair':
+        elif self.backend == "altair":
             marker_attrs = dict()
-            marker_attrs['color'] = 'black'  # MAGICNUMBER
-            marker_attrs['strokeWidth'] = 1  # MAGICNUMBER
-            self.edge_chart = (alt.Chart(self.edge_df)
-                                  .mark_line(**marker_attrs)
-                                  .encode(alt.X(f'{self.node_lon}:Q'),
-                                          alt.Y(f'{self.node_lat}:Q'),
-                                          detail='edge'))
+            marker_attrs["color"] = "black"  # MAGICNUMBER
+            marker_attrs["strokeWidth"] = 1  # MAGICNUMBER
+            self.edge_chart = (
+                alt.Chart(self.edge_df)
+                .mark_line(**marker_attrs)
+                .encode(
+                    alt.X(f"{self.node_lon}:Q"),
+                    alt.Y(f"{self.node_lat}:Q"),
+                    detail="edge",
+                )
+            )
 
     def draw(self):
-        if self.backend == 'matplotlib':
+        if self.backend == "matplotlib":
             super(GeoPlot, self).draw()
-        elif self.backend == 'altair':
-            warn('altair backend still in development, please use matplotlib.')
+        elif self.backend == "altair":
+            warn("altair backend still in development, please use matplotlib.")
             # self.draw_nodes()
             # self.draw_edges()
             # self.viz = self.edge_chart + self.node_chart
