@@ -84,7 +84,7 @@ class BasePlot(object):
     :param fontsize: A text property for editing size of labels in graph
     :type fontsize: int
 
-    :param fontfamily: A text property to define font family
+    :param fontfamily: A text property to define font family. Valid inputs ('serif', 'sans-serif', 'fantasy', 'monospace').
     :type fontfamily: string
     """  # noqa
 
@@ -106,7 +106,7 @@ class BasePlot(object):
         group_label_position=None,
         group_label_color=False,
         fontsize=10,
-        fontfamily = "serif", # Valid inputs ('serif', 'sans-serif', 'fantasy', 'monospace')
+        fontfamily = "serif",
         **kwargs
     ):
         super(BasePlot, self).__init__()
@@ -199,6 +199,9 @@ class BasePlot(object):
                 self.group_label_color = ["black"] * len(self.nodes)
 
         # set text properties
+        valid_fonts = ['serif', 'sans-serif', 'fantasy', 'monospace']
+        if fontfamily not in valid_fonts:
+            raise ValueError(f'fontfamily should be one of {valid_fonts}')
         self.fontfamily = fontfamily
         self.fontsize = fontsize
 
