@@ -151,3 +151,16 @@ def test_init_edge_colors():
     G = make_graph_for_grouping()  # noqa
     b = BasePlot(graph=G)
     assert len(set(b.edge_colors)) == 0
+
+
+def test_init_font():
+    """
+    Checks if the passed value for font and fontfamily
+    is set
+    """
+    G = make_graph_for_edges()
+    fontfamily = "fantasy"
+    fontsize = 5
+    b = BasePlot(graph=G, fontsize=fontsize, fontfamily=fontfamily)
+    assert b.fontfamily == fontfamily
+    assert b.fontsize == fontsize
