@@ -21,11 +21,11 @@ G = nx.erdos_renyi_graph(n=20, p=0.2)
 
 G_geo = G.copy()
 for n, d in G_geo.nodes(data=True):
-    G_geo.node[n]['latitude'] = random()
-    G_geo.node[n]['longitude'] = random()
-    G_geo.node[n]['dpcapacity'] = random()
+    G_geo.node[n]["latitude"] = random()
+    G_geo.node[n]["longitude"] = random()
+    G_geo.node[n]["dpcapacity"] = random()
 
-baseline_dir, result_dir = _image_directories(lambda: 'dummy func')
+baseline_dir, result_dir = _image_directories(lambda: "dummy func")
 
 
 def test_circos_plot():
@@ -47,8 +47,12 @@ def test_arc_plot():
 
 
 def test_geo_plot():
-    g = GeoPlot(G_geo, node_lat='latitude', node_lon='longitude',  # noqa: F841
-                color='dpcapacity')
+    g = GeoPlot(
+        G_geo,
+        node_lat="latitude",
+        node_lon="longitude",  # noqa: F841
+        color="dpcapacity",
+    )
     diff = diff_plots(g, "geo.png", baseline_dir, result_dir)
     assert diff is None
 
@@ -63,9 +67,9 @@ def test_edge_widths():
     # add weight as attribute and fill with random numbers
     edges = G.edges()
     for u, v in edges:
-        G[u][v]['weight'] = random()
+        G[u][v]["weight"] = random()
     # also extract list for testing
-    weights = [G[u][v]['weight'] for u, v in edges]
+    weights = [G[u][v]["weight"] for u, v in edges]
     # add weights as proptery
     c = CircosPlot(G, edge_width="weight")
     assert c.edge_widths == weights
