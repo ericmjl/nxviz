@@ -43,7 +43,7 @@ We recommend using conda_.
 
 .. code:: bash
 
-    $ conda install nxviz
+    $ conda install -c conda-forge nxviz
 
 Alternatively, it is also available on PyPI_.
 
