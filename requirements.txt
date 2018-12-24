@@ -5,7 +5,7 @@ pandas==0.23.4
 matplotlib==3.0.2
 palettable==3.1.1
 networkx==2.2
-setuptools==40.6.2
+setuptools==40.6.3
 numpy==1.15.4
 PyYAML==3.13
 sphinxcontrib-fulltoc==1.2.0
