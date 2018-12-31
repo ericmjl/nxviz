@@ -10,4 +10,4 @@ numpy==1.15.4
 PyYAML==3.13
 sphinxcontrib-fulltoc==1.2.0
 seaborn==0.9.0
-more-itertools==4.3.0
+more-itertools==5.0.0
