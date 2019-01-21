@@ -13,7 +13,7 @@ with open("requirements.txt") as rqmts:
 
 setup(
     name="nxviz",
-    version="0.5.0",
+    version="0.6.0",
     description="Graph Visualization Package",
     long_description=readme + "\n\n" + history,
     author="Eric J. Ma",
