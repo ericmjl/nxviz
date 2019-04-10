@@ -1057,10 +1057,11 @@ class ArcPlot(BasePlot):
 
             verts = [(start_x, start_y), (middle_x, middle_y), (end_x, end_y)]
 
+            color = self.edge_colors[i]
             codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
             lw = self.edge_widths[i]
             path = Path(verts, codes)
-            patch = patches.PathPatch(path, lw=lw, zorder=1, **self.edgeprops)
+            patch = patches.PathPatch(path, lw=lw, edgecolor=color, zorder=1, **self.edgeprops)
             self.ax.add_patch(patch)
 
     def draw(self):
