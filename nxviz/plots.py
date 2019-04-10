@@ -1028,8 +1028,10 @@ class ArcPlot(BasePlot):
         """
         xs = [0] * len(self.nodes)
         ys = [0] * len(self.nodes)
-        for i,_ in enumerate(self.nodes[1:], start=1):
-            xs[i] = xs[i-1] + (self.node_sizes[i-1] / 2) + (self.node_sizes[i] / 2)
+        for i, _ in enumerate(self.nodes[1:], start=1):
+            prev_r = self.node_sizes[i-1] / 2
+            curr_r = self.node_sizes[i] / 2
+            xs[i] = xs[i-1] + prev_r + curr_r
 
         self.node_coords = {"x": xs, "y": ys}
 
@@ -1072,7 +1074,9 @@ class ArcPlot(BasePlot):
             codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
             lw = self.edge_widths[i]
             path = Path(verts, codes)
-            patch = patches.PathPatch(path, lw=lw, edgecolor=color, zorder=1, **self.edgeprops)
+            patch = patches.PathPatch(
+                path, lw=lw, edgecolor=color, zorder=1, **self.edgeprops
+            )
             self.ax.add_patch(patch)
 
     def draw(self):
