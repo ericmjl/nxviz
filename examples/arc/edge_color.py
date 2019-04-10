@@ -17,19 +17,16 @@ NODES_EBUNCH = [
 G.add_nodes_from(NODES_EBUNCH)
 
 
-G.add_edge("A", "B", weight=5, type="a")
-G.add_edge("A", "C", weight=5, type="b")
-G.add_edge("B", "C", weight=5, type="a")
-G.add_edge("C", "B", weight=5, type="b")
+G.add_edge("A", "B", weight=8, type="a")
+G.add_edge("A", "C", weight=8, type="b")
+G.add_edge("B", "C", weight=8, type="a")
+G.add_edge("C", "B", weight=8, type="b")
 
 
 edges = G.edges()
 
 c = ArcPlot(
     G,
-    node_labels=True,
-    node_size="n_visitors",
-    node_color="n_visitors",
     edge_width="weight",
     edge_color="type"
 )
