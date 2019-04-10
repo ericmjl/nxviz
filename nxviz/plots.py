@@ -134,6 +134,11 @@ class BasePlot(object):
 
         # Set node radius
         self.node_size = node_size
+        if self.node_size:
+            self.node_sizes = []
+            self.compute_node_sizes()
+        else:
+            self.node_sizes = [1] * len(self.nodes)
 
         # Set node colors
         self.node_color = node_color
@@ -333,6 +338,14 @@ class BasePlot(object):
                 ),
             )
             self.sm._A = []
+
+    def compute_node_sizes(self):
+        """Compute the node sizes."""
+        if type(self.node_size) is str:
+            nodes = self.graph.nodes
+            self.node_sizes = [nodes[n][self.node_size] for n in self.nodes]
+        else:
+            self.node_sizes = self.node_size
 
     def compute_edge_widths(self):
         """Compute the edge widths."""
@@ -1013,12 +1026,10 @@ class ArcPlot(BasePlot):
         assumed to be equal to 0.5 units. Nodes are placed at integer
         locations.
         """
-        xs = []
-        ys = []
-
-        for node in self.nodes:
-            xs.append(self.nodes.index(node))
-            ys.append(0)
+        xs = [0] * len(self.nodes)
+        ys = [0] * len(self.nodes)
+        for i,_ in enumerate(self.nodes[1:], start=1):
+            xs[i] = xs[i-1] + (self.node_sizes[i-1] / 2) + (self.node_sizes[i] / 2)
 
         self.node_coords = {"x": xs, "y": ys}
 
@@ -1026,13 +1037,13 @@ class ArcPlot(BasePlot):
         """
         Draw nodes to screen.
         """
-        node_r = 1
+        node_r = self.node_sizes
         for i, node in enumerate(self.nodes):
             x = self.node_coords["x"][i]
             y = self.node_coords["y"][i]
             color = self.node_colors[i]
             node_patch = patches.Ellipse(
-                (x, y), node_r, node_r, lw=0, color=color, zorder=2
+                (x, y), node_r[i], node_r[i], lw=0, color=color, zorder=2
             )
             self.ax.add_patch(node_patch)
 
