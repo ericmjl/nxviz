@@ -17,3 +17,4 @@ Contributors
 - Maximilian T. Strauss <straussmaximilian (at) gmail.com>
 - Brian Cajes @bcajes
 - Ashutosh Chandra @ashu16993
+- Rabeez Riaz <19100165 (at) lums.edu.pk>
