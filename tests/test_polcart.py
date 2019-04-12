@@ -12,7 +12,7 @@ from nxviz.polcart import (
 )
 
 
-@settings(perform_health_check=False)
+# @settings(perform_health_check=False)
 @given(floats(), floats())
 def test_convert_xy(x, y):
     assume(x != 0 and y != 0)
@@ -33,7 +33,7 @@ def test_convert_xy(x, y):
     assert np.allclose(y, y_new)
 
 
-@settings(perform_health_check=False)
+# @settings(perform_health_check=False)
 @given(floats(), floats())
 def test_convert_rt(r, theta):
     assume(r > 0.01 and r < 1e6)

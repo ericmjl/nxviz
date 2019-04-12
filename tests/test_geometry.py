@@ -26,7 +26,7 @@ def test_circos_radius():
     assert np.allclose(circ_r, circos_radius(n_nodes, node_r))
 
 
-@settings(perform_health_check=False)
+# @settings(perform_health_check=False)
 @given(lists(integers()), integers())
 def test_node_theta(nodelist, node):
     """
@@ -54,7 +54,7 @@ def test_get_cartesian(r, theta):
     assert get_cartesian(r, theta) == polcart.to_cartesian(r, theta)
 
 
-@settings(perform_health_check=False)
+# @settings(perform_health_check=False)
 @given(floats())
 def test_correct_negative_angle(angle):
 
