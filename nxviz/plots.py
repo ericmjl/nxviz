@@ -502,7 +502,7 @@ class CircosPlot(BasePlot):
         # Verify that the provided input is legitimate
         valid_node_label_layouts = (None, "rotation", "numbers")
         assert specified_layout in valid_node_label_layouts
-        # Store the noda label layout
+        # Store the node label layout
         self.node_label_layout = specified_layout
 
         #
