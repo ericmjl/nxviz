@@ -498,7 +498,7 @@ class CircosPlot(BasePlot):
         """Create the CircosPlot.
         """
 
-        # A CircosPlot only makes sense for atleast 3 nodes
+        # A CircosPlot only makes sense for at least 3 nodes
         assert len(graph.nodes) >= 3
         # Node labels are specified in the node_label_layout argument
         specified_layout = kwargs.pop("node_label_layout", None)
