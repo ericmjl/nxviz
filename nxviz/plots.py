@@ -516,7 +516,8 @@ class CircosPlot(BasePlot):
         data = [self.graph.node[n][self.node_grouping] for n in self.nodes]
         node_length = len(data)
         groups = items_in_groups(data)
-        radius = 1.02 * (self.plot_radius + self.nodeprops["radius"])
+        delta = 2 if self.node_labels else 0
+        radius = 1.02 * (self.plot_radius + self.nodeprops["radius"]) + delta
         xs = []
         ys = []
         has = []
