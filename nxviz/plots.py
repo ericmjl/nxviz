@@ -507,7 +507,7 @@ class CircosPlot(BasePlot):
 
         # Group labels' radius can be offset by a certain amount
         group_label_offset = kwargs.pop("group_label_offset", 0)
-        assert group_label_offset >= 0 
+        assert group_label_offset >= 0
         # Store the group label offset
         self.group_label_offset = group_label_offset
 
@@ -522,7 +522,10 @@ class CircosPlot(BasePlot):
         data = [self.graph.node[n][self.node_grouping] for n in self.nodes]
         node_length = len(data)
         groups = items_in_groups(data)
-        radius = 1.02 * (self.plot_radius + self.nodeprops["radius"]) + self.group_label_offset
+
+        edge_of_plot = self.plot_radius + self.nodeprops["radius"]
+        # The 1.02 serves as padding
+        radius = 1.02 * edge_of_plot + self.group_label_offset
         xs = []
         ys = []
         has = []
