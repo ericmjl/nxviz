@@ -489,19 +489,30 @@ class CircosPlot(BasePlot):
     :param node_label_layout: which/whether (a) node layout is used,
         either 'rotation', 'numbers' or None
     :type node_label_layout: `string`
+    :param group_label_offset: how much to offset the group labels, so that they are
+        not overlapping with node labels.
+    :type group_label_offset: `float` or `int`
     """
 
     def __init__(self, graph, **kwargs):
         """Create the CircosPlot.
         """
 
+        # A CircosPlot only makes sense for at least 3 nodes
+        assert len(graph.nodes) >= 3
         # Node labels are specified in the node_label_layout argument
         specified_layout = kwargs.pop("node_label_layout", None)
         # Verify that the provided input is legitimate
         valid_node_label_layouts = (None, "rotation", "numbers")
         assert specified_layout in valid_node_label_layouts
-        # Store the noda label layout
+        # Store the node label layout
         self.node_label_layout = specified_layout
+
+        # Group labels' radius can be offset by a certain amount
+        group_label_offset = kwargs.pop("group_label_offset", 0)
+        assert group_label_offset >= 0
+        # Store the group label offset
+        self.group_label_offset = group_label_offset
 
         #
         super(CircosPlot, self).__init__(graph, **kwargs)
@@ -514,7 +525,10 @@ class CircosPlot(BasePlot):
         data = [self.graph.node[n][self.node_grouping] for n in self.nodes]
         node_length = len(data)
         groups = items_in_groups(data)
-        radius = 1.02 * (self.plot_radius + self.nodeprops["radius"])
+
+        edge_of_plot = self.plot_radius + self.nodeprops["radius"]
+        # The 1.02 serves as padding
+        radius = 1.02 * edge_of_plot + self.group_label_offset
         xs = []
         ys = []
         has = []
