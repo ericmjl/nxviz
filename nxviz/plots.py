@@ -489,7 +489,9 @@ class CircosPlot(BasePlot):
     :param node_label_layout: which/whether (a) node layout is used,
         either 'rotation', 'numbers' or None
     :type node_label_layout: `string`
-    :type group_label_offset: `int`
+    :param group_label_offset: how much to offset the group labels, so that they are
+        not overlapping with node labels.
+    :type group_label_offset: `float` or `int`
     """
 
     def __init__(self, graph, **kwargs):
