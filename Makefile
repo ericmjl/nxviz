@@ -6,6 +6,9 @@ test:
 black:
 	black -l 79 .
 
+style:
+	pycodestyle .
+
 env-create:
 	conda env create -f environment.yml
 
