@@ -45,7 +45,10 @@ def test_convert_xy(x, y):
         min_value=-1e6, max_value=1e6, allow_infinity=False, allow_nan=False
     ),
     floats(
-        min_value=-np.pi, max_value=np.pi, allow_infinity=False, allow_nan=False
+        min_value=-np.pi,
+        max_value=np.pi,
+        allow_infinity=False,
+        allow_nan=False,
     ),
 )
 def test_convert_rt(r, theta):
