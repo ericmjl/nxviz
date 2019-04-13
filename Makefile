@@ -9,6 +9,8 @@ black:
 style:
 	pycodestyle .
 
+check: black style test
+
 env-create:
 	conda env create -f environment.yml
 
