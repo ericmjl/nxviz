@@ -15,18 +15,11 @@ from nxviz.polcart import (
 # @settings(perform_health_check=False)
 @given(
     floats(
-        min_value=-1e6,
-        max_value=1e6,
-        allow_infinity=False,
-        allow_nan=False,
-
+        min_value=-1e6, max_value=1e6, allow_infinity=False, allow_nan=False
     ),
     floats(
-        min_value=-1e6,
-        max_value=1e6,
-        allow_infinity=False,
-        allow_nan=False,
-    )
+        min_value=-1e6, max_value=1e6, allow_infinity=False, allow_nan=False
+    ),
 )
 def test_convert_xy(x, y):
     """Test for conversion of cartesian to polar."""
