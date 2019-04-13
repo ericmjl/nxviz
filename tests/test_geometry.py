@@ -1,6 +1,7 @@
 """Tests for geometry module."""
 
 import numpy as np
+from random import choice
 
 import nxviz.polcart as polcart
 from hypothesis import assume, given, settings
@@ -30,11 +31,11 @@ def test_circos_radius():
 
 
 # @settings(perform_health_check=False)
-@given(lists(integers()), integers())
-def test_node_theta(nodelist, node):
+@given(lists(integers()))
+def test_node_theta(nodelist):
     """Tests node_theta function."""
     assume(len(nodelist) > 0)
-    assume(node in nodelist)
+    node = choice(nodelist)
     theta_obs = node_theta(nodelist, node)
 
     i = nodelist.index(node)
