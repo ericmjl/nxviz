@@ -40,11 +40,18 @@ def test_convert_xy(x, y):
 
 
 # @settings(perform_health_check=False)
-@given(floats(), floats())
+@given(
+    floats(
+        min_value=-1e6, max_value=1e6, allow_infinity=False, allow_nan=False
+    ),
+    floats(
+        min_value=-np.pi, max_value=np.pi, allow_infinity=False, allow_nan=False
+    ),
+)
 def test_convert_rt(r, theta):
+    """Test for conversion of polar to cartesian coordinates."""
     assume(r > 0.01 and r < 1e6)
     assume(np.isfinite(r) and np.isfinite(theta))
-    assume(theta <= np.pi and theta >= -np.pi)
 
     x, y = to_cartesian(r, theta)
     r_new, theta_new = to_polar(x, y)
