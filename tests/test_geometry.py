@@ -1,4 +1,7 @@
+"""Tests for geometry module."""
+
 import numpy as np
+from random import choice
 
 import nxviz.polcart as polcart
 from hypothesis import assume, given, settings
@@ -13,9 +16,10 @@ from nxviz.geometry import (
 
 def test_circos_radius():
     """
+    Check radius correctness.
+
     Uses the other triangle geometry rule to check that the radius is correct.
     """
-
     n_nodes = 10
     node_r = 1
 
@@ -26,14 +30,12 @@ def test_circos_radius():
     assert np.allclose(circ_r, circos_radius(n_nodes, node_r))
 
 
-@settings(perform_health_check=False)
-@given(lists(integers()), integers())
-def test_node_theta(nodelist, node):
-    """
-    Tests node_theta function.
-    """
+# @settings(perform_health_check=False)
+@given(lists(integers()))
+def test_node_theta(nodelist):
+    """Tests node_theta function."""
     assume(len(nodelist) > 0)
-    assume(node in nodelist)
+    node = choice(nodelist)
     theta_obs = node_theta(nodelist, node)
 
     i = nodelist.index(node)
@@ -46,18 +48,20 @@ def test_node_theta(nodelist, node):
 @given(floats(), floats())
 def test_get_cartesian(r, theta):
     """
-    In this test, we are testing to make sure that `get_cartesian` remains a
-    wrapper around polcart's `to_cartesian`.
+    Test for get_cartesian.
+
+    Makes sure that `get_cartesian` remains a wrapper around polcart's
+    `to_cartesian`.
     """
     assume(np.isfinite(theta))
     assume(np.isfinite(r))
     assert get_cartesian(r, theta) == polcart.to_cartesian(r, theta)
 
 
-@settings(perform_health_check=False)
+# @settings(perform_health_check=False)
 @given(floats())
 def test_correct_negative_angle(angle):
-
+    """Test for correct calculation of negative angle."""
     assume(angle < 0)
     assume(angle >= -2 * np.pi)
     exp = 2 * np.pi + angle

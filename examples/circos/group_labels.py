@@ -16,7 +16,7 @@ c = CircosPlot(
     node_labels=True,
     group_label_position="middle",
     group_label_color=True,
-    group_label_offset=2
+    group_label_offset=2,
 )
 c.draw()
 plt.show()

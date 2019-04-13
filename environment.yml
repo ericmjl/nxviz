@@ -33,5 +33,7 @@ dependencies:
 - jupyterlab
 - seaborn
 - pyyaml
+- pylint
+- pydocstyle
 - pip:
     - sphinxcontrib-fulltoc

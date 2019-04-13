@@ -489,8 +489,8 @@ class CircosPlot(BasePlot):
     :param node_label_layout: which/whether (a) node layout is used,
         either 'rotation', 'numbers' or None
     :type node_label_layout: `string`
-    :param group_label_offset: how much to offset the group labels, so that they are
-        not overlapping with node labels.
+    :param group_label_offset: how much to offset the group labels, so that
+        they are not overlapping with node labels.
     :type group_label_offset: `float` or `int`
     """
 
@@ -1043,9 +1043,9 @@ class ArcPlot(BasePlot):
         xs = [0] * len(self.nodes)
         ys = [0] * len(self.nodes)
         for i, _ in enumerate(self.nodes[1:], start=1):
-            prev_r = self.node_sizes[i-1] / 2
+            prev_r = self.node_sizes[i - 1] / 2
             curr_r = self.node_sizes[i] / 2
-            xs[i] = xs[i-1] + prev_r + curr_r
+            xs[i] = xs[i - 1] + prev_r + curr_r
 
         self.node_coords = {"x": xs, "y": ys}
 

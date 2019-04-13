@@ -18,12 +18,7 @@ G.add_edge("A", "C", weight=8, type="b")
 G.add_edge("B", "C", weight=8, type="a")
 
 
-c = ArcPlot(
-    G,
-    node_size='score',
-    edge_width="weight",
-    edge_color="type"
-)
+c = ArcPlot(G, node_size="score", edge_width="weight", edge_color="type")
 
 c.draw()
 plt.show()

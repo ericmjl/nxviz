@@ -12,12 +12,18 @@ from nxviz.polcart import (
 )
 
 
-@settings(perform_health_check=False)
-@given(floats(), floats())
+# @settings(perform_health_check=False)
+@given(
+    floats(
+        min_value=-1e6, max_value=1e6, allow_infinity=False, allow_nan=False
+    ),
+    floats(
+        min_value=-1e6, max_value=1e6, allow_infinity=False, allow_nan=False
+    ),
+)
 def test_convert_xy(x, y):
+    """Test for conversion of cartesian to polar."""
     assume(x != 0 and y != 0)
-    assume(np.isfinite(x) and np.isfinite(y))
-    assume(abs(x) < 1e6 and abs(y) < 1e6)
     assume(abs(x) > 0.01 and abs(y) > 0.01)
 
     # Test radians
@@ -33,12 +39,22 @@ def test_convert_xy(x, y):
     assert np.allclose(y, y_new)
 
 
-@settings(perform_health_check=False)
-@given(floats(), floats())
+# @settings(perform_health_check=False)
+@given(
+    floats(
+        min_value=-1e6, max_value=1e6, allow_infinity=False, allow_nan=False
+    ),
+    floats(
+        min_value=-np.pi,
+        max_value=np.pi,
+        allow_infinity=False,
+        allow_nan=False,
+    ),
+)
 def test_convert_rt(r, theta):
+    """Test for conversion of polar to cartesian coordinates."""
     assume(r > 0.01 and r < 1e6)
     assume(np.isfinite(r) and np.isfinite(theta))
-    assume(theta <= np.pi and theta >= -np.pi)
 
     x, y = to_cartesian(r, theta)
     r_new, theta_new = to_polar(x, y)
