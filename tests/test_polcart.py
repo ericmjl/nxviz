@@ -13,11 +13,24 @@ from nxviz.polcart import (
 
 
 # @settings(perform_health_check=False)
-@given(floats(), floats())
+@given(
+    floats(
+        min_value=-1e6,
+        max_value=1e6,
+        allow_infinity=False,
+        allow_nan=False,
+
+    ),
+    floats(
+        min_value=-1e6,
+        max_value=1e6,
+        allow_infinity=False,
+        allow_nan=False,
+    )
+)
 def test_convert_xy(x, y):
+    """Test for conversion of cartesian to polar."""
     assume(x != 0 and y != 0)
-    assume(np.isfinite(x) and np.isfinite(y))
-    assume(abs(x) < 1e6 and abs(y) < 1e6)
     assume(abs(x) > 0.01 and abs(y) > 0.01)
 
     # Test radians
