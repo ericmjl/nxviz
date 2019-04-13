@@ -1,12 +1,12 @@
+"""Tests for nxviz plotting classes."""
+
 import networkx as nx
 
 from nxviz.plots import BasePlot
 
 
 def test_initialization():
-    """
-    Tests initialization of plot object.
-    """
+    """Tests initialization of plot object."""
     n_nodes = 10
     G = nx.erdos_renyi_graph(n=n_nodes, p=0.3)  # noqa
 
@@ -16,7 +16,7 @@ def test_initialization():
 
 
 def make_graph_for_grouping():
-
+    """Graph generator for grouping tests."""
     nodelist = [
         ("Andrew", {"affiliation": "MIT", "year": 5, "score": -2.0}),
         ("Felipe", {"affiliation": "Broad", "year": 4, "score": 0.0}),
@@ -32,7 +32,7 @@ def make_graph_for_grouping():
 
 
 def make_graph_for_edges():
-
+    """Graph generator for graph with edge weights."""
     nodelist = [("a"), ("b"), ("c"), ("d"), ("e"), ("f")]
     edgelist = [
         ("a", "b", {"weight": 0.1}),
@@ -56,7 +56,6 @@ def test_init_group_nodes():
     This only tests that the nodes are ordered correctly when sorted on the
     `node_grouping` key.
     """
-
     G = make_graph_for_grouping()  # noqa
     b = BasePlot(graph=G, node_grouping="affiliation")
 
@@ -96,7 +95,6 @@ def test_init_sort_nodes():
     This tests that the nodes are ordered correctly when sorted on the
     "node_order" key.
     """
-
     G = make_graph_for_grouping()  # noqa
 
     b = BasePlot(graph=G, node_order="year")
@@ -108,9 +106,10 @@ def test_init_sort_nodes():
 
 def test_init_data_types():
     """
+    Data type initialization checks.
+
     Checks that the data_types dictionary is initialized correctly.
     """
-
     G = make_graph_for_grouping()  # noqa
 
     b = BasePlot(
@@ -121,6 +120,8 @@ def test_init_data_types():
 
 def test_init_node_colors():
     """
+    Check node color initialization.
+
     Does two checks:
     1. If node_color is not passed in as a keyword argument, check that
        self.node_colors is a list of 'blue', of length (number of nodes).
@@ -138,11 +139,13 @@ def test_init_node_colors():
 
 def test_init_edge_colors():
     """
+    Check edge color initialization.
+
     Does two checks:
-    1. If edge_color is passed in as a keyword argument, check that
-       self.edge_colors is a list with more than one element.
-    2. If edge_color is not passed in as a keyword argument, check that
-       self.edge_colors is a list of 'black', of length 0.
+    1.  If edge_color is passed in as a keyword argument, check that
+        self.edge_colors is a list with more than one element.
+    2.  If edge_color is not passed in as a keyword argument, check that
+        self.edge_colors is a list of 'black', of length 0.
     """
     G = make_graph_for_edges()  # noqa
     b = BasePlot(graph=G, edge_color="weight")
@@ -155,6 +158,8 @@ def test_init_edge_colors():
 
 def test_init_font():
     """
+    Font initialization check.
+
     Checks if the passed value for font and fontfamily
     is set
     """
