@@ -1095,7 +1095,10 @@ class ArcPlot(BasePlot):
 
     def draw(self):
         super(ArcPlot, self).draw()
-        xlimits = (-1, len(self.nodes) + 1)
+
+        left_limit = self.node_sizes[0]
+        right_limit = sum(r for r in self.node_sizes)
+        xlimits = (-left_limit, right_limit + 1)
         self.ax.set_xlim(*xlimits)
         self.ax.set_ylim(*xlimits)
 
