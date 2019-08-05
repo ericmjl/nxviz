@@ -7,7 +7,7 @@ palettable==3.1.1
 networkx==2.3
 setuptools==41.0.1
 numpy==1.17.0
-PyYAML==5.1.1
+PyYAML==5.1.2
 sphinxcontrib-fulltoc==1.2.0
 seaborn==0.9.0
 more-itertools==7.2.0
