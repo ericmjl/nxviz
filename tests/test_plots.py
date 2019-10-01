@@ -80,3 +80,21 @@ def test_edge_widths():
     assert c.edge_widths == weights
     a = ArcPlot(G, edge_width=weights)
     assert a.edge_widths == weights
+
+def test_edge_color():
+    # add color as attribute and fill with random numbers
+    edges = G.edges()
+    for u, v in edges:
+        G[u][v]["type"] = "a" if random() < 0.5 else "b"
+    # also extract list for testing
+    types = [G[u][v]["type"] for u, v in edges]
+    # add color as proptery
+    c = CircosPlot(G, edge_color="type")
+    assert c.edge_widths == types
+    a = ArcPlot(G, edge_color="type")
+    assert a.edge_widths == types
+    # add types as list
+    c = CircosPlot(G, edge_color=types)
+    assert c.edge_widths == types
+    a = ArcPlot(G, edge_color=types)
+    assert a.edge_widths == types
