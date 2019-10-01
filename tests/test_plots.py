@@ -7,7 +7,7 @@ the following issue:
     https://github.com/ericmjl/nxviz/issues/160
 """
 
-from .test_utils import diff_plots
+from .test_utils import diff_plots, corresponding_lists
 
 from random import random
 
@@ -70,7 +70,7 @@ def test_edge_widths():
         G[u][v]["weight"] = random()
     # also extract list for testing
     weights = [G[u][v]["weight"] for u, v in edges]
-    # add weights as proptery
+    # add weights as property
     c = CircosPlot(G, edge_width="weight")
     assert c.edge_widths == weights
     a = ArcPlot(G, edge_width="weight")
@@ -80,3 +80,32 @@ def test_edge_widths():
     assert c.edge_widths == weights
     a = ArcPlot(G, edge_width=weights)
     assert a.edge_widths == weights
+
+
+def test_edge_color():
+    # add color as attribute and fill with random numbers
+    edges = G.edges()
+    for u, v in edges:
+        G[u][v]["type"] = "a" if random() < 0.5 else "b"
+    # also extract list for testing
+    types = [G[u][v]["type"] for u, v in edges]
+    # add color as property
+    c = CircosPlot(G, edge_color="type")
+    assert corresponding_lists(c.edge_colors, types)
+    a = ArcPlot(G, edge_color="type")
+    assert corresponding_lists(a.edge_colors, types)
+
+
+def test_node_size():
+    # add size as attribute and fill with random numbers
+    nodes = G.nodes()
+    for u in nodes:
+        G.node[u]["score"] = random()
+    # also extract list for testing
+    scores = [G.nodes[u]["score"] for u in nodes]
+    # add color as property
+    a = ArcPlot(G, node_size="score")
+    assert a.node_sizes == scores
+    # add types as list
+    a = ArcPlot(G, node_size=scores)
+    assert a.node_sizes == scores
