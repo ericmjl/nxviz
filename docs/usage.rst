@@ -83,3 +83,9 @@ Circos Plots
     
     nxviz Circos plot
 
+
+For a full list of parameters, see the :py:class:`nxviz.plots.CircosPlot` API documentation. 
+
+-------------
+
+The above is a basic overview of the available plots. For more detailed examples of these plots in action, please see the `examples here <https://github.com/ericmjl/nxviz/tree/master/examples>`_.
