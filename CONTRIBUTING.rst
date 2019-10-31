@@ -70,6 +70,10 @@ Ready to contribute? Here's how to set up `nxviz` for local development.
     $ cd nxviz/
     $ python setup.py develop
 
+   Alternatively, you can create a new conda environment with the following command::
+    
+    $ conda env create -f environment.yml
+
 4. (Optionally) Build the docs::
 
     $ cd docs/
