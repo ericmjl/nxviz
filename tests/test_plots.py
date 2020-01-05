@@ -21,9 +21,9 @@ G = nx.erdos_renyi_graph(n=20, p=0.2)
 
 G_geo = G.copy()
 for n, d in G_geo.nodes(data=True):
-    G_geo.node[n]["latitude"] = random()
-    G_geo.node[n]["longitude"] = random()
-    G_geo.node[n]["dpcapacity"] = random()
+    G_geo.nodes[n]["latitude"] = random()
+    G_geo.nodes[n]["longitude"] = random()
+    G_geo.nodes[n]["dpcapacity"] = random()
 
 baseline_dir, result_dir = _image_directories(lambda: "dummy func")
 
@@ -100,7 +100,7 @@ def test_node_size():
     # add size as attribute and fill with random numbers
     nodes = G.nodes()
     for u in nodes:
-        G.node[u]["score"] = random()
+        G.nodes[u]["score"] = random()
     # also extract list for testing
     scores = [G.nodes[u]["score"] for u in nodes]
     # add color as property
