@@ -260,7 +260,7 @@ class BasePlot(object):
 
     def compute_node_colors(self):
         """Compute the node colors. Also computes the colorbar."""
-        data = [self.graph.node[n][self.node_color] for n in self.nodes]
+        data = [self.graph.nodes[n][self.node_color] for n in self.nodes]
 
         if self.group_order == "alphabetically":
             data_reduced = sorted(list(set(data)))
@@ -522,7 +522,7 @@ class CircosPlot(BasePlot):
         Computes the x,y positions of the group labels.
         """
         assert self.group_label_position in ["beginning", "middle", "end"]
-        data = [self.graph.node[n][self.node_grouping] for n in self.nodes]
+        data = [self.graph.nodes[n][self.node_grouping] for n in self.nodes]
         node_length = len(data)
         groups = items_in_groups(data)
 
@@ -1154,8 +1154,8 @@ class GeoPlot(BasePlot):
         self.locs = dict()
 
         for node in self.nodes:
-            x = self.graph.node[node][self.node_lon]
-            y = self.graph.node[node][self.node_lat]
+            x = self.graph.nodes[node][self.node_lon]
+            y = self.graph.nodes[node][self.node_lat]
             xs.append(x)
             ys.append(y)
             self.locs[node] = (x, y)

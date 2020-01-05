@@ -78,13 +78,14 @@ def diff_plots(plot, plot_fn, baseline_dir, result_dir):
     diff = compare_images(baseline_img_path, result_img_path, tol=0)
     return diff
 
+
 def corresponding_lists(x, y):
-    '''Returns True is both lists x and y have one to one mapping
+    """Returns True is both lists x and y have one to one mapping
         e.g:
             x = [12, 4, 12, 3]
             y = [44, 6, 44, 9]
             corresponding_lists(x, y) # True
-    '''
+    """
     unique_mapping_pairs = set(zip(x, y))
     unique_elements = set(y)
     return len(unique_mapping_pairs) == len(unique_elements)

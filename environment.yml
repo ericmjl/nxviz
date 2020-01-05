@@ -5,7 +5,7 @@ channels:
 - ericmjl
 dependencies:
 - python=3.6
-- matplotlib
+- matplotlib-base
 - networkx
 - numpy
 - pip
