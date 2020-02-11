@@ -18,3 +18,4 @@ Contributors
 - Brian Cajes @bcajes
 - Ashutosh Chandra @ashu16993
 - Rabeez Riaz <19100165 (at) lums.edu.pk>
+- Erick Armingol <earmingol (at) eng.ucsd.edu>
