@@ -614,7 +614,7 @@ class CircosPlot(BasePlot):
 
             # Coordinates of text inside nodes
             if self.node_label_layout == "numbers":
-                radius_adjustment = 1.0 - (1.0 / radius)
+                radius_adjustment = self.plot_radius / radius
             else:
                 radius_adjustment = 1.02
             x, y = get_cartesian(r=radius * radius_adjustment, theta=theta)
@@ -641,11 +641,10 @@ class CircosPlot(BasePlot):
 
             # Computes the text rotation
             theta_deg = to_degrees(theta)
-            if theta_deg >= -90 and theta_deg < 90:  # right side
+            if theta_deg >= -90 and theta_deg <= 90:  # right side
                 rot = theta_deg
             else:  # left side
                 rot = theta_deg - 180
-
             # Store values
             self.store_node_label_meta(x, y, tx, ty, rot)
 
@@ -704,7 +703,7 @@ class CircosPlot(BasePlot):
             self.node_label_aligns["has"].append("right")
 
         # Computes the text alignment for y
-        if self.node_label_layout == "rotate" or y == 0:
+        if self.node_label_layout == "rotation" or y == 0:
             self.node_label_aligns["vas"].append("center")
         elif y > 0:
             self.node_label_aligns["vas"].append("bottom")
