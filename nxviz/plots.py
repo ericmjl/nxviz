@@ -497,7 +497,7 @@ class CircosPlot(BasePlot):
         they are not overlapping with node labels.
     :type group_label_offset: `float` or `int`
 
-    :param group_legend: Boolean, whether to include the legend of the group labels.
+    :param group_legend: Whether to include the legend of the group labels.
     :type group_legend: `bool`
     """
 
@@ -847,15 +847,20 @@ class CircosPlot(BasePlot):
     def draw_legend(self):
         # Get the label and color for each group
         seen = set()
+
+        # Gets colors in RGBA
         colors_group = [x for x in self.node_colors if not (
-            x in seen or seen.add(x))]  # Gets colors in RGBA
+            x in seen or seen.add(x))]
+
+        # Gets group labels
         labels_group = sorted(list(set(
-            [self.graph.node[n][self.node_color] for n in self.nodes])))  # Gets group labels
+            [self.graph.node[n][self.node_color] for n in self.nodes])))
 
         # Create patchList to use as handle for plt.legend()
         patchlist = []
         for color, label in zip(colors_group, labels_group):
-            color = to_hex(color, keep_alpha=True)  # Convert RGBA to HEX value
+            # Convert RGBA to HEX value
+            color = to_hex(color, keep_alpha=True)
             data_key = patches.Patch(color=color, label=label)
             patchlist.append(data_key)
 
