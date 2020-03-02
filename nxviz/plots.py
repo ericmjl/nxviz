@@ -344,7 +344,7 @@ class BasePlot(object):
 
     def compute_node_sizes(self):
         """Compute the node sizes."""
-        if type(self.node_size) is str:
+        if isinstance(self.node_size, str):
             nodes = self.graph.nodes
             self.node_sizes = [nodes[n][self.node_size] for n in self.nodes]
         else:
@@ -352,7 +352,7 @@ class BasePlot(object):
 
     def compute_edge_widths(self):
         """Compute the edge widths."""
-        if type(self.edge_width) is str:
+        if isinstance(self.edge_width, str):
             edges = self.graph.edges
             self.edge_widths = [edges[n][self.edge_width] for n in self.edges]
         else:
@@ -847,8 +847,10 @@ class CircosPlot(BasePlot):
     def draw_legend(self):
         # Get the label and color for each group
         seen = set()
-        colors_group = [x for x in self.node_colors if not (x in seen or seen.add(x))]  # Gets colors in RGBA
-        labels_group = sorted(list(set([self.graph.node[n][self.node_color] for n in self.nodes])))  # Gets group labels
+        colors_group = [x for x in self.node_colors if not (
+            x in seen or seen.add(x))]  # Gets colors in RGBA
+        labels_group = sorted(list(set(
+            [self.graph.node[n][self.node_color] for n in self.nodes])))  # Gets group labels
 
         # Create patchList to use as handle for plt.legend()
         patchlist = []
@@ -860,12 +862,13 @@ class CircosPlot(BasePlot):
         # Set the labels with the custom patchList
         self.ax.legend(handles=patchlist,
                        loc="lower center",
-                       ncol=int(len(labels_group)/2),  # Half number of columns for total of labels for the groups
+                       # Half number of columns for total of labels for the
+                       # groups
+                       ncol=int(len(labels_group) / 2),
                        bbox_to_anchor=(0.5, -0.05))
 
         # Make legend handle accessible for manipulation outside of the plot
         self.legend_handles = patchlist
-
 
 
 # class HivePlot(BasePlot):

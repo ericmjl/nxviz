@@ -29,7 +29,11 @@ c.draw()
 c.figure.tight_layout()
 
 # Save figure
-plt.savefig('circusplot_defaultlegend.png', format='png', dpi=400, bbox_inches="tight")
+plt.savefig(
+    'circusplot_defaultlegend.png',
+    format='png',
+    dpi=400,
+    bbox_inches="tight")
 
 # Display graph
 plt.show()

@@ -28,17 +28,22 @@ c = CircosPlot(
 c.draw()
 c.figure.tight_layout()
 
-# If you want more control over the legend, you can pass c.legend_handles to plt.legend()
+# If you want more control over the legend, you can pass c.legend_handles
+# to plt.legend()
 plt.legend(handles=c.legend_handles,
            loc="upper center",
-            title="Class",
+           title="Class",
            ncol=5,
            borderpad=1,
            shadow=True,
            fancybox=True)
 
 # Save figure
-plt.savefig('circusplot_customlegend.png', format='png', dpi=400, bbox_inches="tight")
+plt.savefig(
+    'circusplot_customlegend.png',
+    format='png',
+    dpi=400,
+    bbox_inches="tight")
 
 # Display graph
 plt.show()
