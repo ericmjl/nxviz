@@ -10,6 +10,7 @@ from matplotlib.cm import get_cmap
 from matplotlib.lines import Line2D
 from matplotlib.path import Path
 from more_itertools import unique_everseen
+from matplotlib.colors import to_hex
 
 from .geometry import (
     circos_radius,
@@ -119,6 +120,7 @@ class BasePlot(object):
         group_label_color=False,
         fontsize=10,
         fontfamily="serif",
+        legend_handles=None,
         **kwargs,
     ):
         super(BasePlot, self).__init__()
@@ -245,6 +247,7 @@ class BasePlot(object):
         """
         self.draw_nodes()
         self.draw_edges()
+
         # note that self.groups only exists on condition
         # that group_label_position was given!
         if hasattr(self, "groups") and self.groups:
@@ -489,9 +492,13 @@ class CircosPlot(BasePlot):
     :param node_label_layout: which/whether (a) node layout is used,
         either 'rotation', 'numbers' or None
     :type node_label_layout: `string`
+
     :param group_label_offset: how much to offset the group labels, so that
         they are not overlapping with node labels.
     :type group_label_offset: `float` or `int`
+
+    :param group_legend: Boolean, whether to include the legend of the group labels.
+    :type group_legend: `bool`
     """
 
     def __init__(self, graph, **kwargs):
@@ -516,6 +523,11 @@ class CircosPlot(BasePlot):
 
         #
         super(CircosPlot, self).__init__(graph, **kwargs)
+
+        # Add legend to plot
+        if "group_legend" in kwargs.keys():
+            if kwargs["group_legend"]:
+                self.draw_legend()
 
     def compute_group_label_positions(self):
         """
@@ -831,6 +843,29 @@ class CircosPlot(BasePlot):
                 fontsize=self.fontsize,
                 family=self.fontfamily,
             )
+
+    def draw_legend(self):
+        # Get the label and color for each group
+        seen = set()
+        colors_group = [x for x in self.node_colors if not (x in seen or seen.add(x))]  # Gets colors in RGBA
+        labels_group = sorted(list(set([self.graph.node[n][self.node_color] for n in self.nodes])))  # Gets group labels
+
+        # Create patchList to use as handle for plt.legend()
+        patchlist = []
+        for color, label in zip(colors_group, labels_group):
+            color = to_hex(color, keep_alpha=True)  # Convert RGBA to HEX value
+            data_key = patches.Patch(color=color, label=label)
+            patchlist.append(data_key)
+
+        # Set the labels with the custom patchList
+        self.ax.legend(handles=patchlist,
+                       loc="lower center",
+                       ncol=int(len(labels_group)/2),  # Half number of columns for total of labels for the groups
+                       bbox_to_anchor=(0.5, -0.05))
+
+        # Make legend handle accessible for manipulation outside of the plot
+        self.legend_handles = patchlist
+
 
 
 # class HivePlot(BasePlot):
