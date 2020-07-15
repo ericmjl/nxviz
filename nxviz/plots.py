@@ -853,8 +853,13 @@ class CircosPlot(BasePlot):
             x in seen or seen.add(x))]
 
         # Gets group labels
-        labels_group = sorted(list(set(
-            [self.graph.node[n][self.node_color] for n in self.nodes])))
+        labels_group = sorted(
+        set(
+            [
+                self.graph.nodes[n][self.node_color] for n in self.nodes
+            ]
+            )
+        )
 
         # Create patchList to use as handle for plt.legend()
         patchlist = []
