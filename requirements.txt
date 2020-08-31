@@ -1,5 +1,5 @@
 pytest==6.0.1
-hypothesis==5.29.0
+hypothesis==5.30.0
 cryptography==3.0
 pandas==1.1.1
 matplotlib==3.3.1
