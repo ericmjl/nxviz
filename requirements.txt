@@ -1,13 +1,13 @@
 pytest==6.0.1
-hypothesis==5.29.0
-cryptography==3.0
+hypothesis==5.33.1
+cryptography==3.1
 pandas==1.1.1
 matplotlib==3.3.1
 palettable==3.3.0
 networkx==2.5
-setuptools==49.6.0
+setuptools==50.3.0
 numpy==1.19.1
 PyYAML==5.3.1
 sphinxcontrib-fulltoc==1.2.0
 seaborn==0.10.1
-more-itertools==8.4.0
+more-itertools==8.5.0
