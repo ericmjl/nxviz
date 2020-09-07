@@ -144,9 +144,7 @@ class BasePlot(object):
 
         # Set node colors
         self.node_color = node_color
-        self.sm = (
-            None
-        )  # sm -> for scalarmappable. See https://stackoverflow.com/questions/8342549/matplotlib-add-colorbar-to-a-sequence-of-line-plots  # noqa
+        self.sm = None  # sm -> for scalarmappable. See https://stackoverflow.com/questions/8342549/matplotlib-add-colorbar-to-a-sequence-of-line-plots  # noqa
         logging.debug("INIT: {0}".format(self.sm))
         if self.node_color:
             self.node_colors = []
@@ -502,8 +500,7 @@ class CircosPlot(BasePlot):
     """
 
     def __init__(self, graph, **kwargs):
-        """Create the CircosPlot.
-        """
+        """Create the CircosPlot."""
 
         # A CircosPlot only makes sense for at least 3 nodes
         assert len(graph.nodes) >= 3
@@ -849,16 +846,13 @@ class CircosPlot(BasePlot):
         seen = set()
 
         # Gets colors in RGBA
-        colors_group = [x for x in self.node_colors if not (
-            x in seen or seen.add(x))]
+        colors_group = [
+            x for x in self.node_colors if not (x in seen or seen.add(x))
+        ]
 
         # Gets group labels
         labels_group = sorted(
-        set(
-            [
-                self.graph.nodes[n][self.node_color] for n in self.nodes
-            ]
-            )
+            set([self.graph.nodes[n][self.node_color] for n in self.nodes])
         )
 
         # Create patchList to use as handle for plt.legend()
@@ -870,12 +864,14 @@ class CircosPlot(BasePlot):
             patchlist.append(data_key)
 
         # Set the labels with the custom patchList
-        self.ax.legend(handles=patchlist,
-                       loc="lower center",
-                       # Half number of columns for total of labels for the
-                       # groups
-                       ncol=int(len(labels_group) / 2),
-                       bbox_to_anchor=(0.5, -0.05))
+        self.ax.legend(
+            handles=patchlist,
+            loc="lower center",
+            # Half number of columns for total of labels for the
+            # groups
+            ncol=int(len(labels_group) / 2),
+            bbox_to_anchor=(0.5, -0.05),
+        )
 
         # Make legend handle accessible for manipulation outside of the plot
         self.legend_handles = patchlist
