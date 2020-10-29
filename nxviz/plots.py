@@ -726,11 +726,12 @@ class CircosPlot(BasePlot):
         """
         Renders nodes to the figure.
         """
-        node_r = self.nodeprops["radius"]
+        
         lw = self.nodeprops["linewidth"]
         for i, node in enumerate(self.nodes):
             x = self.node_coords["x"][i]
             y = self.node_coords["y"][i]
+            node_r = self.node_sizes[i]
             color = self.node_colors[i]
             node_patch = patches.Circle(
                 (x, y), node_r, lw=lw, color=color, zorder=2
