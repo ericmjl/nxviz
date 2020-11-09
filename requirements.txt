@@ -6,7 +6,7 @@ matplotlib==3.3.2
 palettable==3.3.0
 networkx==2.5
 setuptools==50.3.2
-numpy==1.19.2
+numpy==1.19.4
 PyYAML==5.3.1
 sphinxcontrib-fulltoc==1.2.0
 seaborn==0.11.0
