@@ -45,8 +45,13 @@ If you have a feature request, please post it as an issue on the GitHub reposito
 
 Because nxviz is currently maintained by volunteers and has no fiscal support, any feature requests will be prioritized according to what maintainers encounter as a need in our day-to-day jobs. Please temper expectations accordingly.
 
+
 [issue]: https://github.com/ericmjl/nxviz/issues
 [PR]: https://github.com/ericmjl/nxviz/pulls
+
+## Related Projects
+
+- [Grandalf](https://github.com/bdcht/grandalf)
 
 ## Credits
 

@@ -16,7 +16,7 @@ from .geometry import (
     circos_radius,
     get_cartesian,
     group_theta,
-    node_theta,
+    item_theta,
     text_alignment,
 )
 from .polcart import to_degrees
@@ -32,7 +32,9 @@ from .utils import (
 )
 
 
-def despine(ax):
+def despine(ax=None):
+    if ax is None:
+        ax = plt.gca()
     for spine in ax.spines:
         ax.spines[spine].set_visible(False)
     plt.setp(ax.get_xticklabels(), visible=False)
@@ -595,7 +597,7 @@ class CircosPlot(BasePlot):
         self.plot_radius = radius
         self.nodeprops["linewidth"] = radius * 0.01
         for node in self.nodes:
-            x, y = get_cartesian(r=radius, theta=node_theta(self.nodes, node))
+            x, y = get_cartesian(r=radius, theta=item_theta(self.nodes, node))
             xs.append(x)
             ys.append(y)
         self.node_coords = {"x": xs, "y": ys}
@@ -617,7 +619,7 @@ class CircosPlot(BasePlot):
         for node in self.nodes:
 
             # Define radius 'radius' and circumference 'theta'
-            theta = node_theta(self.nodes, node)
+            theta = item_theta(self.nodes, node)
             # multiplication factor 1.02 moved below
             radius = self.plot_radius + self.nodeprops["radius"]
 
@@ -804,8 +806,8 @@ class CircosPlot(BasePlot):
         Renders edges to the figure.
         """
         for i, (start, end) in enumerate(self.graph.edges()):
-            start_theta = node_theta(self.nodes, start)
-            end_theta = node_theta(self.nodes, end)
+            start_theta = item_theta(self.nodes, start)
+            end_theta = item_theta(self.nodes, end)
             verts = [
                 get_cartesian(self.plot_radius, start_theta),
                 (0, 0),
@@ -1273,3 +1275,9 @@ class GeoPlot(BasePlot):
             # self.draw_edges()
             # self.viz = self.edge_chart + self.node_chart
             # return self.viz.interactive()
+
+
+def aspect_equal(ax=None):
+    if ax is None:
+        ax = plt.gca()
+    ax.set_aspect("equal")

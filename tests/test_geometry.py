@@ -10,7 +10,7 @@ from nxviz.geometry import (
     circos_radius,
     correct_negative_angle,
     get_cartesian,
-    node_theta,
+    item_theta,
 )
 
 
@@ -32,11 +32,11 @@ def test_circos_radius():
 
 # @settings(perform_health_check=False)
 @given(lists(integers()))
-def test_node_theta(nodelist):
-    """Tests node_theta function."""
+def test_item_theta(nodelist):
+    """Tests item_theta function."""
     assume(len(nodelist) > 0)
     node = choice(nodelist)
-    theta_obs = node_theta(nodelist, node)
+    theta_obs = item_theta(nodelist, node)
 
     i = nodelist.index(node)
     theta_exp = -np.pi + i * 2 * np.pi / len(nodelist)

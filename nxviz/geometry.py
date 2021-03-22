@@ -4,14 +4,14 @@ Utility geometry functions that can help with drawing to screen.
 import numpy as np
 
 from .polcart import to_cartesian
+from typing import List, Hashable
 
 
-def node_theta(nodelist, node):
+def item_theta(nodelist: List[Hashable], node: Hashable):
     """
     Maps node to Angle.
 
     :param nodelist: Nodelist from the graph.
-    :type nodelist: list.
     :param node: The node of interest. Must be in the nodelist.
     :returns: theta -- the angle of the node in radians.
     """
@@ -19,7 +19,7 @@ def node_theta(nodelist, node):
     assert node in nodelist, "node must be inside nodelist."
 
     i = nodelist.index(node)
-    theta = -np.pi + i * 2 * np.pi / len(nodelist)
+    theta = i * 2 * np.pi / len(nodelist)
 
     return theta
 
@@ -69,14 +69,12 @@ def text_alignment(x, y):
     return ha, va
 
 
-def get_cartesian(r, theta):
+def get_cartesian(r: float, theta: float):
     """
     Returns the cartesian (x,y) coordinates of (r, theta).
 
     :param r: Real-valued radius.
-    :type r: int, float.
-    :param theta: Angle
-    :type theta: int, float.
+    :param theta: Angle in radians.
     :returns: to_cartesian(r, theta)
     """
     return to_cartesian(r, theta)
@@ -98,7 +96,7 @@ def correct_negative_angle(angle):
     return angle
 
 
-def circos_radius(n_nodes, node_r):
+def circos_radius(n_nodes: int, node_r: float):
     """
     Automatically computes the origin-to-node centre radius of the Circos plot
     using the triangle equality sine rule.
@@ -106,9 +104,7 @@ def circos_radius(n_nodes, node_r):
     a / sin(A) = b / sin(B) = c / sin(C)
 
     :param n_nodes: the number of nodes in the plot.
-    :type n_nodes: int
     :param node_r: the radius of each node.
-    :type node_r: float
     :returns: Origin-to-node centre radius.
     """
     A = 2 * np.pi / n_nodes  # noqa

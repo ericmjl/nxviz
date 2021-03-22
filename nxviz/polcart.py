@@ -2,7 +2,7 @@ from numpy import arctan2 as atan2
 from numpy import cos, pi, sin, sqrt
 
 
-def to_cartesian(r, theta, theta_units="radians"):
+def to_cartesian(r, theta, theta_units="radians", proper=False):
     """
     Converts polar r, theta to cartesian x, y.
     """
@@ -15,7 +15,8 @@ def to_cartesian(r, theta, theta_units="radians"):
     if theta_units == "degrees":
         theta = to_radians(theta)
 
-    theta = to_proper_radians(theta)
+    if proper:
+        theta = to_proper_radians(theta)
     x = r * cos(theta)
     y = r * sin(theta)
 
