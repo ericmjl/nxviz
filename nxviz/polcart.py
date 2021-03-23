@@ -23,6 +23,9 @@ def to_cartesian(r, theta, theta_units="radians", proper=False):
     return x, y
 
 
+import numpy as np
+
+
 def to_polar(x, y, theta_units="radians"):
     """
     Converts cartesian x, y to polar r, theta.
@@ -37,6 +40,9 @@ def to_polar(x, y, theta_units="radians"):
 
     if theta_units == "degrees":
         theta = to_degrees(theta)
+
+    if theta < 0:
+        theta += 2 * np.pi
 
     return r, theta
 

@@ -40,8 +40,7 @@ def infer_data_type(data_container):
 
     """
     warnings.warn(
-        "`infer_data_type` is deprecated! "
-        "Please use `infer_data_family` instead!"
+        "`infer_data_type` is deprecated! " "Please use `infer_data_family` instead!"
     )
     # Defensive programming checks.
     # 0. Ensure that we are dealing with lists or tuples, and nothing else.

@@ -15,10 +15,9 @@ import pandas as pd
 from typing import Hashable, Dict
 import numpy as np
 
+
 def parallel(
-    nt: pd.DataFrame,
-    group_by: Hashable,
-    sort_by: Hashable
+    nt: pd.DataFrame, group_by: Hashable, sort_by: Hashable
 ) -> Dict[Hashable, np.ndarray]:
     """Parallel coordinates node layout."""
     pos = dict()
@@ -31,14 +30,15 @@ def parallel(
 
 
 from .utils import group_and_sort
-from .geometry import get_cartesian, item_theta
+from .geometry import item_theta
 from .polcart import to_cartesian
+
 
 def circos(
     nt: pd.DataFrame,
-    group_by: Hashable=None,
-    sort_by: Hashable=None,
-    radius: float = 3
+    group_by: Hashable = None,
+    sort_by: Hashable = None,
+    radius: float = 3,
 ) -> Dict[Hashable, np.ndarray]:
     """Circos plot node layout."""
     pos = dict()
@@ -56,8 +56,19 @@ def circos(
     return pos
 
 
-def hive(nt: pd.DataFrame, group_by, sort_by: Hashable=None, inner_radius: float=3):
-    """Hive plot node layout."""
+def hive(
+    nt: pd.DataFrame,
+    group_by,
+    sort_by: Hashable = None,
+    inner_radius: float = 10,
+    rotation: float = 0,
+):
+    """Hive plot node layout.
+
+    ## Parameters
+
+    - `inner_radius`: The inner
+    """
     nt = group_and_sort(nt, group_by=group_by, sort_by=sort_by)
     groups = sorted(set(nt[group_by]))
     if len(groups) > 3:
@@ -70,7 +81,7 @@ def hive(nt: pd.DataFrame, group_by, sort_by: Hashable=None, inner_radius: float
     for grp, df in nt.groupby(group_by):
         for i, (node, data) in enumerate(df.iterrows()):
             radius = inner_radius + i
-            theta = item_theta(groups, grp)
+            theta = item_theta(groups, grp) + rotation
             x, y = to_cartesian(r=radius, theta=theta)
             pos[node] = np.array([x, y])
     return pos

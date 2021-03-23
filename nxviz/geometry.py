@@ -85,15 +85,29 @@ def correct_negative_angle(angle):
     Corrects a negative angle to a positive one.
 
     :param angle: The angle in radians.
-    :type angle: float
     :returns: `angle`, corrected to be positively-valued.
     """
+    angle = angle % (2 * np.pi)
     if angle < 0:
-        angle = 2 * np.pi + angle
-    else:
-        pass
-
+        angle += 2 * np.pi
     return angle
+
+
+def correct_angles(start_radians, end_radians, rotation: float):
+    """
+    This function corrects for the following problems in the edges:
+    """
+    # Edges going the anti-clockwise direction involves angle = 0.
+    if start_radians == 0 and (end_radians - start_radians > np.pi):
+        start_radians = np.pi * 2
+    if end_radians == 0 and (end_radians - start_radians < -np.pi):
+        end_radians = np.pi * 2
+
+    # Case when start_radians == end_radians:
+    if start_radians == end_radians:
+        start_radians = start_radians - rotation
+        end_radians = end_radians + rotation
+    return start_radians, end_radians
 
 
 def circos_radius(n_nodes: int, node_r: float):
@@ -111,3 +125,15 @@ def circos_radius(n_nodes: int, node_r: float):
     B = (np.pi - A) / 2  # noqa
     a = 2 * node_r
     return a * np.sin(B) / np.sin(A)
+
+
+def correct_hive_angles(start, end):
+    if start > np.pi and end == 0.0:
+        end = 2 * np.pi
+    if start < np.pi and end == 0.0:
+        start, end = end, start
+    if end < np.pi and start == 2 * np.pi:
+        start = 0
+    if end > np.pi and start == 0:
+        start = 2 * np.pi
+    return start, end

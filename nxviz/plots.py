@@ -275,9 +275,7 @@ class BasePlot(object):
 
         if dtype == "categorical" or dtype == "ordinal":
             if n_grps <= 8:
-                cmap = get_cmap(
-                    cmaps["Accent_{0}".format(n_grps)].mpl_colormap
-                )
+                cmap = get_cmap(cmaps["Accent_{0}".format(n_grps)].mpl_colormap)
             else:
                 cmap = n_group_colorpallet(n_grps)
         elif dtype == "continuous" and not is_data_diverging(data):
@@ -318,9 +316,7 @@ class BasePlot(object):
         n_grps = num_discrete_groups(data)
         if dtype == "categorical" or dtype == "ordinal":
             if n_grps <= 8:
-                cmap = get_cmap(
-                    cmaps["Accent_{0}".format(n_grps)].mpl_colormap
-                )
+                cmap = get_cmap(cmaps["Accent_{0}".format(n_grps)].mpl_colormap)
             else:
                 cmap = n_group_colorpallet(n_grps)
         elif dtype == "continuous" and not is_data_diverging(data):
@@ -424,19 +420,12 @@ class BasePlot(object):
                 ]
 
             elif self.group_order == "default":
-                grp = [
-                    d[self.node_grouping]
-                    for _, d in self.graph.nodes(data=True)
-                ]
+                grp = [d[self.node_grouping] for _, d in self.graph.nodes(data=True)]
                 grp_name = list(unique_everseen(grp))
                 nodes = []
                 for key in grp_name:
                     nodes.extend(
-                        [
-                            n
-                            for n, d in self.graph.nodes(data=True)
-                            if key in d.values()
-                        ]
+                        [n for n, d in self.graph.nodes(data=True) if key in d.values()]
                     )
                 self.nodes = nodes
 
@@ -462,10 +451,7 @@ class BasePlot(object):
                     )
                 ]
             elif self.group_order == "default":
-                grp = [
-                    d[self.node_grouping]
-                    for _, d in self.graph.nodes(data=True)
-                ]
+                grp = [d[self.node_grouping] for _, d in self.graph.nodes(data=True)]
                 grp_name = list(unique_everseen(grp))
                 nodes = []
                 for key in grp_name:
@@ -548,9 +534,7 @@ class CircosPlot(BasePlot):
         node_idcs = np.insert(node_idcs, 0, 0)
         if self.group_label_position == "beginning":
             for idx in node_idcs[:-1]:
-                x, y = get_cartesian(
-                    r=radius, theta=group_theta(node_length, idx)
-                )
+                x, y = get_cartesian(r=radius, theta=group_theta(node_length, idx))
                 ha, va = text_alignment(x, y)
                 xs.append(x)
                 ys.append(y)
@@ -572,9 +556,7 @@ class CircosPlot(BasePlot):
 
         elif self.group_label_position == "end":
             for idx in node_idcs[1::]:
-                x, y = get_cartesian(
-                    r=radius, theta=group_theta(node_length, idx - 1)
-                )
+                x, y = get_cartesian(r=radius, theta=group_theta(node_length, idx - 1))
                 ha, va = text_alignment(x, y)
                 xs.append(x)
                 ys.append(y)
@@ -734,9 +716,7 @@ class CircosPlot(BasePlot):
             x = self.node_coords["x"][i]
             y = self.node_coords["y"][i]
             color = self.node_colors[i]
-            node_patch = patches.Circle(
-                (x, y), node_r, lw=lw, color=color, zorder=2
-            )
+            node_patch = patches.Circle((x, y), node_r, lw=lw, color=color, zorder=2)
             self.ax.add_patch(node_patch)
             if self.node_labels:
                 label_x = self.node_label_coords["x"][i]
@@ -782,9 +762,7 @@ class CircosPlot(BasePlot):
                     )
 
                     # Add numbers to nodes
-                    self.ax.text(
-                        s=i, x=label_x, y=label_y, ha="center", va="center"
-                    )
+                    self.ax.text(s=i, x=label_x, y=label_y, ha="center", va="center")
 
                 # Standard node label layout
                 else:
@@ -848,9 +826,7 @@ class CircosPlot(BasePlot):
         seen = set()
 
         # Gets colors in RGBA
-        colors_group = [
-            x for x in self.node_colors if not (x in seen or seen.add(x))
-        ]
+        colors_group = [x for x in self.node_colors if not (x in seen or seen.add(x))]
 
         # Gets group labels
         labels_group = sorted(
