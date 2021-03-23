@@ -67,3 +67,4 @@ docs/_build/
 target/
 
 *.ipynb
+.ipynb_checkpoints/*
