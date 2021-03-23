@@ -17,14 +17,15 @@ import numpy as np
 
 
 def parallel(
-    nt: pd.DataFrame, group_by: Hashable, sort_by: Hashable
+    nt: pd.DataFrame, group_by: Hashable, sort_by: Hashable = None
 ) -> Dict[Hashable, np.ndarray]:
     """Parallel coordinates node layout."""
     pos = dict()
 
     for x, (grp, data) in enumerate(nt.groupby(group_by)):
-        df = data.sort_values(sort_by)
-        for y, (node, d) in enumerate(df.iterrows()):
+        if sort_by is not None:
+            data = data.sort_values(sort_by)
+        for y, (node, d) in enumerate(data.iterrows()):
             pos[node] = np.array([x, y])
     return pos
 

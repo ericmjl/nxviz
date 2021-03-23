@@ -1,24 +1,29 @@
+"""Functions for drawing edges.
+
+In drawing edges, we need to know some pieces of information beforehand.
+
+Firstly,
+"""
+
 from copy import deepcopy
-from typing import Dict
+from itertools import product
+from typing import Dict, Hashable, Callable
 
 import janitor
-
 import matplotlib.pyplot as plt
 import networkx as nx
-
+from networkx.generators import line
+import numpy as np
 import pandas as pd
 from datashader.bundling import hammer_bundle
-from matplotlib import patches
-from matplotlib.patches import Path
+from matplotlib.patches import Path, PathPatch, Arc
 
+from . import colors
+from .geometry import correct_hive_angles
+from .polcart import to_cartesian, to_polar, to_radians
 from .utils import edge_table
 
-default_edge_kwargs = dict(alpha=0.1, facecolor="none", zorder=0)
-
-
-def lw_func(d):
-    """Return default line width."""
-    return 1
+default_edge_kwargs = dict(facecolor="none", zorder=0)
 
 
 def alpha_func(d):
@@ -37,6 +42,13 @@ def update_default_edge_kwargs(edge_kwargs):
     return edgekw
 
 
+def edge_colors(et: pd.DataFrame, color_by: Hashable):
+    edge_color = ["black"] * len(et)
+    if color_by:
+        edge_color = colors.data_color(et[color_by])
+    return edge_color
+
+
 def bundle(G, pos, ax=None, edge_kwargs={}):
     edge_df = edge_table(G)
     node_df = (
@@ -47,67 +59,86 @@ def bundle(G, pos, ax=None, edge_kwargs={}):
     hb = hammer_bundle(nodes=node_df, edges=edge_df)
     if ax is None:
         ax = plt.gca()
-    edgekw = update_default_edge_kwargs(edge_kwargs)
-    ax = hb.plot(x="x", y="y", ax=ax, zorder=0, **edgekw)
+    ax = hb.plot(x="x", y="y", ax=ax)
     ax.legend().remove()
 
 
-from nxviz import colors
+from . import lines
 
 
-def circos_curves(
+def line_width(et: pd.DataFrame, lw_by: Hashable, lw_func: Callable):
+    if lw_by is not None:
+        return et[lw_by].apply(lw_func)
+    return pd.Series([1] * len(et))
+
+
+def transparency(et: pd.DataFrame, alpha_by: Hashable, alpha_func: Callable):
+    if alpha_by is not None:
+        return et[alpha_by].apply(alpha_func)
+    return pd.Series([1] * len(et))
+
+
+def circos(
     G: nx.Graph,
     pos: Dict,
     color_by=None,
-    lw_func=lw_func,
-    alpha_func=alpha_func,
+    lw_by=None,
+    lw_func=lambda _: 1,
+    alpha_by=None,
+    alpha_func=lambda _: 0.1,
     ax=None,
     edge_kwargs={},
 ):
     """Draw circos plot curves."""
-
     et = edge_table(G)
-    edge_colors = ["black"] * len(et)
-    if color_by:
-        edge_colors = colors.data_color(et[color_by]).to_list()
     if ax is None:
         ax = plt.gca()
     edgekw = update_default_edge_kwargs(edge_kwargs)
-    for i, (start, end, d) in enumerate(G.edges(data=True)):
-        verts = [pos[start], (0, 0), pos[end]]
-        codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
-        path = Path(verts, codes)
-        edgekw.update(lw=lw_func(d), alpha=alpha_func(d), edgecolor=edge_colors[i])
-        patch = patches.PathPatch(path, **edgekw)
+
+    edge_color = edge_colors(et, color_by)
+    lw = line_width(et, lw_by, lw_func)
+    alpha = transparency(et, alpha_by, alpha_func)
+
+    patches = lines.circos(
+        et, pos, edge_color=edge_color, alpha=alpha, lw=lw, edge_kwargs=edgekw
+    )
+    for patch in patches:
         ax.add_patch(patch)
 
 
-def lines(G: nx.Graph, pos: Dict, ax=None, edge_kwargs={}):
+def line(
+    G: nx.Graph,
+    pos: Dict,
+    color_by=None,
+    lw_by=None,
+    lw_func=lambda _: 1,
+    alpha_by=None,
+    alpha_func=lambda _: 0.1,
+    ax=None,
+    edge_kwargs={},
+):
     """Vanilla lines between nodes.
 
     Can be used with almost any node layout.
     """
+    et = edge_table(G)
     if ax is None:
         ax = plt.gca()
     edgekw = update_default_edge_kwargs(edge_kwargs)
 
-    for start, end in G.edges():
-        verts = [pos[start], pos[end]]
-        codes = [Path.MOVETO, Path.LINETO]
-        path = Path(verts, codes)
-        edgekw = update_default_edge_kwargs(edge_kwargs)
-        patch = patches.PathPatch(path, **edgekw)
+    edge_color = edge_colors(et, color_by)
+    lw = line_width(et, lw_by, lw_func)
+    alpha = transparency(et, alpha_by, alpha_func)
+    patches = lines.line(et, pos, edge_color, alpha, lw, edgekw)
+    for patch in patches:
         ax.add_patch(patch)
 
 
-import numpy as np
-
-
-def arc_curves(
+def arc(
     G: nx.Graph,
     pos: Dict,
     color_by=None,
-    lw_func=lw_func,
+    lw_func=lambda _: 1,
     alpha_func=alpha_func,
     edge_kwargs: Dict = {},
     ax=None,
@@ -115,13 +146,11 @@ def arc_curves(
     """ArcPlot curves."""
 
     et = edge_table(G)
-    edge_colors = ["black"] * len(et)
-    if color_by:
-        edge_colors = colors.data_color(et[color_by]).to_list()
-
+    edge_color = edge_colors(et, color_by)
     if ax is None:
         ax = plt.gca()
     edgekw = update_default_edge_kwargs(edge_kwargs)
+
     for i, (start, end, d) in enumerate(G.edges(data=True)):
         start_x, start_y = pos[start]
         end_x, end_y = pos[end]
@@ -134,9 +163,9 @@ def arc_curves(
 
         theta1, theta2 = 0, 180
         edgekw.update(
-            {"lw": lw_func(d), "alpha": alpha_func(d), "edgecolor": edge_colors[i]}
+            {"lw": lw_func(d), "alpha": alpha_func(d), "edgecolor": edge_color[i]}
         )
-        patch = patches.Arc(
+        patch = Arc(
             xy=(middle_x, middle_y),
             width=width,
             height=height,
@@ -147,18 +176,12 @@ def arc_curves(
         ax.add_patch(patch)
 
 
-from itertools import product
-
-from nxviz.geometry import correct_hive_angles
-from nxviz.polcart import to_cartesian, to_polar, to_radians
-
-
 def hive(
     G: nx.Graph,
     pos: Dict,
     pos_cloned: Dict = None,
     color_by=None,
-    lw_func=lw_func,
+    lw_func=lambda _: 1,
     alpha_func=alpha_func,
     curves: bool = True,
     edge_kwargs={},
@@ -167,20 +190,19 @@ def hive(
     """Draw hive plot edges to a matplotlib axes object."""
 
     et = edge_table(G)
-    edge_colors = ["black"] * len(et)
-    if color_by:
-        edge_colors = colors.data_color(et[color_by]).to_list()
+    edge_color = edge_colors(et, color_by)
+    if ax is None:
+        ax = plt.gca()
+    edgekw = update_default_edge_kwargs(edge_kwargs)
 
     rad = pd.Series(pos).apply(lambda val: to_polar(*val)).to_dict()
     if pos_cloned is None:
         pos_cloned = pos
     rad_cloned = pd.Series(pos_cloned).apply(lambda val: to_polar(*val)).to_dict()
 
-    if ax is None:
-        ax = plt.gca()
-
-    edgekw = update_default_edge_kwargs(edge_kwargs)
-    for i, (start, end, d) in enumerate(G.edges(data=True)):
+    for r, d in et.iterrows():
+        start = d["source"]
+        end = d["target"]
         start_radius, start_theta = rad[start]
         end_radius, end_theta = rad[end]
 
@@ -233,6 +255,6 @@ def hive(
             ]
 
         path = Path(verts, codes)
-        edgekw.update(lw=lw_func(d), alpha=alpha_func(d), edgecolor=edge_colors[i])
-        patch = patches.PathPatch(path, **edgekw)
+        edgekw.update(lw=lw_func(d), alpha=alpha_func(d), edgecolor=edge_color[r])
+        patch = PathPatch(path, **edgekw)
         ax.add_patch(patch)
