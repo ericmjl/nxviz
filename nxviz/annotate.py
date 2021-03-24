@@ -27,7 +27,7 @@ def circos_group(G, group_by: Hashable, radius: int, ax=None, midpoint=True):
         ax.annotate(label, xy=(x, y), ha=ha, va=va)
 
 
-def hive_group(G, group_by, inner_radius: int = 3, ax=None, offset=0):
+def hive_group(G, group_by, radius: int = 3, ax=None, offset=0):
     """Text annotation of hive plot groups."""
     nt = utils.node_table(G)
     groups = sorted(nt[group_by].unique())
@@ -37,12 +37,47 @@ def hive_group(G, group_by, inner_radius: int = 3, ax=None, offset=0):
 
     for grp in groups:
         theta = item_theta(groups, grp) + offset
-        x, y = to_cartesian(inner_radius, theta)
+        x, y = to_cartesian(radius, theta)
         ha, va = text_alignment(x, y)
         ax.annotate(grp, xy=(x, y), ha=ha, va=va)
 
 
-from .colors import data_cmap, color_func
+def arc_group(G, group_by, ax=None, midpoint=True, y_offset=0, rotation=45):
+    if ax is None:
+        ax = plt.gca()
+    nt = utils.node_table(G)
+    groups = nt.groupby(group_by).apply(lambda df: len(df)).sort_index()
+    proportions = groups / groups.sum()
+    starting_points = proportions.cumsum() - proportions
+    if midpoint:
+        starting_points += proportions / 2
+    starting_points *= len(G)
+
+    for label, starting_point in starting_points.to_dict().items():
+        x = starting_point
+        y = y_offset
+        ha = "right"
+        va = "top"
+        ax.annotate(label, xy=(x, y), ha=ha, va=va, rotation=rotation)
+
+
+def parallel_group(G, group_by, ax=None, y_offset=-0.3, rotation=45):
+    if ax is None:
+        ax = plt.gca()
+    nt = utils.node_table(G)
+    # groups = nt.groupby(group_by).apply(lambda df: len(df)).sort_index()
+    groups = sorted(nt[group_by].unique())
+
+    for i, label in enumerate(groups):
+        x = i
+        y = y_offset
+        ha = "right"
+        va = "top"
+        ax.annotate(label, xy=(x, y), ha=ha, va=va, rotation=rotation)
+    ax.relim()
+
+
+from .aesthetics import data_cmap, color_func
 from matplotlib.colors import Normalize
 from matplotlib.cm import ScalarMappable
 from matplotlib import patches

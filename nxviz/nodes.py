@@ -1,83 +1,114 @@
-from nxviz.utils import node_table
-from . import layouts, colors
-import numpy as np
-import networkx as nx
 from copy import deepcopy
+from functools import partial
+from typing import Callable, Dict, Hashable
 
-
-default_node_kwargs = {"node_size": 10}
-
-
-def update_node_kwargs(node_kwargs):
-    nodekw = deepcopy(default_node_kwargs)
-    nodekw.update(node_kwargs)
-    return nodekw
-
-
+import networkx as nx
+import numpy as np
 import pandas as pd
-from typing import Hashable
+
+from nxviz import aesthetics
+from nxviz.utils import node_table
+
+from . import layouts
 
 
 def node_colors(nt: pd.DataFrame, color_by: Hashable):
-    node_color = "black"
     if color_by:
-        node_color = colors.data_color(nt[color_by])
-    return node_color
+        return aesthetics.data_color(nt[color_by])
+    return pd.Series(["blue"] * len(nt), name="color_by", index=nt.index)
 
 
-def hive(
-    G,
-    group_by,
-    sort_by=None,
-    color_by=None,
-    clone=False,
-    layout_kwargs={},
-    node_kwargs={},
+def transparency(nt: pd.DataFrame, alpha_by: Hashable):
+    """Transparency must always be normalized to (0, 1)."""
+    if alpha_by:
+        return aesthetics.data_transparency(nt[alpha_by])
+    return pd.Series([1.0] * len(nt), name="transparency", index=nt.index)
+
+
+def node_size(nt: pd.DataFrame, size_by: Hashable):
+    if size_by:
+        return aesthetics.data_size(nt[size_by])
+    return pd.Series([1.0] * len(nt), name="size", index=nt.index)
+
+
+from matplotlib.patches import Circle
+
+
+def node_glyphs(nt, pos, node_color, alpha, size, **aesthetics_kwargs):
+    """Draw circos glyphs to the matplotlib axes object."""
+    patches = dict()
+    for r, d in nt.iterrows():
+        kw = {
+            "fc": node_color[r],
+            "alpha": alpha[r],
+            "radius": size[r],
+        }
+        kw.update(aesthetics_kwargs)
+        c = Circle(xy=pos[r], **kw)
+        patches[r] = c
+    return pd.Series(patches)
+
+
+import matplotlib.pyplot as plt
+
+
+def rescale(G):
+    """Default rescale."""
+    ax = plt.gca()
+    ax.relim()
+    ax.autoscale_view()
+
+
+def rescale_arc(G):
+    """Axes rescale function for arc plot."""
+    ax = plt.gca()
+    ax.relim()
+    ymin, ymax = ax.get_ylim()
+    maxheight = int(len(G) / 2) + 1
+    ax.set_ylim(ymin - 1, maxheight)
+    ax.set_xlim(-1, len(G) + 1)
+
+
+def draw(
+    G: nx.Graph,
+    layout_func: Callable,
+    group_by: Hashable,
+    sort_by: Hashable,
+    color_by: Hashable = None,
+    alpha_by: Hashable = None,
+    size_by: Hashable = None,
+    layout_kwargs: Dict = {},
+    aesthetics_kwargs: Dict = {},
+    rescale_func=rescale,
     ax=None,
 ):
+    """
+    node_kwargs:
+
+    - size_scale: float - scaling factor for size.
+    """
+    if ax is None:
+        ax = plt.gca()
     nt = node_table(G)
-    pos = layouts.hive(nt, group_by, sort_by, **layout_kwargs)
-    pos_cloned = pos
-    if clone:
-        pos_cloned = layouts.hive(
-            nt, group_by, sort_by, rotation=np.pi / 6, **layout_kwargs
-        )
-
+    pos = layout_func(nt, group_by, sort_by, **layout_kwargs)
     node_color = node_colors(nt, color_by)
-    nodekw = update_node_kwargs(node_kwargs)
+    alpha = transparency(nt, alpha_by)
+    size = node_size(nt, size_by) * aesthetics_kwargs.pop("size_scale", 1)
+    patches = node_glyphs(nt, pos, node_color, alpha, size, **aesthetics_kwargs)
+    for patch in patches:
+        ax.add_patch(patch)
 
-    nx.draw_networkx_nodes(G, pos, node_color=node_color, **nodekw, ax=ax)
-    nx.draw_networkx_nodes(G, pos_cloned, node_color=node_color, **nodekw, ax=ax)
-    return pos, pos_cloned
-
-
-def arc(G, group_by=None, sort_by=None, color_by=None, node_kwargs={}, ax=None):
-    nt = node_table(G)
-    pos = layouts.arc(nt, group_by, sort_by)
-    node_color = node_colors(nt, color_by)
-    nodekw = update_node_kwargs(node_kwargs)
-
-    nx.draw_networkx_nodes(G, pos=pos, node_color=node_color, **nodekw, ax=ax)
+    rescale_func(G)
     return pos
 
 
-def circos(
-    G, group_by=None, sort_by=None, color_by=None, radius=10, node_kwargs={}, ax=None
-):
-    nt = node_table(G)
-    pos = layouts.circos(nt, group_by=group_by, sort_by=sort_by, radius=radius)
-    node_color = node_colors(nt, color_by)
-
-    nodekw = update_node_kwargs(node_kwargs)
-    nx.draw_networkx_nodes(G, pos=pos, node_color=node_color, **nodekw, ax=ax)
-    return pos
-
-
-def parallel(G, group_by, sort_by=None, color_by=None, node_kwargs={}, ax=None):
-    nt = node_table(G)
-    pos = layouts.parallel(nt, group_by=group_by, sort_by=sort_by)
-    node_color = node_colors(nt, color_by)
-
-    nodekw = update_node_kwargs(node_kwargs)
-    nx.draw_networkx_nodes(G, pos=pos, node_color=node_color, **nodekw, ax=ax)
-    return pos
+hive = partial(draw, layout_func=layouts.hive, sort_by=None)
+circos = partial(draw, layout_func=layouts.circos, group_by=None, sort_by=None)
+arc = partial(
+    draw,
+    layout_func=layouts.arc,
+    group_by=None,
+    sort_by=None,
+    rescale_func=rescale_arc,
+)
+parallel = partial(draw, layout_func=layouts.parallel, sort_by=None)
