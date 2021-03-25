@@ -5,9 +5,14 @@ they will each return a dictionary
 of node mapped to a cartesian coordinate on the (x, y) plane.
 """
 
-import pandas as pd
-from typing import Hashable, Dict
+from typing import Dict, Hashable
+
 import numpy as np
+import pandas as pd
+
+from nxviz.geometry import item_theta
+from nxviz.polcart import to_cartesian
+from nxviz.utils import group_and_sort
 
 
 def parallel(
@@ -22,11 +27,6 @@ def parallel(
         for y, (node, d) in enumerate(data.iterrows()):
             pos[node] = np.array([x * 4, y])
     return pos
-
-
-from .utils import group_and_sort
-from .geometry import item_theta
-from .polcart import to_cartesian
 
 
 def circos(
