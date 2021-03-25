@@ -108,5 +108,3 @@ def data_size(data: pd.Series) -> pd.Series:
 def data_linewidth(data: pd.Series) -> pd.Series:
     """Line width scales linearly with property (by default)."""
     return data
-
-

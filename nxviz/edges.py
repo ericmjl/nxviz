@@ -6,7 +6,7 @@ Firstly,
 """
 
 from copy import deepcopy
-from functools import partial, update_wrapper, wraps
+from functools import partial, update_wrapper
 from typing import Callable, Dict, Hashable
 
 import janitor
@@ -17,9 +17,7 @@ import pandas as pd
 from datashader.bundling import hammer_bundle
 
 from nxviz import aesthetics
-from nxviz.polcart import to_polar
-
-from .utils import edge_table
+from nxviz.utils import edge_table
 
 default_edge_kwargs = dict(facecolor="none", zorder=0)
 
