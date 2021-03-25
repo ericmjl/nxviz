@@ -3,12 +3,6 @@
 Compatible with NetworkX's drawing facilities;
 they will each return a dictionary
 of node mapped to a cartesian coordinate on the (x, y) plane.
-
-Each function has a consistent signature:
-
-- `G`: graph object
-- `node_grouping`: how to group nodes (defaults to None, otherwise, should be a key on the graph object)
-- `node_ordering`: how to order nodes (defaults to None, otherwise, should be a key on the graph object)
 """
 
 import pandas as pd
@@ -26,7 +20,7 @@ def parallel(
         if sort_by is not None:
             data = data.sort_values(sort_by)
         for y, (node, d) in enumerate(data.iterrows()):
-            pos[node] = np.array([x, y])
+            pos[node] = np.array([x * 4, y])
     return pos
 
 
@@ -61,7 +55,7 @@ def hive(
     nt: pd.DataFrame,
     group_by,
     sort_by: Hashable = None,
-    inner_radius: float = 10,
+    inner_radius: float = 8,
     rotation: float = 0,
 ):
     """Hive plot node layout.
