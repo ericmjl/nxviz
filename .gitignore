@@ -68,3 +68,5 @@ target/
 
 # *.ipynb
 .ipynb_checkpoints
+site/
+*.md.tmp

@@ -31,3 +31,7 @@ dependencies:
 - setuptools
 - sphinx
 - twine
+- mkdocs
+- mkdocs-material
+- pip:
+  - mknotebooks

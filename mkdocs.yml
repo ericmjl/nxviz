@@ -1,0 +1,75 @@
+site_name: "nxviz: Rational Graph Visualization in Python"
+site_url: https://ericmjl.github.io/nxviz
+
+docs_dir: docs/
+
+theme:
+  name: "material"
+  palette:
+    primary: "yellow"
+    accent: "yellow"
+  icon:
+    logo: "fontawesome/solid/book"
+  features:
+    - instant
+    - tabs
+  language: en
+
+# We customize the navigation by hand to control the order
+# in which pages show up.
+nav:
+  - Home:
+    - Index: index.md
+  - Releases:
+    - Release History: history.md
+    - Contributors: contributors.md
+  - Developers:
+    - Development Guide: developers/devguide.md
+    - Ways to contribute: developers/contributing.md
+    - Developing new plots: developers/new-plots.ipynb
+    - Architecture: developers/architecture.md
+  - API:
+    - High level API: api/high-level-api.ipynb
+    - Mid-level API: api/mid-level-api.ipynb
+
+plugins:
+  - search
+  - mknotebooks:
+      execute: true
+      write_markdown: true
+      allow_errors: true
+      timeout: 1200
+      binder: true
+      binder_service_name: "gh"
+      binder_branch: "master"
+      binder_ui: "lab"
+
+# Taken from here: https://squidfunk.github.io/mkdocs-material/extensions/codehilite/
+markdown_extensions:
+  - codehilite
+  - admonition
+  - pymdownx.tabbed
+  - pymdownx.arithmatex
+  - pymdownx.details
+  - pymdownx.superfences
+  - markdown.extensions.attr_list
+
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+  - https://hypothes.is/embed.js
+
+extra_css:
+  - css/nb_mods.css
+  - css/apidocs.css
+
+repo_name: "ericmjl/Network-Analysis-Made-Simple"
+repo_url: "https://github.com/ericmjl/Network-Analysis-Made-Simple"
+
+extra:
+  social:
+    - icon: "fontawesome/brands/github"
+      link: "https://github.com/ericmjl"
+    - icon: "fontawesome/brands/twitter"
+      link: "https://twitter.com/ericmjl"
+    - icon: "fontawesome/brands/linkedin"
+      link: "https://linkedin.com/in/ericmjl"

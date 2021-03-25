@@ -166,6 +166,9 @@ def base_cloned(
     return plt.gca()
 
 
+base_cloned.__doc__ = docstring
+
+
 hive = partial(
     base_cloned,
     node_layout_func=nodes.hive,
@@ -175,11 +178,10 @@ hive = partial(
 update_wrapper(hive, base_cloned)
 matrix = partial(
     base_cloned,
+    group_by=None,
     node_layout_func=nodes.matrix,
     edge_line_func=edges.matrix,
     cloned_node_layout_kwargs={"axis": "y"},
     edge_line_kwargs={"directed": False},
 )
 update_wrapper(matrix, base_cloned)
-
-# hive.__doc__ = docstring
