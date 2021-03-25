@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from . import utils
 
 
-def circos_group(G, group_by: Hashable, radius: int, ax=None, midpoint=True):
+def circos_group(G, group_by: Hashable, radius: int = 3.2, ax=None, midpoint=True):
     """Text annotation of node grouping variable on a circos plot."""
     nt = utils.node_table(G)
     groups = nt.groupby(group_by).apply(lambda df: len(df)).sort_index()
@@ -42,7 +42,9 @@ def hive_group(G, group_by, radius: int = 3, ax=None, offset=0):
         ax.annotate(grp, xy=(x, y), ha=ha, va=va)
 
 
-def arc_group(G, group_by, ax=None, midpoint=True, y_offset=0, rotation=45):
+def arc_group(
+    G, group_by, ax=None, midpoint=True, y_offset=-1, rotation=45, ha="right", va="top"
+):
     if ax is None:
         ax = plt.gca()
     nt = utils.node_table(G)
@@ -56,12 +58,12 @@ def arc_group(G, group_by, ax=None, midpoint=True, y_offset=0, rotation=45):
     for label, starting_point in starting_points.to_dict().items():
         x = starting_point
         y = y_offset
-        ha = "right"
-        va = "top"
         ax.annotate(label, xy=(x, y), ha=ha, va=va, rotation=rotation)
 
 
-def parallel_group(G, group_by, ax=None, y_offset=-0.3, rotation=45):
+def parallel_group(
+    G, group_by, ax=None, y_offset=-0.3, rotation=45, ha="right", va="top"
+):
     if ax is None:
         ax = plt.gca()
     nt = utils.node_table(G)
@@ -69,10 +71,8 @@ def parallel_group(G, group_by, ax=None, y_offset=-0.3, rotation=45):
     groups = sorted(nt[group_by].unique())
 
     for i, label in enumerate(groups):
-        x = i
+        x = i * 4
         y = y_offset
-        ha = "right"
-        va = "top"
         ax.annotate(label, xy=(x, y), ha=ha, va=va, rotation=rotation)
     ax.relim()
 
