@@ -7,20 +7,20 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 from matplotlib.cm import get_cmap
+from matplotlib.colors import to_hex
 from matplotlib.lines import Line2D
 from matplotlib.path import Path
 from more_itertools import unique_everseen
-from matplotlib.colors import to_hex
 
-from .geometry import (
+from nxviz.geometry import (
     circos_radius,
     get_cartesian,
     group_theta,
     item_theta,
     text_alignment,
 )
-from .polcart import to_degrees
-from .utils import (
+from nxviz.polcart import to_degrees
+from nxviz.utils import (
     cmaps,
     infer_data_type,
     is_data_diverging,
@@ -80,9 +80,13 @@ def rescale_arc(G: nx.Graph):
     ax = plt.gca()
     ax.relim()
     ymin, ymax = ax.get_ylim()
-    maxheight = int(len(G) / 2) + 1
+    maxheight = int(len(G)) + 1
     ax.set_ylim(ymin - 1, maxheight)
-    ax.set_xlim(-1, len(G) + 1)
+    ax.set_xlim(-1, len(G) * 2 + 1)
+
+
+def rescale_hive(G: nx.Graph):
+    """Axes rescale function for hive plot."""
 
 
 ############################### Old API below! ###############################

@@ -110,7 +110,7 @@ def correct_angles(start_radians, end_radians, rotation: float):
     return start_radians, end_radians
 
 
-def circos_radius(n_nodes: int, node_r: float):
+def circos_radius(n_nodes: int, node_radius: float = 1.0):
     """
     Automatically computes the origin-to-node centre radius of the Circos plot
     using the triangle equality sine rule.
@@ -123,7 +123,7 @@ def circos_radius(n_nodes: int, node_r: float):
     """
     A = 2 * np.pi / n_nodes  # noqa
     B = (np.pi - A) / 2  # noqa
-    a = 2 * node_r
+    a = 2 * node_radius
     return a * np.sin(B) / np.sin(A)
 
 

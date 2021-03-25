@@ -36,11 +36,7 @@ def node_glyphs(nt, pos, node_color, alpha, size, **aesthetics_kwargs):
     """Draw circos glyphs to the matplotlib axes object."""
     patches = dict()
     for r, d in nt.iterrows():
-        kw = {
-            "fc": node_color[r],
-            "alpha": alpha[r],
-            "radius": size[r],
-        }
+        kw = {"fc": node_color[r], "alpha": alpha[r], "radius": size[r], "zorder": 10}
         kw.update(aesthetics_kwargs)
         c = Circle(xy=pos[r], **kw)
         patches[r] = c
@@ -121,7 +117,6 @@ circos = partial(
     layout_func=layouts.circos,
     group_by=None,
     sort_by=None,
-    aesthetics_kwargs={"size_scale": 0.1},
 )
 arc = partial(
     draw,
@@ -136,6 +131,7 @@ parallel = partial(
     sort_by=None,
     aesthetics_kwargs={"size_scale": 0.5},
 )
+matrix = partial(draw, layout_func=layouts.matrix, group_by=None, sort_by=None)
 
 update_wrapper(circos, draw)
 update_wrapper(parallel, draw)

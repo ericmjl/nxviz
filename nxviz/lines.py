@@ -1,12 +1,14 @@
 """Patch generators for edges."""
 
 
+from itertools import product
 from typing import Dict, Iterable, List
 
 import numpy as np
 import pandas as pd
-from matplotlib.patches import Arc, Patch, Path, PathPatch
+from matplotlib.patches import Arc, Circle, Patch, Path, PathPatch
 
+from nxviz.geometry import correct_hive_angles
 from nxviz.polcart import to_cartesian, to_polar, to_radians
 
 
@@ -76,6 +78,11 @@ def arc(
         r1, theta1 = to_polar(start_x - middle_x, start_y - middle_y)
         r2, theta2 = to_polar(end_x - middle_x, end_y - middle_y)
 
+        theta1 = np.rad2deg(theta1)
+        theta2 = np.rad2deg(theta2)
+
+        theta1, theta2 = min([theta1, theta2]), max([theta1, theta2])
+
         patch = Arc(
             xy=(middle_x, middle_y),
             width=width,
@@ -89,10 +96,6 @@ def arc(
         )
         patches.append(patch)
     return patches
-
-
-from itertools import product
-from nxviz.geometry import correct_hive_angles
 
 
 def hive(
@@ -170,4 +173,40 @@ def hive(
             path, lw=lw[r], alpha=alpha[r], edgecolor=edge_color[r], **aes_kw
         )
         patches.append(patch)
+    return patches
+
+
+def matrix(
+    et,
+    pos,
+    pos_cloned,
+    directed,
+    edge_color: Iterable,
+    alpha: Iterable,
+    lw: Iterable,
+    aes_kw: Dict,
+):
+    patches = []
+    for r, d in et.iterrows():
+        start = d["source"]
+        end = d["target"]
+        x_start, y_start = pos_cloned[start]
+        x_end, y_end = pos[end]
+
+        x, y = (max(x_start, y_start), max(x_end, y_end))
+        kw = {
+            "fc": edge_color[r],
+            "alpha": alpha[r],
+            "radius": lw[r],
+            "zorder": 5,
+        }
+        kw.update(aes_kw)
+        patch = Circle(xy=(x, y), **kw)
+        patches.append(patch)
+
+        # In the mid-level API, we will need to explicitly set this.
+        # In the high-level API, it's automatically inferred.
+        if not directed:
+            patch = Circle(xy=(y, x), **kw)
+            patches.append(patch)
     return patches

@@ -1,13 +1,29 @@
-from nxviz.polcart import to_cartesian
-from nxviz.geometry import item_theta, text_alignment
-import pandas as pd
-import numpy as np
 from typing import Hashable
+
 import matplotlib.pyplot as plt
-from . import utils
+import numpy as np
+import pandas as pd
+from matplotlib.patches import Rectangle
+
+from nxviz import aesthetics, utils
+from nxviz.geometry import circos_radius, item_theta, text_alignment
+from nxviz.polcart import to_cartesian
+
+from typing import Dict
+
+from matplotlib import patches
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Normalize
 
 
-def circos_group(G, group_by: Hashable, radius: int = 3.2, ax=None, midpoint=True):
+def circos_group(
+    G,
+    group_by: Hashable,
+    radius: float = None,
+    radius_offset: float = 1,
+    ax=None,
+    midpoint=True,
+):
     """Text annotation of node grouping variable on a circos plot."""
     nt = utils.node_table(G)
     groups = nt.groupby(group_by).apply(lambda df: len(df)).sort_index()
@@ -20,6 +36,9 @@ def circos_group(G, group_by: Hashable, radius: int = 3.2, ax=None, midpoint=Tru
 
     if ax is None:
         ax = plt.gca()
+
+    if radius is None:
+        radius = circos_radius(len(G)) + radius_offset
 
     for label, theta in radians.to_dict().items():
         x, y = to_cartesian(radius, theta)
@@ -53,7 +72,7 @@ def arc_group(
     starting_points = proportions.cumsum() - proportions
     if midpoint:
         starting_points += proportions / 2
-    starting_points *= len(G)
+    starting_points *= len(G) * 2
 
     for label, starting_point in starting_points.to_dict().items():
         x = starting_point
@@ -77,11 +96,94 @@ def parallel_group(
     ax.relim()
 
 
-from .aesthetics import data_cmap, color_func
-from matplotlib.colors import Normalize
-from matplotlib.cm import ScalarMappable
-from matplotlib import patches
-from typing import Dict
+def matrix_group(G, group_by, ax=None, offset=-3.0, xrotation=0, yrotation=0):
+    if ax is None:
+        ax = plt.gca()
+    nt = utils.node_table(G)
+    group_sizes = nt.groupby(group_by).apply(lambda df: len(df))
+    proportions = group_sizes / group_sizes.sum()
+    midpoint = proportions / 2
+    starting_positions = proportions.cumsum() - proportions
+    label_positions = (starting_positions + midpoint) * len(G) * 2
+    label_positions += 1
+
+    for label, position in label_positions.to_dict().items():
+        # Plot the x-axis labels
+        y = offset
+        x = position
+        ax.annotate(label, xy=(x, y), ha="center", va="center", rotation=0)
+
+        # Plot the y-axis labels
+        x = offset
+        y = position
+        ax.annotate(label, xy=(x, y), ha="center", va="center", rotation=90)
+
+
+def matrix_block(G, group_by, color_by=None, ax=None, alpha=0.1):
+    """Annotate group blocks on a matrix plot.
+
+    Most useful for highlighting the within- vs between-group edges.
+    """
+    nt = utils.node_table(G)
+    group_sizes = nt.groupby(group_by).apply(lambda df: len(df)) * 2
+    starting_positions = group_sizes.cumsum() + 1 - group_sizes
+    starting_positions
+
+    colors = pd.Series(["black"] * len(group_sizes), index=group_sizes.index)
+    if color_by:
+        color_data = pd.Series(group_sizes.index, index=group_sizes.index)
+        colors = aesthetics.data_color(color_data)
+    # Generate patches first
+    patches = []
+    for label, position in starting_positions.to_dict().items():
+        xy = (position, position)
+        width = height = group_sizes[label]
+
+        patch = Rectangle(
+            xy, width, height, zorder=0, alpha=alpha, facecolor=colors[label]
+        )
+        patches.append(patch)
+
+    if ax is None:
+        ax = plt.gca()
+    # Then add patches in.
+    for patch in patches:
+        ax.add_patch(patch)
+
+
+def colormapping(data, legend_kwargs: Dict = {}, ax=None):
+    """Annotate node color mapping.
+
+    If the color attribute is continuous, a colorbar will be added to the matplotlib figure.
+    Otherwise, a legend will be added.
+    """
+    cmap, data_family = aesthetics.data_cmap(data)
+    if ax is None:
+        ax = plt.gca()
+    if data_family == "continuous":
+        norm = Normalize(vmin=data.min(), vmax=data.max())
+        scalarmap = ScalarMappable(
+            cmap=cmap,
+            norm=norm,
+        )
+        fig = plt.gcf()
+        fig.colorbar(scalarmap)
+    else:
+        labels = data.drop_duplicates().sort_values()
+        cfunc = aesthetics.color_func(data)
+        colors = labels.apply(cfunc)
+        patchlist = []
+        for color, label in zip(colors, labels):
+            data_key = patches.Patch(color=color, label=label)
+            patchlist.append(data_key)
+        kwargs = dict(
+            loc="best",
+            ncol=int(len(labels) / 2),
+            # bbox_to_anchor=(0.5, -0.05),
+        )
+        kwargs.update(legend_kwargs)
+        legend = plt.legend(handles=patchlist, **kwargs)
+        ax.add_artist(legend)
 
 
 def node_colormapping(
@@ -106,38 +208,3 @@ def edge_colormapping(
     et = utils.edge_table(G)
     data = et[color_by]
     colormapping(data, legend_kwargs, ax)
-
-
-def colormapping(data, legend_kwargs: Dict = {}, ax=None):
-    """Annotate node color mapping.
-
-    If the color attribute is continuous, a colorbar will be added to the matplotlib figure.
-    Otherwise, a legend will be added.
-    """
-    cmap, data_family = data_cmap(data)
-    if ax is None:
-        ax = plt.gca()
-    if data_family == "continuous":
-        norm = Normalize(vmin=data.min(), vmax=data.max())
-        scalarmap = ScalarMappable(
-            cmap=cmap,
-            norm=norm,
-        )
-        fig = plt.gcf()
-        fig.colorbar(scalarmap)
-    else:
-        labels = data.drop_duplicates().sort_values()
-        cfunc = color_func(data)
-        colors = labels.apply(cfunc)
-        patchlist = []
-        for color, label in zip(colors, labels):
-            data_key = patches.Patch(color=color, label=label)
-            patchlist.append(data_key)
-        kwargs = dict(
-            loc="best",
-            ncol=int(len(labels) / 2),
-            # bbox_to_anchor=(0.5, -0.05),
-        )
-        kwargs.update(legend_kwargs)
-        legend = plt.legend(handles=patchlist, **kwargs)
-        ax.add_artist(legend)

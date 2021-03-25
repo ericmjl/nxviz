@@ -10,7 +10,7 @@ from typing import Dict, Hashable
 import numpy as np
 import pandas as pd
 
-from nxviz.geometry import item_theta
+from nxviz.geometry import circos_radius, item_theta
 from nxviz.polcart import to_cartesian
 from nxviz.utils import group_and_sort
 
@@ -33,12 +33,14 @@ def circos(
     nt: pd.DataFrame,
     group_by: Hashable = None,
     sort_by: Hashable = None,
-    radius: float = 3,
+    radius: float = None,
 ) -> Dict[Hashable, np.ndarray]:
     """Circos plot node layout."""
     pos = dict()
     nt = group_and_sort(nt, group_by, sort_by)
     nodes = list(nt.index)
+    if radius is None:
+        radius = circos_radius(len(nodes))
     if group_by:
         for grp, df in nt.groupby(group_by):
             for node, data in df.iterrows():
@@ -77,7 +79,7 @@ def hive(
         for i, (node, data) in enumerate(df.iterrows()):
             radius = inner_radius + i
             theta = item_theta(groups, grp) + rotation
-            x, y = to_cartesian(r=radius, theta=theta)
+            x, y = to_cartesian(r=radius * 2, theta=theta)
             pos[node] = np.array([x, y])
     return pos
 
@@ -87,7 +89,7 @@ def arc(nt, group_by: Hashable = None, sort_by: Hashable = None):
     nt = group_and_sort(nt, group_by=group_by, sort_by=sort_by)
     pos = dict()
     for x, (node, data) in enumerate(nt.iterrows()):
-        pos[node] = np.array([x, 0])
+        pos[node] = np.array([x * 2, 0])
     return pos
 
 
@@ -96,4 +98,22 @@ def geo(nt, group_by=None, sort_by=None, longitude="longitude", latitude="latitu
     pos = dict()
     for node, data in nt.iterrows():
         pos[node] = data[[longitude, latitude]]
+    return pos
+
+
+def matrix(nt, group_by: Hashable = None, sort_by: Hashable = None, axis="x"):
+    # Nodes should be grouped and sorted before we begin assigning coordinates.
+    nt = group_and_sort(node_table=nt, group_by=group_by, sort_by=sort_by)
+
+    # We are eventually going to return this pos dictionary.
+    pos = dict()
+
+    # Loop over each of the rows, and assign x, y coordinates in order of them being grouped and sorted.
+    for i, (node, data) in enumerate(nt.iterrows()):
+        x = (i + 1) * 2
+        y = 0
+
+        if axis == "y":
+            x, y = y, x
+        pos[node] = np.array([x, y])
     return pos

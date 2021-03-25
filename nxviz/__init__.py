@@ -44,7 +44,7 @@ docstring = """High-level graph plotting function.
 def base(
     G: nx.Graph,
     node_layout_func: Callable,
-    edge_layout_func: Callable,
+    edge_line_func: Callable,
     group_by: Hashable,
     sort_by: Hashable,
     node_color_by: Hashable = None,
@@ -55,6 +55,8 @@ def base(
     edge_lw_by: Hashable = None,
     edge_alpha_by: Hashable = None,
     edge_aes_kwargs: Dict = {},
+    node_layout_kwargs: Dict = {},
+    edge_layout_kwargs: Dict = {},
 ):
 
     pos = node_layout_func(
@@ -65,8 +67,9 @@ def base(
         size_by=node_size_by,
         alpha_by=node_alpha_by,
         aesthetics_kwargs=node_aes_kwargs,
+        layout_kwargs=node_layout_kwargs,
     )
-    edge_layout_func(
+    edge_line_func(
         G,
         pos,
         color_by=edge_color_by,
@@ -85,7 +88,7 @@ base.__doc__ = docstring
 arc = partial(
     base,
     node_layout_func=nodes.arc,
-    edge_layout_func=edges.arc,
+    edge_line_func=edges.arc,
     group_by=None,
     sort_by=None,
 )
@@ -93,24 +96,25 @@ update_wrapper(arc, base)
 circos = partial(
     base,
     node_layout_func=nodes.circos,
-    edge_layout_func=edges.circos,
+    edge_line_func=edges.circos,
     group_by=None,
     sort_by=None,
-    node_aes_kwargs={"size_scale": 0.1},
 )
 update_wrapper(circos, base)
 parallel = partial(
     base,
     node_layout_func=nodes.parallel,
-    edge_layout_func=edges.line,
+    edge_line_func=edges.line,
     sort_by=None,
     node_aes_kwargs={"size_scale": 0.5},
 )
 update_wrapper(parallel, base)
 
 
-def hive(
+def base_cloned(
     G,
+    node_layout_func,
+    edge_line_func,
     group_by,
     sort_by=None,
     node_color_by=None,
@@ -121,8 +125,12 @@ def hive(
     edge_lw_by=None,
     edge_alpha_by=None,
     edge_aes_kwargs={},
+    node_layout_kwargs: Dict = {},
+    edge_line_kwargs: Dict = {},
+    cloned_node_layout_kwargs: Dict = {},
 ):
-    pos = nodes.hive(
+    """Base plotting function for visualizations that have cloned axes."""
+    pos = node_layout_func(
         G,
         group_by=group_by,
         sort_by=sort_by,
@@ -130,8 +138,9 @@ def hive(
         size_by=node_size_by,
         alpha_by=node_alpha_by,
         aesthetics_kwargs=node_aes_kwargs,
+        layout_kwargs=node_layout_kwargs,
     )
-    pos_cloned = nodes.hive(
+    pos_cloned = node_layout_func(
         G,
         group_by=group_by,
         sort_by=sort_by,
@@ -139,9 +148,9 @@ def hive(
         size_by=node_size_by,
         alpha_by=node_alpha_by,
         aesthetics_kwargs=node_aes_kwargs,
-        layout_kwargs={"rotation": np.pi / 6},
+        layout_kwargs=cloned_node_layout_kwargs,
     )
-    edges.hive(
+    edge_line_func(
         G,
         pos,
         pos_cloned=pos_cloned,
@@ -149,6 +158,7 @@ def hive(
         lw_by=edge_lw_by,
         alpha_by=edge_alpha_by,
         aesthetics_kwargs=edge_aes_kwargs,
+        **edge_line_kwargs,
     )
 
     despine()
@@ -156,4 +166,20 @@ def hive(
     return plt.gca()
 
 
-hive.__doc__ = docstring
+hive = partial(
+    base_cloned,
+    node_layout_func=nodes.hive,
+    edge_line_func=edges.hive,
+    cloned_node_layout_kwargs={"rotation": np.pi / 6},
+)
+update_wrapper(hive, base_cloned)
+matrix = partial(
+    base_cloned,
+    node_layout_func=nodes.matrix,
+    edge_line_func=edges.matrix,
+    cloned_node_layout_kwargs={"axis": "y"},
+    edge_line_kwargs={"directed": False},
+)
+update_wrapper(matrix, base_cloned)
+
+# hive.__doc__ = docstring
