@@ -62,8 +62,8 @@ extra_css:
   - css/nb_mods.css
   - css/apidocs.css
 
-repo_name: "ericmjl/Network-Analysis-Made-Simple"
-repo_url: "https://github.com/ericmjl/Network-Analysis-Made-Simple"
+repo_name: "ericmjl/nxviz"
+repo_url: "https://github.com/ericmjl/nxviz"
 
 extra:
   social:
