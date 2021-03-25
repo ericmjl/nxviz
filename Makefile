@@ -1,3 +1,5 @@
+.PHONY: docs
+
 SHELL=/bin/bash
 
 test:
@@ -18,7 +20,8 @@ env-remove:
 	conda env remove -n nxviz
 
 docs:
-	make -f docs/Makefile html
+	mkdocs build
+	python -m http.server -d site/
 
 release:
 	rm dist/*
