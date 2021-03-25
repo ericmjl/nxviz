@@ -1,3 +1,5 @@
+"""Polar/cartesian conversions functions."""
+
 from numpy import arctan2 as atan2
 from numpy import cos, pi, sin, sqrt
 
