@@ -46,18 +46,21 @@ from . import lines
 
 
 def line_width(et: pd.DataFrame, lw_by: Hashable):
+    """Default edge line width function."""
     if lw_by is not None:
         return aesthetics.data_linewidth(et[lw_by])
     return pd.Series([1] * len(et), name="lw")
 
 
 def transparency(et: pd.DataFrame, alpha_by: Hashable):
+    """Default edge line transparency function."""
     if alpha_by is not None:
         return aesthetics.data_transparency(et[alpha_by])
     return pd.Series([0.1] * len(et), name="alpha")
 
 
 def edge_colors(et: pd.DataFrame, color_by: Hashable):
+    """Default edge line color function."""
     if color_by:
         return aesthetics.data_color(et[color_by])
     return pd.Series(["black"] * len(et), name="color_by")

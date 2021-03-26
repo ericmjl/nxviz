@@ -1,7 +1,12 @@
+"""Functions to map data to aesthetic properties of nodes and edges."""
+from functools import partial
+from typing import Callable, Tuple
+
+import numpy as np
 import pandas as pd
-from typing import Hashable, Tuple
-from palettable.colorbrewer import sequential, qualitative
-from matplotlib.colors import ListedColormap, PowerNorm
+from matplotlib.colors import ListedColormap, Normalize
+from palettable.colorbrewer import qualitative, sequential
+
 from nxviz.utils import infer_data_family
 
 
@@ -33,9 +38,6 @@ def data_cmap(data: pd.Series) -> Tuple:
     return cmap, data_family
 
 
-from matplotlib.colors import Normalize
-
-
 def continuous_color_func(val, cmap, data: pd.Series):
     """Return RGBA of a value.
 
@@ -62,12 +64,6 @@ def discrete_color_func(val, cmap, data):
     """
     colors = sorted(set(data))
     return cmap.colors[colors.index(val)]
-
-
-from typing import Callable
-
-from functools import partial
-import numpy as np
 
 
 def color_func(data: pd.Series) -> Callable:
