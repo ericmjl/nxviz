@@ -4,10 +4,10 @@ site_url: https://ericmjl.github.io/nxviz
 docs_dir: docs/
 
 theme:
-  name: "material"
+  name: material
   palette:
-    primary: "yellow"
-    accent: "yellow"
+    primary: teal
+    accent: teal
   icon:
     logo: "fontawesome/solid/book"
   features:
@@ -31,6 +31,7 @@ nav:
   - API:
     - High level API: api/high-level-api.ipynb
     - Mid-level API: api/mid-level-api.ipynb
+    - Low-level API: api/low-level-api.ipynb
 
 plugins:
   - search

@@ -67,6 +67,7 @@ def discrete_color_func(val, cmap, data):
 from typing import Callable
 
 from functools import partial
+import numpy as np
 
 
 def color_func(data: pd.Series) -> Callable:
@@ -101,8 +102,7 @@ def data_transparency(data: pd.Series) -> pd.Series:
 
 def data_size(data: pd.Series) -> pd.Series:
     """Square root node size."""
-    norm = PowerNorm(gamma=0.5)
-    return data.apply(norm)
+    return data.apply(np.sqrt)
 
 
 def data_linewidth(data: pd.Series) -> pd.Series:

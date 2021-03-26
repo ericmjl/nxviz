@@ -13,6 +13,7 @@ dependencies:
 - isort
 - jupyter
 - jupyterlab
+- jupyterlab_code_formatter
 - matplotlib-base
 - more-itertools
 - networkx
@@ -23,6 +24,7 @@ dependencies:
 - pipreqs
 - pycodestyle
 - pydocstyle
+- pre-commit
 - pylint
 - pytest
 - pytest-cov
