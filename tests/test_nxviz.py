@@ -60,10 +60,7 @@ def test_init_group_nodes():
     b = BasePlot(graph=G, node_grouping="affiliation")
 
     assert b.nodes == [
-        n
-        for n, d in sorted(
-            G.nodes(data=True), key=lambda x: x[1]["affiliation"]
-        )
+        n for n, d in sorted(G.nodes(data=True), key=lambda x: x[1]["affiliation"])
     ]
 
 
@@ -112,9 +109,7 @@ def test_init_data_types():
     """
     G = make_graph_for_grouping()  # noqa
 
-    b = BasePlot(
-        graph=G, data_types={"year": "ordinal", "affiliation": "categorical"}
-    )
+    b = BasePlot(graph=G, data_types={"year": "ordinal", "affiliation": "categorical"})
     assert isinstance(b.data_types, dict)
 
 

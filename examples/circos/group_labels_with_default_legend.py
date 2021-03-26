@@ -17,11 +17,11 @@ c = CircosPlot(
     node_label_rotation=True,
     node_label_color=True,
     group_label_color=True,
-    node_label_layout='numbers',
-    group_order='alphabetically',
+    node_label_layout="numbers",
+    group_order="alphabetically",
     fontsize=10,
     group_legend=True,
-    figsize=(12, 12)
+    figsize=(12, 12),
 )
 
 # Draw the CircosPlot
@@ -29,11 +29,7 @@ c.draw()
 c.figure.tight_layout()
 
 # Save figure
-plt.savefig(
-    'circusplot_defaultlegend.png',
-    format='png',
-    dpi=400,
-    bbox_inches="tight")
+plt.savefig("circusplot_defaultlegend.png", format="png", dpi=400, bbox_inches="tight")
 
 # Display graph
 plt.show()

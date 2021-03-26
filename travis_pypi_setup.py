@@ -69,8 +69,7 @@ def fetch_public_key(repo):
 
 
 def prepend_line(filepath, line):
-    """Rewrite a file adding a line to its beginning.
-    """
+    """Rewrite a file adding a line to its beginning."""
     with open(filepath) as f:
         lines = f.readlines()
 

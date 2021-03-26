@@ -27,9 +27,9 @@ If you are adding documentation changes, please ensure the following:
 
 Please describe the changes proposed in the pull request:
 
-- 
-- 
-- 
+-
+-
+-
 
 # Relevant Reviewers
 

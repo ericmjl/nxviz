@@ -14,9 +14,7 @@ data_generator = (
         i % 10,
         choice(["red", "green", "blue"]),
         choice(["A", "B"]),
-        choice(
-            ["New York", "San Francisco", "Chicago", "LA", "Austin", "Boston"]
-        ),
+        choice(["New York", "San Francisco", "Chicago", "LA", "Austin", "Boston"]),
     )
     for i in range(0, n_nodes)
 )
