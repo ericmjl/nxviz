@@ -13,9 +13,9 @@ Report bugs at https://github.com/ericmjl/nxviz/issues.
 
 If you are reporting a bug, please include:
 
-* Your operating system name and version.
-* Any details about your local setup that might be helpful in troubleshooting.
-* Detailed steps to reproduce the bug.
+- Your operating system name and version.
+- Any details about your local setup that might be helpful in troubleshooting.
+- A minimally reproducible example (a.k.a. reprex) to reproduce the bug.
 
 ### Fix Bugs
 
@@ -39,7 +39,12 @@ The best way to send feedback is to file an issue at https://github.com/ericmjl/
 
 If you are proposing a feature:
 
-* Explain in detail how it would work.
-* Keep the scope as narrow as possible, to make it easier to implement.
-* Remember that this is a volunteer-driven project, and that contributions
+- Explain in detail how it would work.
+- Keep the scope as narrow as possible, to make it easier to implement.
+- Remember that this is a volunteer-driven project, and that contributions
   are welcome :)
+
+Because nxviz is currently maintained by volunteers and has no fiscal support,
+any feature requests will be prioritized
+according to what maintainers encounter as a need in our day-to-day jobs.
+Please temper expectations accordingly.
