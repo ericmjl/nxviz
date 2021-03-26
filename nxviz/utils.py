@@ -275,6 +275,10 @@ def to_pandas_edges(G, x_kw, y_kw, **kwargs):  # noqa: N803
     """
     Convert Graph edges to pandas DataFrame that's readable to Altair.
     """
+    warnings.warn(
+        "The function `to_pandas_edges` is deprecated. "
+        "Please use the `node_table` function instead."
+    )
     # Get all attributes in nodes
     attributes = ["source", "target", "x", "y", "edge", "pair"]
     for e in G.edges():

@@ -1,3 +1,4 @@
+"""Deprecated module no longer used."""
 import pandas as pd
 from networkx import Graph, MultiGraph
 
@@ -79,9 +80,9 @@ def graph_from_dataframe(
         False).
     """
 
-    assert isinstance(
-        dataframe, pd.DataFrame
-    ), "{} is not a pandas DataFrame".format(dataframe)
+    assert isinstance(dataframe, pd.DataFrame), "{} is not a pandas DataFrame".format(
+        dataframe
+    )
 
     M = MultiGraph()
 
