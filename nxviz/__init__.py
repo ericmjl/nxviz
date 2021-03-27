@@ -1,5 +1,4 @@
 """High level nxviz plotting API."""
-from nxviz.plots import ArcPlot, CircosPlot, MatrixPlot, GeoPlot  # NOQA
 
 
 from functools import partial, update_wrapper

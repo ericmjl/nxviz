@@ -9,7 +9,7 @@ from typing import List, Hashable
 
 def item_theta(nodelist: List[Hashable], node: Hashable):
     """
-    Maps node to Angle.
+    Maps node to an angle in radians.
 
     :param nodelist: Nodelist from the graph.
     :param node: The node of interest. Must be in the nodelist.
@@ -22,51 +22,6 @@ def item_theta(nodelist: List[Hashable], node: Hashable):
     theta = i * 2 * np.pi / len(nodelist)
 
     return theta
-
-
-def group_theta(node_length, node_idx):
-    """
-    Returns an angle corresponding to a node of interest.
-
-    Intended to be used for placing node group labels at the correct spot.
-
-    :param float node_length: total number of nodes in the graph.
-    :param int node_idx: the index of the node of interest.
-    :returns: theta -- the angle of the node of interest in radians.
-    """
-    theta = -np.pi + node_idx * 2 * np.pi / node_length
-    return theta
-
-
-def text_alignment(x, y):
-    """
-    Align text labels based on the x- and y-axis coordinate values.
-
-    This function is used for computing the appropriate alignment of the text
-    label.
-
-    For example, if the text is on the "right" side of the plot, we want it to
-    be left-aligned. If the text is on the "top" side of the plot, we want it
-    to be bottom-aligned.
-
-    :param x, y: (`int` or `float`) x- and y-axis coordinate respectively.
-    :returns: A 2-tuple of strings, the horizontal and vertical alignments
-        respectively.
-    """
-    if x == 0:
-        ha = "center"
-    elif x > 0:
-        ha = "left"
-    else:
-        ha = "right"
-    if y == 0:
-        va = "center"
-    elif y > 0:
-        va = "bottom"
-    else:
-        va = "top"
-
-    return ha, va
 
 
 def get_cartesian(r: float, theta: float):
@@ -93,23 +48,6 @@ def correct_negative_angle(angle):
     return angle
 
 
-def correct_angles(start_radians, end_radians, rotation: float):
-    """
-    This function corrects for the following problems in the edges:
-    """
-    # Edges going the anti-clockwise direction involves angle = 0.
-    if start_radians == 0 and (end_radians - start_radians > np.pi):
-        start_radians = np.pi * 2
-    if end_radians == 0 and (end_radians - start_radians < -np.pi):
-        end_radians = np.pi * 2
-
-    # Case when start_radians == end_radians:
-    if start_radians == end_radians:
-        start_radians = start_radians - rotation
-        end_radians = end_radians + rotation
-    return start_radians, end_radians
-
-
 def circos_radius(n_nodes: int, node_radius: float = 1.0):
     """
     Automatically computes the origin-to-node centre radius of the Circos plot
@@ -128,6 +66,7 @@ def circos_radius(n_nodes: int, node_radius: float = 1.0):
 
 
 def correct_hive_angles(start, end):
+    """Perform correction of hive plot angles for edge drawing."""
     if start > np.pi and end == 0.0:
         end = 2 * np.pi
     if start < np.pi and end == 0.0:

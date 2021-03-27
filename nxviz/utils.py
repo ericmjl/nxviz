@@ -167,47 +167,47 @@ def items_in_groups(data_container):
     return Counter(data_container)
 
 
-def n_group_colorpallet(n):
-    """If more then 8 categorical groups of nodes or edges this function
-    creats the matching color_palette
-    """
-    cmap = ListedColormap(sns.color_palette("hls", n))
-    return cmap
+# def n_group_colorpallet(n):
+#     """If more then 8 categorical groups of nodes or edges this function
+#     creats the matching color_palette
+#     """
+#     cmap = ListedColormap(sns.color_palette("hls", n))
+#     return cmap
 
 
-cmaps = {
-    "Accent_2": qualitative.Accent_3,
-    "Accent_3": qualitative.Accent_3,
-    "Accent_4": qualitative.Accent_4,
-    "Accent_5": qualitative.Accent_5,
-    "Accent_6": qualitative.Accent_6,
-    "Accent_7": qualitative.Accent_7,
-    "Accent_8": qualitative.Accent_8,
-    "continuous": sequential.YlGnBu_9,
-    "diverging": diverging.RdBu_11,
-    "weights": sns.cubehelix_palette(
-        50, hue=0.05, rot=0, light=0.9, dark=0, as_cmap=True
-    ),
-}
+# cmaps = {
+#     "Accent_2": qualitative.Accent_3,
+#     "Accent_3": qualitative.Accent_3,
+#     "Accent_4": qualitative.Accent_4,
+#     "Accent_5": qualitative.Accent_5,
+#     "Accent_6": qualitative.Accent_6,
+#     "Accent_7": qualitative.Accent_7,
+#     "Accent_8": qualitative.Accent_8,
+#     "continuous": sequential.YlGnBu_9,
+#     "diverging": diverging.RdBu_11,
+#     "weights": sns.cubehelix_palette(
+#         50, hue=0.05, rot=0, light=0.9, dark=0, as_cmap=True
+#     ),
+# }
 
 import warnings
 
 
-def to_pandas_nodes(G):  # noqa: N803
-    """
-    Convert nodes in the graph into a pandas DataFrame.
-    """
-    warnings.warn(
-        "The function `to_pandas_nodes` is deprecated. "
-        "Please use the `node_table` function instead."
-    )
-    data = []
-    for n, meta in G.nodes(data=True):
-        d = dict()
-        d["node"] = n
-        d.update(meta)
-        data.append(d)
-    return pd.DataFrame(data)
+# def to_pandas_nodes(G):  # noqa: N803
+#     """
+#     Convert nodes in the graph into a pandas DataFrame.
+#     """
+#     warnings.warn(
+#         "The function `to_pandas_nodes` is deprecated. "
+#         "Please use the `node_table` function instead."
+#     )
+#     data = []
+#     for n, meta in G.nodes(data=True):
+#         d = dict()
+#         d["node"] = n
+#         d.update(meta)
+#         data.append(d)
+#     return pd.DataFrame(data)
 
 
 def node_table(G, group_by=None, sort_by=None):
@@ -271,33 +271,33 @@ def group_and_sort(
     return node_table
 
 
-def to_pandas_edges(G, x_kw, y_kw, **kwargs):  # noqa: N803
-    """
-    Convert Graph edges to pandas DataFrame that's readable to Altair.
-    """
-    warnings.warn(
-        "The function `to_pandas_edges` is deprecated. "
-        "Please use the `node_table` function instead."
-    )
-    # Get all attributes in nodes
-    attributes = ["source", "target", "x", "y", "edge", "pair"]
-    for e in G.edges():
-        attributes += list(G.edges[e].keys())
-    attributes = list(set(attributes))
+# def to_pandas_edges(G, x_kw, y_kw, **kwargs):  # noqa: N803
+#     """
+#     Convert Graph edges to pandas DataFrame that's readable to Altair.
+#     """
+#     warnings.warn(
+#         "The function `to_pandas_edges` is deprecated. "
+#         "Please use the `node_table` function instead."
+#     )
+#     # Get all attributes in nodes
+#     attributes = ["source", "target", "x", "y", "edge", "pair"]
+#     for e in G.edges():
+#         attributes += list(G.edges[e].keys())
+#     attributes = list(set(attributes))
 
-    # Build a dataframe for all edges and their attributes
-    df = pd.DataFrame(index=range(G.size() * 2), columns=attributes)
+#     # Build a dataframe for all edges and their attributes
+#     df = pd.DataFrame(index=range(G.size() * 2), columns=attributes)
 
-    # Add node data to dataframe.
-    for i, (n1, n2, d) in enumerate(G.edges(data=True)):
-        idx = i * 2
-        x = G.node[n1][x_kw]
-        y = G.node[n1][y_kw]
-        data1 = dict(edge=i, source=n1, target=n2, pair=(n1, n2), x=x, y=y, **d)
+#     # Add node data to dataframe.
+#     for i, (n1, n2, d) in enumerate(G.edges(data=True)):
+#         idx = i * 2
+#         x = G.node[n1][x_kw]
+#         y = G.node[n1][y_kw]
+#         data1 = dict(edge=i, source=n1, target=n2, pair=(n1, n2), x=x, y=y, **d)
 
-        data2 = dict(edge=i, source=n1, target=n2, pair=(n1, n2), x=x, y=y, **d)
+#         data2 = dict(edge=i, source=n1, target=n2, pair=(n1, n2), x=x, y=y, **d)
 
-        df.loc[idx] = data1
-        df.loc[idx + 1] = data2
+#         df.loc[idx] = data1
+#         df.loc[idx + 1] = data2
 
-    return df
+#     return df
