@@ -102,6 +102,7 @@ def geo(nt, group_by=None, sort_by=None, longitude="longitude", latitude="latitu
 
 
 def matrix(nt, group_by: Hashable = None, sort_by: Hashable = None, axis="x"):
+    """Matrix plot layout."""
     # Nodes should be grouped and sorted before we begin assigning coordinates.
     nt = group_and_sort(node_table=nt, group_by=group_by, sort_by=sort_by)
 

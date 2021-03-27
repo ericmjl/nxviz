@@ -56,7 +56,7 @@ def base(
     edge_alpha_by: Hashable = None,
     edge_aes_kwargs: Dict = {},
     node_layout_kwargs: Dict = {},
-    edge_layout_kwargs: Dict = {},
+    edge_line_kwargs: Dict = {},
 ):
 
     pos = node_layout_func(
