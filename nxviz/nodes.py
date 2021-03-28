@@ -133,7 +133,16 @@ parallel = partial(
 )
 matrix = partial(draw, layout_func=layouts.matrix, group_by=None, sort_by=None)
 
+geo = partial(
+    draw,
+    layout_func=layouts.geo,
+    group_by=None,
+    sort_by=None,
+    aesthetics_kwargs={"size_scale": 0.0015},
+)
+
 update_wrapper(circos, draw)
 update_wrapper(parallel, draw)
 update_wrapper(arc, draw)
 update_wrapper(hive, draw)
+update_wrapper(geo, draw)

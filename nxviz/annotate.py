@@ -77,7 +77,7 @@ def circos_group(
         ax.annotate(label, xy=(x, y), ha=ha, va=va)
 
 
-def hive_group(G, group_by, radius: int = 3, ax=None, offset=0):
+def hive_group(G, group_by, ax=None, offset=np.pi / 12):
     """Text annotation of hive plot groups."""
     nt = utils.node_table(G)
     groups = sorted(nt[group_by].unique())
@@ -87,6 +87,7 @@ def hive_group(G, group_by, radius: int = 3, ax=None, offset=0):
 
     for grp in groups:
         theta = item_theta(groups, grp) + offset
+        radius = 2 * (8 + len(nt[nt[group_by] == grp]) + 1)
         x, y = to_cartesian(radius, theta)
         ha, va = text_alignment(x, y)
         ax.annotate(grp, xy=(x, y), ha=ha, va=va)

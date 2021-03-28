@@ -5,9 +5,9 @@ docs_dir: docs/
 
 theme:
   name: material
-  palette:
-    primary: teal
-    accent: teal
+  # palette:
+  #   primary: teal
+  #   accent: teal
   icon:
     logo: "fontawesome/solid/book"
   features:
@@ -18,8 +18,8 @@ theme:
 # We customize the navigation by hand to control the order
 # in which pages show up.
 nav:
-  - Home:
-    - Index: index.md
+  - Home: index.md
+  - Principles of Visualization: theory.md
   - Releases:
     - Release History: history.md
     - Contributors: contributors.md
@@ -32,6 +32,12 @@ nav:
     - High level API: api/high-level-api.ipynb
     - Mid-level API: api/mid-level-api.ipynb
     - Low-level API: api/low-level-api.ipynb
+    - Object-oriented API: api/object-oriented-api.ipynb
+  - Examples Gallery:
+    - Matrix Plot: examples/matrix.ipynb
+    - Hive Panel: examples/hive-panel.ipynb
+    - Geo Plot: examples/geo.ipynb
+    - Edge Panel: examples/edge-panel.ipynb
 
 plugins:
   - search
@@ -59,7 +65,7 @@ extra_javascript:
   # - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
 
 extra_css:
-  # - css/nb_mods.css
+  - stylesheets/custom.css
   # - css/apidocs.css
 
 repo_name: "ericmjl/nxviz"

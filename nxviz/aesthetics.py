@@ -4,7 +4,9 @@ from typing import Callable, Tuple
 
 import numpy as np
 import pandas as pd
-from matplotlib.colors import ListedColormap, Normalize
+
+from matplotlib.cm import get_cmap
+from matplotlib.colors import ListedColormap, Normalize, BoundaryNorm
 from palettable.colorbrewer import qualitative, sequential
 
 from nxviz.utils import infer_data_family
@@ -29,12 +31,14 @@ def data_cmap(data: pd.Series) -> Tuple:
             )
         cmap = ListedColormap(base_cmap.__dict__[f"Set3_{num_categories}"].mpl_colors)
     elif data_family == "ordinal":
-        base_cmap = sequential
-        num_categories = len(set(data))
-        cmap = ListedColormap(base_cmap.__dict__[f"YlGnBu_{num_categories}"].mpl_colors)
+        # base_cmap = sequential
+        # num_categories = len(set(data))
+        # bounds = np.arange(data.min(), data.max())
+        # cmap = ListedColormap(base_cmap.__dict__[f"YlGnBu_{num_categories}"].mpl_colors)
+        cmap = get_cmap("viridis")
     elif data_family == "continuous":
         base_cmap = sequential
-        cmap = base_cmap.__dict__["YlGnBu_9"].mpl_colormap
+        cmap = get_cmap("viridis")
     return cmap, data_family
 
 
@@ -45,8 +49,7 @@ def continuous_color_func(val, cmap, data: pd.Series):
 
     - `val`: Value to convert to RGBA
     - `cmap`: A Matplotlib cmap
-    - `df`: Node table for a graph.
-    - `color_by`: The column in a node table to map to a color.
+    - `data`: Pandas series.
     """
     norm = Normalize(vmin=data.min(), vmax=data.max())
     return cmap(norm(val))
@@ -59,11 +62,24 @@ def discrete_color_func(val, cmap, data):
 
     - `val`: Value to convert to RGBA
     - `cmap`: A Matplotlib cmap
-    - `nt`: Node table for a graph.
-    - `color_by`: The column in a node table to map to a color.
+    - `data`: Pandas series.
     """
     colors = sorted(set(data))
     return cmap.colors[colors.index(val)]
+
+
+def ordinal_color_func(val, cmap, data):
+    """Return RGB corresponding to an ordinal value.
+
+    ## Parameters
+
+    - `val`: Value to convert to RGBA
+    - `cmap`: A Matplotlib cmap
+    - `data`: Pandas series.
+    """
+    bounds = np.arange(data.min(), data.max())
+    norm = BoundaryNorm(bounds, cmap.N)
+    return cmap(norm(val))
 
 
 def color_func(data: pd.Series) -> Callable:
@@ -75,6 +91,8 @@ def color_func(data: pd.Series) -> Callable:
     func = discrete_color_func
     if data_family == "continuous":
         func = continuous_color_func
+    elif data_family == "ordinal":
+        func = ordinal_color_func
     return partial(func, cmap=cmap, data=data)
 
 
