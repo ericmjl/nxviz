@@ -25,6 +25,7 @@ dependencies:
 - pycodestyle
 - pydocstyle
 - pre-commit
+- pyprojroot
 - pylint
 - pytest
 - pytest-cov
