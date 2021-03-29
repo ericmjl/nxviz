@@ -36,20 +36,3 @@ jobs:
 
       - name: Run interrogate
         run: interrogate .
-
-  darglint:
-    name: Check darglint compliance.
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Setup Python
-        uses: actions/setup-python@v2
-
-      - name: Install darglint
-        run: python -m pip install darglint
-
-      - name: Run darglint
-        run: darglint janitor -v 2
