@@ -22,11 +22,11 @@ jobs:
 
       - name: Run tests
         run: |
-          conda activate nxviz && make tests
+          source activate nxviz && make tests
 
       - name: Build docs
         run: |
-          conda activate nxviz && make docs
+          source activate nxviz && make docs
 
       # https://www.bradmcgonigle.com/blog/github-action-for-continuous-deployment
       # - NETLIFY_SITE_ID maps to the netlify site's API ID
