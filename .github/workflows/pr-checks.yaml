@@ -1,4 +1,4 @@
-name: Docs Website
+name: Pull request checks
 
 on: [pull_request]
 
