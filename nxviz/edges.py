@@ -19,26 +19,6 @@ from nxviz.utils import edge_table
 default_edge_kwargs = dict(facecolor="none", zorder=0)
 
 
-# def update_default_edge_kwargs(edge_kwargs):
-#     edgekw = deepcopy(default_edge_kwargs)
-#     edgekw.update(edge_kwargs)
-#     return edgekw
-
-
-# def bundle(G, pos, ax=None, edge_kwargs={}):
-#     edge_df = edge_table(G)
-#     node_df = (
-#         pd.DataFrame(pos)
-#         .T.reset_index()
-#         .rename_columns({0: "x", 1: "y", "index": "name"})
-#     )
-#     hb = hammer_bundle(nodes=node_df, edges=edge_df)
-#     if ax is None:
-#         ax = plt.gca()
-#     ax = hb.plot(x="x", y="y", ax=ax)
-#     ax.legend().remove()
-
-
 def line_width(et: pd.DataFrame, lw_by: Hashable):
     """Default edge line width function."""
     if lw_by is not None:
