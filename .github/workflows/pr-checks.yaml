@@ -5,6 +5,7 @@ on: [pull_request]
 jobs:
   build-environment:
     runs-on: ubuntu-18.04
+    name: Build conda environment
     steps:
       - uses: actions/checkout@v2
         name: Checkout repository
