@@ -17,6 +17,8 @@ We hope you enjoy using it to build beautiful graph visualizations.
 
 ## Installation
 
+### Official Releases
+
 `nxviz` is available on PyPI:
 
 ```bash
@@ -27,6 +29,14 @@ It's also available on conda-forge:
 
 ```bash
 conda install -c conda-forge nxviz
+```
+
+### Pre-releases
+
+Pre-releases are done by installing directly from git:
+
+```bash
+pip install git+https://github.com/ericmjl/nxviz.git
 ```
 
 ## Quickstart

@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from functools import partial
 import numpy as np
 import pandas as pd
+from copy import deepcopy
 
 
 def node(
@@ -76,6 +77,7 @@ def edge(
     et = utils.edge_table(G).query("source == @source").query("target == @target")
     pos = layout_func(nt, group_by=group_by, sort_by=sort_by)
 
+    line_func_kwargs = deepcopy(line_func_kwargs)
     line_func_kwargs.update(
         et=et,
         pos=pos,
@@ -90,6 +92,8 @@ def edge(
             nt, group_by=group_by, sort_by=sort_by, **cloned_node_layout_kwargs
         )
         line_func_kwargs["pos_cloned"] = pos_cloned
+
+    print(line_func_kwargs.keys())
 
     patches = line_func(**line_func_kwargs)
     ax = plt.gca()
