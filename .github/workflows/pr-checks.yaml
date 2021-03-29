@@ -93,6 +93,7 @@ jobs:
       - name: Build docs
         run: |
           source /tmp/nxviz/bin/activate
+          python -m ipykernel install --user --name nxviz
           make docs
 
       # https://www.bradmcgonigle.com/blog/github-action-for-continuous-deployment
