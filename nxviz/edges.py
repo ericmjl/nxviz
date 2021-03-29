@@ -5,16 +5,13 @@ In drawing edges, we need to know some pieces of information beforehand.
 Firstly,
 """
 
-from copy import deepcopy
 from functools import partial, update_wrapper
 from typing import Callable, Dict, Hashable
 
-import janitor
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import pandas as pd
-from datashader.bundling import hammer_bundle
 
 from nxviz import aesthetics, lines
 from nxviz.utils import edge_table
