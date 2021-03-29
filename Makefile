@@ -21,7 +21,6 @@ env-remove:
 
 docs:
 	mkdocs build
-	python -m http.server -d site/
 
 release:
 	rm dist/*
