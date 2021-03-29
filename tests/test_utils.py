@@ -1,3 +1,5 @@
+"""Tests for utilities."""
+
 import pytest
 
 import os
@@ -27,6 +29,7 @@ binomial_float = [0.1, 0.2]
 
 
 def test_is_data_homogenous():
+    """Test for is_data_homogeneous."""
     assert not is_data_homogenous(mixed)
     assert is_data_homogenous(categorical)
     assert is_data_homogenous(ordinal)
@@ -34,12 +37,14 @@ def test_is_data_homogenous():
 
 
 def test_infer_data_type():
+    """Test for infer_data_type."""
     assert infer_data_type(categorical) == "categorical"
     assert infer_data_type(ordinal) == "ordinal"
     assert infer_data_type(continuous) == "continuous"
 
 
 def test_is_data_diverging():
+    """Test for is_data_diverging."""
     assert is_data_diverging(diverging_ordinal)
     assert is_data_diverging(diverging_continuous)
 
@@ -48,28 +53,33 @@ def test_is_data_diverging():
 
 
 def test_unknown_data_type():
+    """Test that an unknown data type raises a value error."""
     with pytest.raises(ValueError):
         infer_data_type(unknown_type)
 
 
 def test_is_groupable():
+    """Test for is_groupable."""
     assert is_groupable(categorical)
     with pytest.raises(AssertionError):
         is_groupable(mixed)
 
 
 def test_num_discrete_groups():
+    """Test that num_discrete_groups works correctly."""
     assert num_discrete_groups(categorical) == 3
     assert num_discrete_groups(ordinal) == 5
 
 
 def test_binomial():
+    """Test for is_data_type for binomial data."""
     assert infer_data_type(binomial) == "categorical"
     assert infer_data_type(binomial_float) == "categorical"
     assert infer_data_type(binomial_integer) == "categorical"
 
 
 def diff_plots(plot, plot_fn, baseline_dir, result_dir):
+    """Utility function to diff two plots."""
     plot.draw()
     img_fn = plot_fn
     baseline_img_path = os.path.join(baseline_dir, img_fn)

@@ -20,6 +20,7 @@ def circos(
     lw: Iterable,
     aes_kw: Dict,
 ) -> List[Patch]:
+    """Circos plot line drawing."""
     patches = []
     for r, d in et.iterrows():
         verts = [pos[d["source"]], (0, 0), pos[d["target"]]]
@@ -40,6 +41,7 @@ def line(
     lw: Iterable,
     aes_kw: Dict,
 ):
+    """Straight line drawing function."""
     patches = []
     for r, d in et.iterrows():
         start = d["source"]
@@ -62,6 +64,7 @@ def arc(
     lw: Iterable,
     aes_kw: Dict,
 ):
+    """Arc plot edge drawing function."""
     patches = []
     for r, d in et.iterrows():
         start = d["source"]
@@ -108,6 +111,7 @@ def hive(
     aes_kw: Dict,
     curves: bool = True,
 ):
+    """Hive plot line drawing function."""
     rad = pd.Series(pos).apply(lambda val: to_polar(*val)).to_dict()
     if pos_cloned is None:
         pos_cloned = pos
@@ -186,6 +190,7 @@ def matrix(
     lw: Iterable,
     aes_kw: Dict,
 ):
+    """Matrix plot edge drawing function."""
     patches = []
     for r, d in et.iterrows():
         start = d["source"]

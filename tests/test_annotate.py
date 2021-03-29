@@ -49,11 +49,13 @@ def test_matrix_block(dummyG):
 
 @pytest.mark.usefixtures("dummyG")
 def test_node_colormapping(dummyG):
+    """Execution test for node_colormapping."""
     ax = nv.circos(dummyG, group_by="group", node_color_by="group")
     annotate.node_colormapping(dummyG, color_by="group")
 
 
 @pytest.mark.usefixtures("dummyG")
 def test_edge_colormapping(dummyG):
+    """Execution test for edge_colormapping."""
     ax = nv.circos(dummyG, group_by="group", edge_color_by="edge_value")
     annotate.edge_colormapping(dummyG, color_by="edge_value")

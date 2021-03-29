@@ -1,3 +1,5 @@
+"""Graph generator fixtures."""
+
 from itertools import cycle
 import numpy as np
 import networkx as nx
@@ -29,10 +31,12 @@ many_categorical = cycle(categories)
 
 @pytest.fixture
 def dummyG():
+    """Return a dummy graph."""
     return make_dummyG()
 
 
 def make_dummyG():
+    """Make an erdos-renyi graph."""
     n = 71
     p = 0.1
     G = nx.erdos_renyi_graph(n=n, p=p)

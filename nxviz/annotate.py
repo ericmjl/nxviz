@@ -1,3 +1,4 @@
+"""Annotation submodule."""
 from typing import Hashable
 
 import matplotlib.pyplot as plt
@@ -96,6 +97,7 @@ def hive_group(G, group_by, ax=None, offset=np.pi / 12):
 def arc_group(
     G, group_by, ax=None, midpoint=True, y_offset=-1, rotation=45, ha="right", va="top"
 ):
+    """Annotate arc group."""
     if ax is None:
         ax = plt.gca()
     nt = utils.node_table(G)
@@ -115,6 +117,7 @@ def arc_group(
 def parallel_group(
     G, group_by, ax=None, y_offset=-0.3, rotation=45, ha="right", va="top"
 ):
+    """Annotate parallel plot groups."""
     if ax is None:
         ax = plt.gca()
     nt = utils.node_table(G)
@@ -128,7 +131,8 @@ def parallel_group(
     ax.relim()
 
 
-def matrix_group(G, group_by, ax=None, offset=-3.0, xrotation=0, yrotation=0):
+def matrix_group(G, group_by, ax=None, offset=-3.0, xrotation=0, yrotation=90):
+    """Annotate matrix plot groups."""
     if ax is None:
         ax = plt.gca()
     nt = utils.node_table(G)
@@ -143,12 +147,12 @@ def matrix_group(G, group_by, ax=None, offset=-3.0, xrotation=0, yrotation=0):
         # Plot the x-axis labels
         y = offset
         x = position
-        ax.annotate(label, xy=(x, y), ha="center", va="center", rotation=0)
+        ax.annotate(label, xy=(x, y), ha="center", va="center", rotation=xrotation)
 
         # Plot the y-axis labels
         x = offset
         y = position
-        ax.annotate(label, xy=(x, y), ha="center", va="center", rotation=90)
+        ax.annotate(label, xy=(x, y), ha="center", va="center", rotation=yrotation)
 
 
 def matrix_block(G, group_by, color_by=None, ax=None, alpha=0.1):
@@ -224,6 +228,7 @@ def node_colormapping(
     legend_kwargs: Dict = {"loc": "upper right", "bbox_to_anchor": (0.0, 1.0)},
     ax=None,
 ):
+    """Annotate node color mapping."""
     nt = utils.node_table(G)
     data = nt[color_by]
     colormapping(data, legend_kwargs, ax)
@@ -235,6 +240,7 @@ def edge_colormapping(
     legend_kwargs={"loc": "lower right", "bbox_to_anchor": (0.0, 0.0)},
     ax=None,
 ):
+    """Annotate edge color mapping."""
     if ax is None:
         ax = plt.gca()
     et = utils.edge_table(G)

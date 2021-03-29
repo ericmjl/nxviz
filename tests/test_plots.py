@@ -32,6 +32,7 @@ from nxviz.plots import despine, respine, rescale, rescale_arc, rescale_hive
 
 
 def test_despine():
+    """Test that despine removes all spines from matplotlib axes."""
     despine()
     ax = plt.gca()
 
@@ -43,6 +44,7 @@ def test_despine():
 
 
 def test_respine():
+    """Test that respine reinstates all spines from matplotlib axes."""
     despine()
     respine()
     ax = plt.gca()

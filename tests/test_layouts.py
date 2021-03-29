@@ -8,6 +8,7 @@ import numpy as np
 
 
 def get_pos_df(G, layout, group_by=None, sort_by=None, **layout_kwargs):
+    """Convenience function to get position dictionary as a dataframe."""
     nt = node_table(G)
     pos = layout(nt, group_by, sort_by, **layout_kwargs)
     pos_df = pd.DataFrame(pos).T
@@ -113,6 +114,7 @@ def test_geo(geoG, group_by=None, sort_by=None):
 @pytest.mark.usefixtures("dummyG")
 @pytest.mark.parametrize("sort_by", ("value", None))
 def test_hive(dummyG, sort_by):
+    """Hive plot node layout execution test."""
     pos, nt = get_pos_df(dummyG, layouts.hive, group_by="group", sort_by=sort_by)
 
 

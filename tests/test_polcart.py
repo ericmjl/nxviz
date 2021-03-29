@@ -1,3 +1,4 @@
+"""Tests for polcart submodule."""
 import numpy as np
 
 from hypothesis import assume, given, settings
@@ -57,6 +58,7 @@ def test_convert_rt(r, theta):
 
 @given(floats())
 def test_to_proper_radians(theta):
+    """Test for to_proper_radians."""
     assume(np.isfinite(theta))
     theta = to_proper_radians(theta)
     assert theta <= np.pi and theta >= -np.pi
@@ -64,6 +66,7 @@ def test_to_proper_radians(theta):
 
 @given(floats())
 def test_to_proper_degrees(theta):
+    """Test for to_proper_degrees."""
     assume(np.isfinite(theta))
     theta = to_proper_degrees(theta)
     assert theta <= 180 and theta >= -180
@@ -71,6 +74,7 @@ def test_to_proper_degrees(theta):
 
 @given(floats())
 def test_to_degrees(theta):
+    """Test for to_degrees."""
     assume(np.isfinite(theta))
     theta = to_degrees(theta)
     assert theta <= 180 and theta >= -180
@@ -78,6 +82,7 @@ def test_to_degrees(theta):
 
 @given(floats())
 def test_to_radians(theta):
+    """Test for to_radians."""
     assume(np.isfinite(theta))
     theta = to_radians(theta)
     assert theta <= np.pi and theta >= -np.pi

@@ -12,32 +12,7 @@ from nxviz import edges, nodes
 from nxviz.plots import aspect_equal, despine
 
 # This docstring applies to all plotting functions in this module.
-docstring = """High-level graph plotting function.
-
-## Parameters
-
-### Basic
-
-- `G`: A NetworkX Graph.
-
-### Nodes
-
-- `group_by`: Node metadata attribute key to group nodes.
-- `sort_by`: Node metadata attribute key to sort nodes.
-- `node_color_by`: Node metadata attribute key to color nodes.
-- `node_alpha_by`: Node metadata attribute key to set node transparency.
-- `node_size_by`: Node metadata attribute key to set node size.
-- `node_aes_kwargs`: Keyword arguments to set node aesthetics appearances.
-    TODO: Elaborate on what these arguments are.
-
-### Edges
-
-- `edge_color_by`: Edge metdata attribute key to color edges.
-- `edge_lw_by`: Edge metdata attribute key to set edge line width.
-- `edge_alpha_by`: Edge metdata attribute key to set edge transparency.
-- `edge_aes_kwargs`: Keyword arguments to set node aesthetics appearances.
-    TODO: Elaborate on what these arguments are.
-"""
+# docstring =
 
 
 def base(
@@ -57,7 +32,32 @@ def base(
     node_layout_kwargs: Dict = {},
     edge_line_kwargs: Dict = {},
 ):
+    """High-level graph plotting function.
 
+    ## Parameters
+
+    ### Basic
+
+    - `G`: A NetworkX Graph.
+
+    ### Nodes
+
+    - `group_by`: Node metadata attribute key to group nodes.
+    - `sort_by`: Node metadata attribute key to sort nodes.
+    - `node_color_by`: Node metadata attribute key to color nodes.
+    - `node_alpha_by`: Node metadata attribute key to set node transparency.
+    - `node_size_by`: Node metadata attribute key to set node size.
+    - `node_aes_kwargs`: Keyword arguments to set node aesthetics appearances.
+        TODO: Elaborate on what these arguments are.
+
+    ### Edges
+
+    - `edge_color_by`: Edge metdata attribute key to color edges.
+    - `edge_lw_by`: Edge metdata attribute key to set edge line width.
+    - `edge_alpha_by`: Edge metdata attribute key to set edge transparency.
+    - `edge_aes_kwargs`: Keyword arguments to set node aesthetics appearances.
+        TODO: Elaborate on what these arguments are.
+    """
     pos = node_layout_func(
         G,
         group_by=group_by,
@@ -198,6 +198,8 @@ update_wrapper(matrix, base_cloned)
 
 
 class BasePlot:
+    """Base Plot class."""
+
     def __init__(
         self,
         G: nx.Graph = None,
@@ -278,6 +280,8 @@ object_to_functional = dict(zip(object_api_names, functional_api_names))
 
 
 class ArcPlot(BasePlot):
+    """Arc Plot."""
+
     def __init__(self, G, **kwargs):
         super().__init__()
         func_kwargs = {object_to_functional[k]: v for k, v in kwargs.items()}
@@ -286,6 +290,8 @@ class ArcPlot(BasePlot):
 
 
 class CircosPlot(BasePlot):
+    """Circos Plot."""
+
     def __init__(self, G, **kwargs):
         super().__init__()
         func_kwargs = {object_to_functional[k]: v for k, v in kwargs.items()}
@@ -294,6 +300,8 @@ class CircosPlot(BasePlot):
 
 
 class HivePlot(BasePlot):
+    """Hive Plot."""
+
     def __init__(self, G, **kwargs):
         super().__init__()
         func_kwargs = {object_to_functional[k]: v for k, v in kwargs.items()}
@@ -302,6 +310,8 @@ class HivePlot(BasePlot):
 
 
 class MatrixPlot(BasePlot):
+    """Matrix Plot."""
+
     def __init__(self, G, **kwargs):
         super().__init__()
         func_kwargs = {object_to_functional[k]: v for k, v in kwargs.items()}

@@ -1,23 +1,23 @@
+"""Utility functions."""
 from collections import Counter
 
 import pandas as pd
 import warnings
 
 
-def is_data_homogenous(data_container):
+def is_data_homogenous(data_container: Iterable):
     """
     Checks that all of the data in the container are of the same Python data
     type. This function is called in every other function below, and as such
     need not necessarily be called.
 
     :param data_container: A generic container of data points.
-    :type data_container: `iterable`
     """
     data_types = set([type(i) for i in data_container])
     return len(data_types) == 1
 
 
-def infer_data_type(data_container):
+def infer_data_type(data_container: Iterable):
     """
     For a given container of data, infer the type of data as one of
     continuous, categorical, or ordinal.
@@ -99,7 +99,7 @@ def infer_data_family(data: pd.Series):
         return "categorical"
 
 
-def is_data_diverging(data_container):
+def is_data_diverging(data_container: Iterable):
     """
     We want to use this to check whether the data are diverging or not.
 
@@ -127,7 +127,7 @@ def is_data_diverging(data_container):
         return False
 
 
-def is_groupable(data_container):
+def is_groupable(data_container: Iterable):
     """
     Returns whether the data container is a "groupable" container or not.
 
@@ -142,7 +142,7 @@ def is_groupable(data_container):
     return is_groupable
 
 
-def num_discrete_groups(data_container):
+def num_discrete_groups(data_container: Iterable):
     """
     Returns the number of discrete groups present in a data container.
 
@@ -152,7 +152,7 @@ def num_discrete_groups(data_container):
     return len(set(data_container))
 
 
-def items_in_groups(data_container):
+def items_in_groups(data_container: Iterable):
     """
     Returns discrete groups present in a data container and the number items
     per group.
@@ -207,7 +207,7 @@ def edge_table(G) -> pd.DataFrame:
     return pd.DataFrame(data)
 
 
-from typing import Hashable
+from typing import Hashable, Iterable
 
 
 def group_and_sort(

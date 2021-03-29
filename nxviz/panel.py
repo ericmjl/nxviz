@@ -58,5 +58,6 @@ def node_group_edges(G, group_by):
 
 
 def n_rows_cols(groups):
+    """Return squarest n_rows and n_cols combination."""
     nrows = ncols = int(np.ceil(np.sqrt(len(groups))))
     return nrows, ncols

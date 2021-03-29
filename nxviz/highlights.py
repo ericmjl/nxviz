@@ -71,6 +71,7 @@ def edge(
     line_func_aes_kw={"zorder": 30, "fc": "none"},
     line_func_kwargs={},
 ):
+    """Highlight one particular edge."""
     nt = utils.node_table(G, group_by=group_by, sort_by=sort_by)
     et = utils.edge_table(G).query("source == @source").query("target == @target")
     pos = layout_func(nt, group_by=group_by, sort_by=sort_by)
