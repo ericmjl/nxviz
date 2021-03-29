@@ -82,8 +82,6 @@ def base(
     return plt.gca()
 
 
-base.__doc__ = docstring
-
 arc = partial(
     base,
     node_layout_func=nodes.arc,
@@ -136,7 +134,32 @@ def base_cloned(
     edge_line_kwargs: Dict = {},
     cloned_node_layout_kwargs: Dict = {},
 ):
-    """Base plotting function for visualizations that have cloned axes."""
+    """High-level graph plotting function.
+
+    ## Parameters
+
+    ### Basic
+
+    - `G`: A NetworkX Graph.
+
+    ### Nodes
+
+    - `group_by`: Node metadata attribute key to group nodes.
+    - `sort_by`: Node metadata attribute key to sort nodes.
+    - `node_color_by`: Node metadata attribute key to color nodes.
+    - `node_alpha_by`: Node metadata attribute key to set node transparency.
+    - `node_size_by`: Node metadata attribute key to set node size.
+    - `node_aes_kwargs`: Keyword arguments to set node aesthetics appearances.
+        TODO: Elaborate on what these arguments are.
+
+    ### Edges
+
+    - `edge_color_by`: Edge metdata attribute key to color edges.
+    - `edge_lw_by`: Edge metdata attribute key to set edge line width.
+    - `edge_alpha_by`: Edge metdata attribute key to set edge transparency.
+    - `edge_aes_kwargs`: Keyword arguments to set node aesthetics appearances.
+        TODO: Elaborate on what these arguments are.
+    """
     pos = node_layout_func(
         G,
         group_by=group_by,
@@ -171,9 +194,6 @@ def base_cloned(
     despine()
     aspect_equal()
     return plt.gca()
-
-
-base_cloned.__doc__ = docstring
 
 
 hive = partial(

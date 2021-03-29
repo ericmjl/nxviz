@@ -16,3 +16,11 @@ def test_api(dummyG):
     for func in apifuncs:
         fig, ax = plt.subplots()
         func(dummyG, group_by="group", sort_by="value", edge_alpha_by="edge_value")
+
+
+def test_classes(dummyG):
+    """Tests that the object oriented APIs execute."""
+    objects = nv.ArcPlot, nv.CircosPlot, nv.MatrixPlot, nv.HivePlot
+    for obj in objects:
+        fig, ax = plt.subplots()
+        obj(dummyG, node_grouping="group", node_order="value", node_color="group")

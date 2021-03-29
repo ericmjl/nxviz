@@ -37,3 +37,9 @@ verbose = 2
 quiet = false
 whitelist-regex = []
 color = true
+
+[tool.pytest.ini_options]
+addopts = "-v --cov --cov-report term-missing"
+testpaths = [
+    "tests",
+]

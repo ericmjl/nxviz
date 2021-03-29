@@ -3,6 +3,7 @@ from collections import Counter
 
 import pandas as pd
 import warnings
+from typing import Iterable
 
 
 def is_data_homogenous(data_container: Iterable):
