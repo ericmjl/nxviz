@@ -64,7 +64,6 @@ def rescale_square(G):
     xmin, xmax = ax.get_xlim()
     ymin, ymax = ax.get_ylim()
 
-    newmin = min([xmin, ymin])
-    newmax = max([xmax, ymax])
-    ax.set_xlim(newmin, newmax)
-    ax.set_ylim(newmin, newmax)
+    newmax = max([xmax, ymax, -xmin, -ymin])
+    ax.set_xlim(-newmax, newmax)
+    ax.set_ylim(-newmax, newmax)
