@@ -16,7 +16,7 @@ import pandas as pd
 from nxviz import aesthetics, lines
 from nxviz.utils import edge_table
 
-default_edge_kwargs = dict(facecolor="none", zorder=0)
+default_edge_kwargs = dict(facecolor="none", zorder=1)
 
 
 def line_width(et: pd.DataFrame, lw_by: Hashable):

@@ -12,7 +12,7 @@ from matplotlib.patches import Circle
 
 from nxviz import aesthetics, layouts
 from nxviz.utils import node_table
-from nxviz.plots import rescale, rescale_arc
+from nxviz.plots import rescale, rescale_arc, rescale_square
 
 
 def node_colors(nt: pd.DataFrame, color_by: Hashable):
@@ -42,7 +42,7 @@ def node_glyphs(nt, pos, node_color, alpha, size, **aesthetics_kwargs):
     """Draw circos glyphs to the matplotlib axes object."""
     patches = dict()
     for r, d in nt.iterrows():
-        kw = {"fc": node_color[r], "alpha": alpha[r], "radius": size[r], "zorder": 10}
+        kw = {"fc": node_color[r], "alpha": alpha[r], "radius": size[r], "zorder": 2}
         kw.update(aesthetics_kwargs)
         c = Circle(xy=pos[r], **kw)
         patches[r] = c
@@ -117,6 +117,7 @@ hive = partial(
     sort_by=None,
     layout_kwargs={"inner_radius": 8},
     aesthetics_kwargs={"size_scale": 0.5},
+    rescale_func=rescale_square,
 )
 circos = partial(
     draw,

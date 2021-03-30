@@ -184,7 +184,6 @@ def matrix(
     et,
     pos,
     pos_cloned,
-    directed,
     edge_color: Iterable,
     alpha: Iterable,
     lw: Iterable,
@@ -203,15 +202,9 @@ def matrix(
             "fc": edge_color[r],
             "alpha": alpha[r],
             "radius": lw[r],
-            "zorder": 0,
+            "zorder": 1,
         }
         kw.update(aes_kw)
         patch = Circle(xy=(x, y), **kw)
         patches.append(patch)
-
-        # In the mid-level API, we will need to explicitly set this.
-        # In the high-level API, it's automatically inferred.
-        if not directed:
-            patch = Circle(xy=(y, x), **kw)
-            patches.append(patch)
     return patches

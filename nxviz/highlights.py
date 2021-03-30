@@ -1,6 +1,8 @@
 """Highlights onto a particular graph."""
 
 from typing import Callable, Hashable
+
+from networkx.drawing import layout
 from nxviz import layouts, lines, utils
 from matplotlib.patches import Circle, Rectangle
 import matplotlib.pyplot as plt
@@ -26,14 +28,15 @@ def node(
     """Highlight one particular node."""
     nt = utils.node_table(G, group_by=group_by, sort_by=sort_by)
     pos = layout_func(nt, group_by=group_by, sort_by=sort_by)
-    c = Circle(xy=pos[node], fc=color, radius=radius, zorder=30)
     ax = plt.gca()
+    zorder = max([_.zorder for _ in ax.get_children()])
+    c = Circle(xy=pos[node], fc=color, radius=radius, zorder=zorder)
     ax.add_patch(c)
     if clone:
         pos_cloned = layout_func(
             nt, group_by=group_by, sort_by=sort_by, **cloned_node_layout_kwargs
         )
-        c = Circle(xy=pos_cloned[node], fc=color, radius=radius, zorder=30)
+        c = Circle(xy=pos_cloned[node], fc=color, radius=radius, zorder=zorder + 1)
         ax.add_patch(c)
 
 
@@ -114,6 +117,7 @@ arc_edge = partial(
     line_func=lines.arc,
     group_by=None,
     sort_by=None,
+    line_func_aes_kw={"zorder": 1},
 )
 
 hive_edge = partial(
@@ -133,8 +137,15 @@ matrix_edge = partial(
     sort_by=None,
     clone=True,
     cloned_node_layout_kwargs={"axis": "y"},
-    line_func_kwargs={"directed": False},
     line_func_aes_kw={},
+)
+
+parallel_edge = partial(
+    edge,
+    layout_func=layouts.parallel,
+    line_func=lines.line,
+    sort_by=None,
+    line_func_aes_kw={"zorder": 1},
 )
 import networkx as nx
 
