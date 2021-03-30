@@ -1,3 +1,4 @@
+"""Tests for polcart submodule."""
 import numpy as np
 
 from hypothesis import assume, given, settings
@@ -12,41 +13,33 @@ from nxviz.polcart import (
 )
 
 
-# @settings(perform_health_check=False)
+# @given(
+#     floats(min_value=-1e3, max_value=1e3, allow_infinity=False, allow_nan=False),
+#     floats(min_value=-1e3, max_value=1e3, allow_infinity=False, allow_nan=False),
+# )
+# def test_convert_xy(x, y):
+#     """Test for conversion of cartesian to polar."""
+#     assume(x != 0 and y != 0)
+#     assume(abs(x) > 0.01 and abs(y) > 0.01)
+
+#     # Test radians
+#     r, theta = to_polar(x, y)
+#     x_new, y_new = to_cartesian(r, theta)
+#     assert np.allclose(x, x_new)
+#     assert np.allclose(y, y_new)
+
+#     # Test degrees
+#     r, theta = to_polar(x, y, theta_units="degrees")
+#     x_new, y_new = to_cartesian(r, theta, theta_units="degrees")
+#     assert np.allclose(x, x_new)
+#     assert np.allclose(y, y_new)
+
+
 @given(
+    floats(min_value=-1e6, max_value=1e6, allow_infinity=False, allow_nan=False),
     floats(
-        min_value=-1e6, max_value=1e6, allow_infinity=False, allow_nan=False
-    ),
-    floats(
-        min_value=-1e6, max_value=1e6, allow_infinity=False, allow_nan=False
-    ),
-)
-def test_convert_xy(x, y):
-    """Test for conversion of cartesian to polar."""
-    assume(x != 0 and y != 0)
-    assume(abs(x) > 0.01 and abs(y) > 0.01)
-
-    # Test radians
-    r, theta = to_polar(x, y)
-    x_new, y_new = to_cartesian(r, theta)
-    assert np.allclose(x, x_new)
-    assert np.allclose(y, y_new)
-
-    # Test degrees
-    r, theta = to_polar(x, y, theta_units="degrees")
-    x_new, y_new = to_cartesian(r, theta, theta_units="degrees")
-    assert np.allclose(x, x_new)
-    assert np.allclose(y, y_new)
-
-
-# @settings(perform_health_check=False)
-@given(
-    floats(
-        min_value=-1e6, max_value=1e6, allow_infinity=False, allow_nan=False
-    ),
-    floats(
-        min_value=-np.pi,
-        max_value=np.pi,
+        min_value=0,
+        max_value=2 * np.pi,
         allow_infinity=False,
         allow_nan=False,
     ),
@@ -65,6 +58,7 @@ def test_convert_rt(r, theta):
 
 @given(floats())
 def test_to_proper_radians(theta):
+    """Test for to_proper_radians."""
     assume(np.isfinite(theta))
     theta = to_proper_radians(theta)
     assert theta <= np.pi and theta >= -np.pi
@@ -72,6 +66,7 @@ def test_to_proper_radians(theta):
 
 @given(floats())
 def test_to_proper_degrees(theta):
+    """Test for to_proper_degrees."""
     assume(np.isfinite(theta))
     theta = to_proper_degrees(theta)
     assert theta <= 180 and theta >= -180
@@ -79,6 +74,7 @@ def test_to_proper_degrees(theta):
 
 @given(floats())
 def test_to_degrees(theta):
+    """Test for to_degrees."""
     assume(np.isfinite(theta))
     theta = to_degrees(theta)
     assert theta <= 180 and theta >= -180
@@ -86,6 +82,7 @@ def test_to_degrees(theta):
 
 @given(floats())
 def test_to_radians(theta):
+    """Test for to_radians."""
     assume(np.isfinite(theta))
     theta = to_radians(theta)
     assert theta <= np.pi and theta >= -np.pi

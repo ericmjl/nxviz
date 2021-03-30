@@ -3,8 +3,6 @@ from setuptools import setup
 with open("README.md") as readme_file:
     readme = readme_file.read()
 
-with open("HISTORY.rst") as history_file:
-    history = history_file.read()
 
 requirements = []
 with open("requirements.txt") as rqmts:
@@ -15,7 +13,7 @@ setup(
     name="nxviz",
     version="0.6.3",
     description="Graph Visualization Package",
-    long_description=readme + "\n\n" + history,
+    long_description=readme,
     author="Eric J. Ma",
     author_email="ericmajinglong@gmail.com",
     url="https://github.com/ericmjl/nxviz",

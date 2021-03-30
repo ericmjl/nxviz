@@ -1,41 +1,34 @@
+"""Polar/cartesian conversions functions."""
+
 from numpy import arctan2 as atan2
 from numpy import cos, pi, sin, sqrt
 
 
-def to_cartesian(r, theta, theta_units="radians"):
+def to_cartesian(r, theta, proper=False):
     """
     Converts polar r, theta to cartesian x, y.
     """
-    assert theta_units in [
-        "radians",
-        "degrees",
-    ], "kwarg theta_units must specified in radians or degrees"
 
-    # Convert to radians
-    if theta_units == "degrees":
-        theta = to_radians(theta)
-
-    theta = to_proper_radians(theta)
+    if proper:
+        theta = to_proper_radians(theta)
     x = r * cos(theta)
     y = r * sin(theta)
 
     return x, y
 
 
-def to_polar(x, y, theta_units="radians"):
+import numpy as np
+
+
+def to_polar(x, y):
     """
     Converts cartesian x, y to polar r, theta.
     """
-    assert theta_units in [
-        "radians",
-        "degrees",
-    ], "kwarg theta_units must specified in radians or degrees"
-
     theta = atan2(y, x)
     r = sqrt(x ** 2 + y ** 2)
 
-    if theta_units == "degrees":
-        theta = to_degrees(theta)
+    if theta < 0:
+        theta += 2 * np.pi
 
     return r, theta
 

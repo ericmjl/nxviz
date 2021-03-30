@@ -1,7 +1,6 @@
-SHELL=/bin/bash
+.PHONY: docs
 
-test:
-	py.test -v --cov --cov-report term-missing # --doctest-modules
+SHELL=/bin/bash
 
 black:
 	black -l 79 .
@@ -18,7 +17,7 @@ env-remove:
 	conda env remove -n nxviz
 
 docs:
-	make -f docs/Makefile html
+	mkdocs build
 
 release:
 	rm dist/*

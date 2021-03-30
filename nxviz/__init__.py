@@ -1,3 +1,13 @@
-from nxviz.plots import ArcPlot, CircosPlot, MatrixPlot, GeoPlot  # NOQA
-
-__version__ = "0.6.3"
+"""Top-level nxviz API."""
+from .api import (
+    arc,
+    hive,
+    circos,
+    parallel,
+    matrix,
+    geo,
+    ArcPlot,
+    HivePlot,
+    MatrixPlot,
+    CircosPlot,
+)

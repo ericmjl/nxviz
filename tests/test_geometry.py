@@ -10,8 +10,10 @@ from nxviz.geometry import (
     circos_radius,
     correct_negative_angle,
     get_cartesian,
-    node_theta,
+    item_theta,
 )
+
+tau = 2 * np.pi
 
 
 def test_circos_radius():
@@ -32,17 +34,15 @@ def test_circos_radius():
 
 # @settings(perform_health_check=False)
 @given(lists(integers()))
-def test_node_theta(nodelist):
-    """Tests node_theta function."""
+def test_item_theta(nodelist):
+    """Tests item_theta function."""
     assume(len(nodelist) > 0)
     node = choice(nodelist)
-    theta_obs = node_theta(nodelist, node)
+    theta_observed = item_theta(nodelist, node)
 
-    i = nodelist.index(node)
-    theta_exp = -np.pi + i * 2 * np.pi / len(nodelist)
-    if theta_exp > np.pi:
-        theta_exp = np.pi - theta_exp
-    assert np.allclose(theta_obs, theta_exp)
+    theta_expected = nodelist.index(node) / len(nodelist) * tau
+
+    assert np.allclose(theta_observed, theta_expected)
 
 
 @given(floats(), floats())
@@ -59,11 +59,9 @@ def test_get_cartesian(r, theta):
 
 
 # @settings(perform_health_check=False)
-@given(floats())
+@given(floats(max_value=0, min_value=-tau, exclude_max=True))
 def test_correct_negative_angle(angle):
     """Test for correct calculation of negative angle."""
-    assume(angle < 0)
-    assume(angle >= -2 * np.pi)
     exp = 2 * np.pi + angle
     obs = correct_negative_angle(angle)
 

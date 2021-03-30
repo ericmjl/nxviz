@@ -1,0 +1,77 @@
+site_name: "nxviz: Rational Graph Visualization in Python"
+site_url: https://ericmjl.github.io/nxviz
+
+docs_dir: docs/
+
+theme:
+  name: material
+  # palette:
+  #   primary: teal
+  #   accent: teal
+  icon:
+    logo: "fontawesome/solid/book"
+  features:
+    - instant
+    - tabs
+  language: en
+
+# We customize the navigation by hand to control the order
+# in which pages show up.
+nav:
+  - Home: index.md
+  - Principles of Visualization: theory.md
+  - Releases:
+    - Release History: history.md
+    - Contributors: contributors.md
+  - Developers:
+    - Architecture: developers/architecture.md
+    - Development Guide: developers/devguide.md
+    - Ways to contribute: developers/contributing.md
+    - Developing new plots: developers/new-plots.ipynb
+  - API:
+    - High level API: api/high-level-api.ipynb
+    - Mid-level API: api/mid-level-api.ipynb
+    - Low-level API: api/low-level-api.ipynb
+    - Object-oriented API: api/object-oriented-api.ipynb
+  - Examples Gallery:
+    - Matrix Plot: examples/matrix.ipynb
+    - Hive Panel: examples/hive-panel.ipynb
+    - Geo Plot: examples/geo.ipynb
+    - Edge Panel: examples/edge-panel.ipynb
+
+plugins:
+  - search
+  - mknotebooks:
+      execute: true
+      write_markdown: true
+      allow_errors: false
+      timeout: 1200
+      binder: true
+      binder_service_name: "gh"
+      binder_branch: "master"
+      binder_ui: "lab"
+
+# Taken from here: https://squidfunk.github.io/mkdocs-material/extensions/codehilite/
+markdown_extensions:
+  - codehilite
+  - admonition
+  # - pymdownx.tabbed
+  # - pymdownx.arithmatex
+  # - pymdownx.details
+  - pymdownx.superfences
+  - markdown.extensions.attr_list
+
+extra_css:
+  - stylesheets/custom.css
+
+repo_name: "ericmjl/nxviz"
+repo_url: "https://github.com/ericmjl/nxviz"
+
+extra:
+  social:
+    - icon: "fontawesome/brands/github"
+      link: "https://github.com/ericmjl"
+    - icon: "fontawesome/brands/twitter"
+      link: "https://twitter.com/ericmjl"
+    - icon: "fontawesome/brands/linkedin"
+      link: "https://linkedin.com/in/ericmjl"

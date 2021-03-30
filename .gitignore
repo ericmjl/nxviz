@@ -66,4 +66,7 @@ docs/_build/
 # PyBuilder
 target/
 
-*.ipynb
+# *.ipynb
+.ipynb_checkpoints
+site/
+*.md.tmp
