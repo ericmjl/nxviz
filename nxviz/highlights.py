@@ -93,8 +93,6 @@ def edge(
         )
         line_func_kwargs["pos_cloned"] = pos_cloned
 
-    print(line_func_kwargs.keys())
-
     patches = line_func(**line_func_kwargs)
     ax = plt.gca()
     for patch in patches:
