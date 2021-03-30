@@ -20,7 +20,7 @@ def data_cmap(data: pd.Series) -> Tuple:
     data_family = infer_data_family(data)
     if data_family == "categorical":
         base_cmap = qualitative
-        num_categories = len(set(data))
+        num_categories = max(len(set(data)), 3)
         if num_categories > 12:
             raise ValueError(
                 f"It appears you have >12 categories for the key {data.name}. "
@@ -89,10 +89,8 @@ def color_func(data: pd.Series) -> Callable:
     """
     cmap, data_family = data_cmap(data)
     func = discrete_color_func
-    if data_family == "continuous":
+    if data_family in ["continuous", "ordinal"]:
         func = continuous_color_func
-    elif data_family == "ordinal":
-        func = ordinal_color_func
     return partial(func, cmap=cmap, data=data)
 
 
