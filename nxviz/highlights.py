@@ -1,7 +1,8 @@
 """Highlights onto a particular graph."""
 
+from typing import Callable, Hashable
 from nxviz import layouts, lines, utils
-from matplotlib.patches import Circle
+from matplotlib.patches import Circle, Rectangle
 import matplotlib.pyplot as plt
 from functools import partial
 import numpy as np
@@ -25,14 +26,14 @@ def node(
     """Highlight one particular node."""
     nt = utils.node_table(G, group_by=group_by, sort_by=sort_by)
     pos = layout_func(nt, group_by=group_by, sort_by=sort_by)
-    c = Circle(xy=pos[node], fc=color, radius=radius, zorder=20)
+    c = Circle(xy=pos[node], fc=color, radius=radius, zorder=30)
     ax = plt.gca()
     ax.add_patch(c)
     if clone:
         pos_cloned = layout_func(
             nt, group_by=group_by, sort_by=sort_by, **cloned_node_layout_kwargs
         )
-        c = Circle(xy=pos_cloned[node], fc=color, radius=radius, zorder=20)
+        c = Circle(xy=pos_cloned[node], fc=color, radius=radius, zorder=30)
         ax.add_patch(c)
 
 
@@ -133,4 +134,32 @@ matrix_edge = partial(
     clone=True,
     cloned_node_layout_kwargs={"axis": "y"},
     line_func_kwargs={"directed": False},
+    line_func_aes_kw={},
 )
+import networkx as nx
+
+
+def matrix_row(
+    G: nx.Graph,
+    node: Hashable,
+    group_by: Hashable = None,
+    sort_by: Hashable = None,
+    axis="x",
+    color="red",
+):
+    """Highlight one row (or column) in the matrix plot."""
+    nt = utils.node_table(G)
+    pos = layouts.matrix(nt, group_by=group_by, sort_by=sort_by, axis=axis)
+    x, y = pos[node]
+
+    width = 2
+    height = 2 * len(G)
+    xy = x - 1, y + 1
+    if axis == "y":
+        width, height = height, width
+        xy = x + 1, y - 1
+    rectangle = Rectangle(
+        xy=xy, width=width, height=height, fc=color, ec="none", alpha=0.3
+    )
+    ax = plt.gca()
+    ax.add_patch(rectangle)

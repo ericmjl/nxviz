@@ -203,7 +203,7 @@ def matrix(
             "fc": edge_color[r],
             "alpha": alpha[r],
             "radius": lw[r],
-            "zorder": 5,
+            "zorder": 0,
         }
         kw.update(aes_kw)
         patch = Circle(xy=(x, y), **kw)

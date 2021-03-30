@@ -176,7 +176,7 @@ def matrix_block(G, group_by, color_by=None, ax=None, alpha=0.1):
         width = height = group_sizes[label]
 
         patch = Rectangle(
-            xy, width, height, zorder=0, alpha=alpha, facecolor=colors[label]
+            xy, width, height, zorder=20, alpha=alpha, facecolor=colors[label]
         )
         patches.append(patch)
 

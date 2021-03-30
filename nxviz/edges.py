@@ -88,7 +88,7 @@ def draw(
     lw = line_width(et, lw_by) * aesthetics_kwargs.pop("lw_scale", 1.0)
     alpha = transparency(et, alpha_by) * aesthetics_kwargs.pop("alpha_scale", 1.0)
 
-    aes_kw = {"zorder": 0, "facecolor": "none"}
+    aes_kw = {"facecolor": "none"}
     aes_kw.update(aesthetics_kwargs)
     patches = lines_func(
         et,
