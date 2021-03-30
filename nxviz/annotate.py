@@ -246,3 +246,28 @@ def edge_colormapping(
     et = utils.edge_table(G)
     data = et[color_by]
     colormapping(data, legend_kwargs, ax)
+
+
+def node_labels(G, layout_func, group_by, sort_by, ax=None):
+    """Annotate node labels."""
+    if ax is None:
+        ax = plt.gca()
+
+    nt = utils.node_table(G)
+    pos = layout_func(nt, group_by, sort_by)
+    for node in G.nodes():
+        ax.annotate(text=node, xy=pos[node], ha="center", va="center")
+
+
+from functools import partial
+from nxviz import layouts
+
+parallel_labels = partial(node_labels, layout_func=layouts.parallel, sort_by=None)
+hive_labels = partial(node_labels, layout_func=layouts.hive, sort_by=None)
+arc_labels = partial(node_labels, layout_func=layouts.arc, group_by=None, sort_by=None)
+matrix_labels = partial(
+    node_labels, layout_func=layouts.matrix, group_by=None, sort_by=None
+)
+circos_labels = partial(
+    node_labels, layout_func=layouts.circos, group_by=None, sort_by=None
+)
