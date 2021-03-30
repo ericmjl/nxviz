@@ -57,5 +57,14 @@ def rescale_arc(G: nx.Graph):
     ax.set_xlim(-1, len(G) * 2 + 1)
 
 
-def rescale_hive(G: nx.Graph):
-    """Axes rescale function for hive plot."""
+def rescale_square(G):
+    """Axes rescale function to go square."""
+    rescale(G)
+    ax = plt.gca()
+    xmin, xmax = ax.get_xlim()
+    ymin, ymax = ax.get_ylim()
+
+    newmin = min([xmin, ymin])
+    newmax = max([xmax, ymax])
+    ax.set_xlim(newmin, newmax)
+    ax.set_ylim(newmin, newmax)
