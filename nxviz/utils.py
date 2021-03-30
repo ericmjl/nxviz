@@ -188,6 +188,9 @@ def node_table(G, group_by=None, sort_by=None):
     return df
 
 
+import networkx as nx
+
+
 def edge_table(G) -> pd.DataFrame:
     """Return the edge table of a graph.
 
@@ -205,6 +208,13 @@ def edge_table(G) -> pd.DataFrame:
         row["source"] = u
         row["target"] = v
         data.append(row)
+        if not G.is_directed():
+            u, v = v, u
+            row = dict()
+            row.update(d)
+            row["source"] = u
+            row["target"] = v
+            data.append(row)
     return pd.DataFrame(data)
 
 

@@ -209,7 +209,6 @@ matrix = partial(
     node_layout_func=nodes.matrix,
     edge_line_func=edges.matrix,
     cloned_node_layout_kwargs={"axis": "y"},
-    edge_line_kwargs={"directed": False},
 )
 update_wrapper(matrix, base_cloned)
 
