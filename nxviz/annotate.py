@@ -1,20 +1,17 @@
 """Annotation submodule."""
-from typing import Hashable
+from functools import partial, update_wrapper
+from typing import Dict, Hashable
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from matplotlib.patches import Rectangle
-
-from nxviz import aesthetics, utils
-from nxviz.geometry import circos_radius, item_theta
-from nxviz.polcart import to_cartesian
-
-from typing import Dict
-
-from matplotlib import patches
 from matplotlib.cm import ScalarMappable
 from matplotlib.colors import Normalize
+from matplotlib.patches import Patch, Rectangle
+
+from nxviz import aesthetics, layouts, utils
+from nxviz.geometry import circos_radius, item_theta
+from nxviz.polcart import to_cartesian
 
 
 def text_alignment(x, y):
@@ -210,7 +207,7 @@ def colormapping(data, legend_kwargs: Dict = {}, ax=None):
         colors = labels.apply(cfunc)
         patchlist = []
         for color, label in zip(colors, labels):
-            data_key = patches.Patch(color=color, label=label)
+            data_key = Patch(color=color, label=label)
             patchlist.append(data_key)
         kwargs = dict(
             loc="best",
@@ -258,9 +255,6 @@ def node_labels(G, layout_func, group_by, sort_by, ax=None):
     for node in G.nodes():
         ax.annotate(text=node, xy=pos[node], ha="center", va="center")
 
-
-from functools import partial, update_wrapper
-from nxviz import layouts
 
 parallel_labels = partial(node_labels, layout_func=layouts.parallel, sort_by=None)
 update_wrapper(parallel_labels, node_labels)
