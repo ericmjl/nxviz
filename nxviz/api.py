@@ -90,6 +90,8 @@ arc = partial(
     sort_by=None,
 )
 update_wrapper(arc, base)
+arc.__name__ = "api.arc"
+
 circos = partial(
     base,
     node_layout_func=nodes.circos,
@@ -98,6 +100,8 @@ circos = partial(
     sort_by=None,
 )
 update_wrapper(circos, base)
+circos.__name__ = "api.circos"
+
 parallel = partial(
     base,
     node_layout_func=nodes.parallel,
@@ -106,6 +110,8 @@ parallel = partial(
     node_aes_kwargs={"size_scale": 0.5},
 )
 update_wrapper(parallel, base)
+parallel.__name__ = "api.parallel"
+
 geo = partial(
     base,
     node_layout_func=nodes.geo,
@@ -114,6 +120,8 @@ geo = partial(
     sort_by=None,
     node_aes_kwargs={"size_scale": 0.0015},
 )
+update_wrapper(geo, base)
+geo.__name__ = "api.geo"
 
 
 def base_cloned(
@@ -203,6 +211,8 @@ hive = partial(
     cloned_node_layout_kwargs={"rotation": np.pi / 6},
 )
 update_wrapper(hive, base_cloned)
+hive.__name__ = "api.hive"
+
 matrix = partial(
     base_cloned,
     group_by=None,
@@ -211,6 +221,7 @@ matrix = partial(
     cloned_node_layout_kwargs={"axis": "y"},
 )
 update_wrapper(matrix, base_cloned)
+matrix.__name__ = "api.matrix"
 
 
 # Object-oriented API below, placed for compatibility.

@@ -259,15 +259,31 @@ def node_labels(G, layout_func, group_by, sort_by, ax=None):
         ax.annotate(text=node, xy=pos[node], ha="center", va="center")
 
 
-from functools import partial
+from functools import partial, update_wrapper
 from nxviz import layouts
 
 parallel_labels = partial(node_labels, layout_func=layouts.parallel, sort_by=None)
+update_wrapper(parallel_labels, node_labels)
+parallel_labels.__name__ = "annotate.parallel_labels"
+
 hive_labels = partial(node_labels, layout_func=layouts.hive, sort_by=None)
+update_wrapper(hive_labels, node_labels)
+hive_labels.__name__ = "annotate.hive_labels"
+
 arc_labels = partial(node_labels, layout_func=layouts.arc, group_by=None, sort_by=None)
+update_wrapper(arc_labels, node_labels)
+arc_labels.__name__ = "annotate.arc_labels"
+
+
 matrix_labels = partial(
     node_labels, layout_func=layouts.matrix, group_by=None, sort_by=None
 )
+update_wrapper(matrix_labels, node_labels)
+matrix_labels.__name__ = "annotate.matrix_labels"
+
+
 circos_labels = partial(
     node_labels, layout_func=layouts.circos, group_by=None, sort_by=None
 )
+update_wrapper(circos_labels, node_labels)
+circos_labels.__name__ = "annotate.circos_labels"

@@ -119,12 +119,18 @@ hive = partial(
     aesthetics_kwargs={"size_scale": 0.5},
     rescale_func=rescale_square,
 )
+update_wrapper(hive, draw)
+hive.__name__ = "nodes.hive"
+
 circos = partial(
     draw,
     layout_func=layouts.circos,
     group_by=None,
     sort_by=None,
 )
+update_wrapper(circos, draw)
+circos.__name__ = "nodes.circos"
+
 arc = partial(
     draw,
     layout_func=layouts.arc,
@@ -132,13 +138,21 @@ arc = partial(
     sort_by=None,
     rescale_func=rescale_arc,
 )
+update_wrapper(arc, draw)
+arc.__name__ = "nodes.arc"
+
 parallel = partial(
     draw,
     layout_func=layouts.parallel,
     sort_by=None,
     aesthetics_kwargs={"size_scale": 0.5},
 )
+update_wrapper(parallel, draw)
+parallel.__name__ = "nodes.parallel"
+
 matrix = partial(draw, layout_func=layouts.matrix, group_by=None, sort_by=None)
+update_wrapper(matrix, draw)
+matrix.__name__ = "nodes.matrix"
 
 geo = partial(
     draw,
@@ -147,9 +161,5 @@ geo = partial(
     sort_by=None,
     aesthetics_kwargs={"size_scale": 0.0015},
 )
-
-update_wrapper(circos, draw)
-update_wrapper(parallel, draw)
-update_wrapper(arc, draw)
-update_wrapper(hive, draw)
 update_wrapper(geo, draw)
+geo.__name__ = "nodes.geo"

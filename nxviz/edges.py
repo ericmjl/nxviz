@@ -5,6 +5,7 @@ In drawing edges, we need to know some pieces of information beforehand.
 Firstly,
 """
 
+from copy import deepcopy
 from functools import partial, update_wrapper
 from typing import Callable, Dict, Hashable
 
@@ -85,6 +86,7 @@ def draw(
     if ax is None:
         ax = plt.gca()
     edge_color = edge_colors(et, color_by)
+    aesthetics_kwargs = deepcopy(aesthetics_kwargs)
     lw = line_width(et, lw_by) * aesthetics_kwargs.pop("lw_scale", 1.0)
     alpha = transparency(et, alpha_by) * aesthetics_kwargs.pop("alpha_scale", 1.0)
 
@@ -110,7 +112,16 @@ hive = partial(draw, lines_func=lines.hive)
 matrix = partial(draw, lines_func=lines.matrix)
 
 update_wrapper(circos, draw)
+circos.__name__ = "edges.circos"
+
 update_wrapper(line, draw)
+line.__name__ = "edges.line"
+
 update_wrapper(arc, draw)
+arc.__name__ = "edges.arc"
+
 update_wrapper(hive, draw)
+hive.__name__ = "edges.hive"
+
 update_wrapper(matrix, draw)
+matrix.__name__ = "edges.matrix"

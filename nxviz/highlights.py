@@ -6,10 +6,12 @@ from networkx.drawing import layout
 from nxviz import layouts, lines, utils
 from matplotlib.patches import Circle, Rectangle
 import matplotlib.pyplot as plt
-from functools import partial
+from functools import partial, update_wrapper
 import numpy as np
 import pandas as pd
 from copy import deepcopy
+
+import networkx as nx
 
 
 def node(
@@ -41,8 +43,15 @@ def node(
 
 
 circos_node = partial(node, layout_func=layouts.circos, group_by=None)
+update_wrapper(circos_node, node)
+circos_node.__name__ = "highlights.circos_node"
 parallel_node = partial(node, layout_func=layouts.parallel, group_by=None)
+update_wrapper(parallel_node, node)
+parallel_node.__name__ = "highlights.parallel_node"
+
 arc_node = partial(node, layout_func=layouts.arc, group_by=None)
+update_wrapper(arc_node, node)
+arc_node.__name__ = "highlights.arc_node"
 
 
 hive_node = partial(
@@ -51,6 +60,8 @@ hive_node = partial(
     clone=True,
     cloned_node_layout_kwargs={"rotation": np.pi / 6},
 )
+update_wrapper(hive_node, node)
+hive_node.__name__ = "highlights.hive_node"
 matrix_node = partial(
     node,
     layout_func=layouts.matrix,
@@ -58,6 +69,8 @@ matrix_node = partial(
     clone=True,
     cloned_node_layout_kwargs={"axis": "y"},
 )
+update_wrapper(matrix_node, node)
+matrix_node.__name__ = "highlights.matrix_node"
 
 
 def edge(
@@ -110,6 +123,8 @@ circos_edge = partial(
     group_by=None,
     sort_by=None,
 )
+update_wrapper(circos_edge, node)
+circos_edge.__name__ = "highlights.circos_edge"
 
 arc_edge = partial(
     edge,
@@ -119,6 +134,8 @@ arc_edge = partial(
     sort_by=None,
     line_func_aes_kw={"zorder": 1},
 )
+update_wrapper(arc_edge, node)
+arc_edge.__name__ = "highlights.arc_edge"
 
 hive_edge = partial(
     edge,
@@ -128,6 +145,9 @@ hive_edge = partial(
     clone=True,
     cloned_node_layout_kwargs={"rotation": np.pi / 6},
 )
+update_wrapper(hive_edge, node)
+hive_edge.__name__ = "highlights.hive_edge"
+
 
 matrix_edge = partial(
     edge,
@@ -139,6 +159,8 @@ matrix_edge = partial(
     cloned_node_layout_kwargs={"axis": "y"},
     line_func_aes_kw={},
 )
+update_wrapper(matrix_edge, node)
+matrix_edge.__name__ = "highlights.matrix_edge"
 
 parallel_edge = partial(
     edge,
@@ -147,7 +169,8 @@ parallel_edge = partial(
     sort_by=None,
     line_func_aes_kw={"zorder": 1},
 )
-import networkx as nx
+update_wrapper(parallel_edge, node)
+parallel_edge.__name__ = "highlights.parallel_edge"
 
 
 def matrix_row(
