@@ -16,7 +16,7 @@ import networkx as nx
 
 
 # from nxviz import ArcPlot, CircosPlot, GeoPlot, MatrixPlot
-from nxviz.plots import despine, respine, rescale, rescale_arc, rescale_hive
+from nxviz.plots import despine, respine, rescale, rescale_arc, rescale_square
 
 # from matplotlib.testing.decorators import _image_directories
 
