@@ -5,3 +5,7 @@ numpy>=1.19.4
 palettable>=3.3.0
 pandas>=1.2.0
 seaborn>=0.11.1
+# Needed by readthedocs:
+mkdocs
+mkdocs-material
+mknotebooks
