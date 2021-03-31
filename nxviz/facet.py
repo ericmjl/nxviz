@@ -1,4 +1,4 @@
-"""Declarative graph visualization panels."""
+"""Declarative graph visualization facets."""
 from nxviz import utils
 import warnings
 from itertools import combinations
@@ -25,7 +25,7 @@ def hive_triplets(G, group_by):
 
     for groups in triplets:
         wanted_nodes = (n for n in G.nodes() if G.nodes[n][group_by] in groups)
-        yield G.subgraph(wanted_nodes)
+        yield G.subgraph(wanted_nodes), groups
 
 
 def edge_group(G, group_by):
@@ -38,7 +38,7 @@ def edge_group(G, group_by):
         for u, v, d in G.edges(data=True):
             if d[group_by] == group:
                 G_sub.add_edge(u, v, **d)
-        yield G_sub
+        yield G_sub, group
 
 
 def node_group_edges(G, group_by):
@@ -54,7 +54,7 @@ def node_group_edges(G, group_by):
         for node in wanted_nodes:
             for u, v, d in G.edges(node, data=True):
                 G_sub.add_edge(u, v, **d)
-        yield G_sub
+        yield G_sub, group
 
 
 def n_rows_cols(groups):
