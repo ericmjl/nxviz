@@ -36,7 +36,6 @@ nav:
       - Faceting API: api/facet-api.ipynb
   - Examples Gallery:
       - Matrix Plot: examples/matrix.ipynb
-      - Hive Panel: examples/hive-panel.ipynb
       - Geo Plot: examples/geo.ipynb
 
 plugins:
