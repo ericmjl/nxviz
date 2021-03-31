@@ -70,3 +70,10 @@ def manygroupG():
         G.nodes[n]["group"] = next(many_categorical)
 
     return G
+
+
+@pytest.fixture
+def smallG():
+    """Generate a small graph with 10 nodes."""
+    G = nx.erdos_renyi_graph(n=10, p=0.15)
+    return G

@@ -59,3 +59,10 @@ def test_edge_colormapping(dummyG):
     """Execution test for edge_colormapping."""
     ax = nv.circos(dummyG, group_by="group", edge_color_by="edge_value")
     annotate.edge_colormapping(dummyG, color_by="edge_value")
+
+
+@pytest.mark.usefixtures("smallG")
+def test_node_labels(smallG):
+    """Execution test for node labels."""
+    ax = nv.arc(smallG)
+    annotate.arc_labels(smallG)
