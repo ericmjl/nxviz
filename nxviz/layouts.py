@@ -67,7 +67,7 @@ def hive(
     - `inner_radius`: The inner
     """
     nt = group_and_sort(nt, group_by=group_by, sort_by=sort_by)
-    groups = sorted(set(nt[group_by]))
+    groups = sorted(nt[group_by].unique())
     if len(groups) > 3:
         raise ValueError(
             f"group_by {group_by} is associated with more than 3 groups. "

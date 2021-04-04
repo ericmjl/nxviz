@@ -20,7 +20,7 @@ def data_cmap(data: pd.Series) -> Tuple:
     data_family = infer_data_family(data)
     if data_family == "categorical":
         base_cmap = qualitative
-        num_categories = max(len(set(data)), 3)
+        num_categories = max(len(data.unique()), 3)
         if num_categories > 12:
             raise ValueError(
                 f"It appears you have >12 categories for the key {data.name}. "
@@ -55,7 +55,7 @@ def continuous_color_func(val, cmap, data: pd.Series):
     return cmap(norm(val))
 
 
-def discrete_color_func(val, cmap, data):
+def discrete_color_func(val, cmap, data: pd.Series):
     """Return RGB corresponding to a value.
 
     ## Parameters
@@ -64,7 +64,7 @@ def discrete_color_func(val, cmap, data):
     - `cmap`: A Matplotlib cmap
     - `data`: Pandas series.
     """
-    colors = sorted(set(data))
+    colors = sorted(data.unique())
     return cmap.colors[colors.index(val)]
 
 
