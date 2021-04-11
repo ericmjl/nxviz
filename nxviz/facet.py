@@ -1,4 +1,11 @@
-"""Declarative graph visualization facets."""
+"""Declarative graph visualization facets.
+
+There are two groups of functions in here:
+One are intended to yield graph objects that
+contain the subset of nodes and edges to be plotted.
+The others are faceting functions that can be called on.
+The faceting functions rely on the high level API for plotting.
+"""
 import warnings
 from functools import partial, update_wrapper
 from itertools import combinations
