@@ -64,7 +64,7 @@ def draw(
     - `alpha_by`: Quantitative edge attribute key to determine transparency.
     - `ax`: Matplotlib axes object to plot onto.
     - `encodings_kwargs`: A dictionary of kwargs
-        to determine the aesthetic properties of the edge.
+        to determine the visual properties of the edge.
     - `linefunc_kwargs`: All other keyword arguments passed in
         will be passed onto the appropriate linefunc.
 

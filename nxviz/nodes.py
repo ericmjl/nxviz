@@ -76,7 +76,7 @@ def draw(
     - `layout_kwargs`: Keyword arguments to pass
         to the appropriate layout function.
     - `encodings_kwargs`: A dictionary of kwargs
-        to determine the aesthetic properties of the node.
+        to determine the visual properties of the node.
     - `linefunc_kwargs`: All other keyword arguments passed in
         will be passed onto the appropriate linefunc.
 
