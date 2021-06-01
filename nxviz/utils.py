@@ -83,21 +83,23 @@ def infer_data_family(data: pd.Series):
 
     The rules:
 
-    - dtype = float: continuous
+    - dtype = float:
+        - min < 0 and max > 0: divergent
+        - otherwise: continuous
     - dtype = integer:
         - greater than 12 distinct integers: continuous
         - otherwise: ordinal
     - dtype = object: categorical
     """
     if data.dtype == float:
+        if data.min() < 0 and data.max() > 0:
+            return "divergent"
         return "continuous"
     if data.dtype == int:
         if len(set(data)) > 9:
             return "continuous"
-        else:
-            return "ordinal"
-    else:
-        return "categorical"
+        return "ordinal"
+    return "categorical"
 
 
 def is_data_diverging(data_container: Iterable):

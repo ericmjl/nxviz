@@ -14,7 +14,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 
-from nxviz import aesthetics, lines
+from nxviz import encodings, lines
 from nxviz.utils import edge_table
 
 default_edge_kwargs = dict(facecolor="none", zorder=1)
@@ -23,21 +23,21 @@ default_edge_kwargs = dict(facecolor="none", zorder=1)
 def line_width(et: pd.DataFrame, lw_by: Hashable):
     """Default edge line width function."""
     if lw_by is not None:
-        return aesthetics.data_linewidth(et[lw_by])
+        return encodings.data_linewidth(et[lw_by])
     return pd.Series([1] * len(et), name="lw")
 
 
 def transparency(et: pd.DataFrame, alpha_by: Hashable):
     """Default edge line transparency function."""
     if alpha_by is not None:
-        return aesthetics.data_transparency(et[alpha_by])
+        return encodings.data_transparency(et[alpha_by])
     return pd.Series([0.1] * len(et), name="alpha")
 
 
 def edge_colors(et: pd.DataFrame, color_by: Hashable):
     """Default edge line color function."""
     if color_by:
-        return aesthetics.data_color(et[color_by])
+        return encodings.data_color(et[color_by])
     return pd.Series(["black"] * len(et), name="color_by")
 
 
@@ -49,7 +49,7 @@ def draw(
     lw_by: Hashable = None,
     alpha_by: Hashable = None,
     ax=None,
-    aesthetics_kwargs: Dict = {},
+    encodings_kwargs: Dict = {},
     **linefunc_kwargs,
 ):
     """Draw edges to matplotlib axes.
@@ -63,12 +63,12 @@ def draw(
     - `lw_by`: Quantitative edge attribute key to determine line width.
     - `alpha_by`: Quantitative edge attribute key to determine transparency.
     - `ax`: Matplotlib axes object to plot onto.
-    - `aesthetics_kwargs`: A dictionary of kwargs
+    - `encodings_kwargs`: A dictionary of kwargs
         to determine the aesthetic properties of the edge.
     - `linefunc_kwargs`: All other keyword arguments passed in
         will be passed onto the appropriate linefunc.
 
-    Special keyword arguments for `aesthetics_kwargs` include:
+    Special keyword arguments for `encodings_kwargs` include:
 
     - `lw_scale`: A scaling factor for all edges' line widths.
         Equivalent to multiplying all line widths by this number.
@@ -86,12 +86,12 @@ def draw(
     if ax is None:
         ax = plt.gca()
     edge_color = edge_colors(et, color_by)
-    aesthetics_kwargs = deepcopy(aesthetics_kwargs)
-    lw = line_width(et, lw_by) * aesthetics_kwargs.pop("lw_scale", 1.0)
-    alpha = transparency(et, alpha_by) * aesthetics_kwargs.pop("alpha_scale", 1.0)
+    encodings_kwargs = deepcopy(encodings_kwargs)
+    lw = line_width(et, lw_by) * encodings_kwargs.pop("lw_scale", 1.0)
+    alpha = transparency(et, alpha_by) * encodings_kwargs.pop("alpha_scale", 1.0)
 
     aes_kw = {"facecolor": "none"}
-    aes_kw.update(aesthetics_kwargs)
+    aes_kw.update(encodings_kwargs)
     patches = lines_func(
         et,
         pos,

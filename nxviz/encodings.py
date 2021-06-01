@@ -1,4 +1,4 @@
-"""Functions to map data to aesthetic properties of nodes and edges."""
+"""Functions to encode data inside visual properties of nodes and edges."""
 from functools import partial
 from typing import Callable, Tuple
 
@@ -31,14 +31,11 @@ def data_cmap(data: pd.Series) -> Tuple:
             )
         cmap = ListedColormap(base_cmap.__dict__[f"Set3_{num_categories}"].mpl_colors)
     elif data_family == "ordinal":
-        # base_cmap = sequential
-        # num_categories = len(set(data))
-        # bounds = np.arange(data.min(), data.max())
-        # cmap = ListedColormap(base_cmap.__dict__[f"YlGnBu_{num_categories}"].mpl_colors)
         cmap = get_cmap("viridis")
     elif data_family == "continuous":
-        base_cmap = sequential
         cmap = get_cmap("viridis")
+    elif data_family == "divergent":
+        cmap = get_cmap("bwr")
     return cmap, data_family
 
 
@@ -52,6 +49,18 @@ def continuous_color_func(val, cmap, data: pd.Series):
     - `data`: Pandas series.
     """
     norm = Normalize(vmin=data.min(), vmax=data.max())
+    return cmap(norm(val))
+
+
+def divergent_color_func(val, cmap, data: pd.Series):
+    """Return RGBA for divergent color func.
+
+    Divergent colormaps are best made symmetric.
+    Hence, vmin and vmax are set appropriately here.
+    """
+    vmin = min(data.min(), -data.max())
+    vmax = max(data.max(), -data.min())
+    norm = Normalize(vmin=vmin, vmax=vmax)
     return cmap(norm(val))
 
 

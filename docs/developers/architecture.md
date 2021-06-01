@@ -136,13 +136,13 @@ one would use `annotate.circos_group`.
 Or if one wants to add in group block diagonals to the Matrix plot,
 one would call `annotate.matrix_block`.
 
-## Aesthetics
+## Visual Encodings
 
 The default functions for mapping data to
 aesthetic properties of node and edges
 are located in the `nxviz.nodes` and `nxviz.edges` modules.
 Underneath the hood, however,
-they call on functions in the `aesthetics` module.
+they call on functions in the `encodings` module.
 
 The pattern here is to produce an iterable of colors
 that correspond to each node and edge,

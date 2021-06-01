@@ -24,11 +24,11 @@ def base(
     node_color_by: Hashable = None,
     node_alpha_by: Hashable = None,
     node_size_by: Hashable = None,
-    node_aes_kwargs: Dict = {},
+    node_enc_kwargs: Dict = {},
     edge_color_by: Hashable = None,
     edge_lw_by: Hashable = None,
     edge_alpha_by: Hashable = None,
-    edge_aes_kwargs: Dict = {},
+    edge_enc_kwargs: Dict = {},
     node_layout_kwargs: Dict = {},
     edge_line_kwargs: Dict = {},
 ):
@@ -47,7 +47,7 @@ def base(
     - `node_color_by`: Node metadata attribute key to color nodes.
     - `node_alpha_by`: Node metadata attribute key to set node transparency.
     - `node_size_by`: Node metadata attribute key to set node size.
-    - `node_aes_kwargs`: Keyword arguments to set node aesthetics appearances.
+    - `node_enc_kwargs`: Keyword arguments to set node visual encodings.
         TODO: Elaborate on what these arguments are.
 
     ### Edges
@@ -55,7 +55,7 @@ def base(
     - `edge_color_by`: Edge metdata attribute key to color edges.
     - `edge_lw_by`: Edge metdata attribute key to set edge line width.
     - `edge_alpha_by`: Edge metdata attribute key to set edge transparency.
-    - `edge_aes_kwargs`: Keyword arguments to set node aesthetics appearances.
+    - `edge_enc_kwargs`: Keyword arguments to set node visual encodings.
         TODO: Elaborate on what these arguments are.
     """
     pos = node_layout_func(
@@ -65,7 +65,7 @@ def base(
         color_by=node_color_by,
         size_by=node_size_by,
         alpha_by=node_alpha_by,
-        aesthetics_kwargs=node_aes_kwargs,
+        encodings_kwargs=node_enc_kwargs,
         layout_kwargs=node_layout_kwargs,
     )
     edge_line_func(
@@ -74,7 +74,7 @@ def base(
         color_by=edge_color_by,
         lw_by=edge_lw_by,
         alpha_by=edge_alpha_by,
-        aesthetics_kwargs=edge_aes_kwargs,
+        encodings_kwargs=edge_enc_kwargs,
     )
 
     despine()
@@ -107,7 +107,7 @@ parallel = partial(
     node_layout_func=nodes.parallel,
     edge_line_func=edges.line,
     sort_by=None,
-    node_aes_kwargs={"size_scale": 0.5},
+    node_enc_kwargs={"size_scale": 0.5},
 )
 update_wrapper(parallel, base)
 parallel.__name__ = "api.parallel"
@@ -118,7 +118,7 @@ geo = partial(
     edge_line_func=edges.line,
     group_by=None,
     sort_by=None,
-    node_aes_kwargs={"size_scale": 0.0015},
+    node_enc_kwargs={"size_scale": 0.0015},
 )
 update_wrapper(geo, base)
 geo.__name__ = "api.geo"
@@ -133,11 +133,11 @@ def base_cloned(
     node_color_by=None,
     node_alpha_by=None,
     node_size_by=None,
-    node_aes_kwargs={},
+    node_enc_kwargs={},
     edge_color_by=None,
     edge_lw_by=None,
     edge_alpha_by=None,
-    edge_aes_kwargs={},
+    edge_enc_kwargs={},
     node_layout_kwargs: Dict = {},
     edge_line_kwargs: Dict = {},
     cloned_node_layout_kwargs: Dict = {},
@@ -157,7 +157,7 @@ def base_cloned(
     - `node_color_by`: Node metadata attribute key to color nodes.
     - `node_alpha_by`: Node metadata attribute key to set node transparency.
     - `node_size_by`: Node metadata attribute key to set node size.
-    - `node_aes_kwargs`: Keyword arguments to set node aesthetics appearances.
+    - `node_enc_kwargs`: Keyword arguments to set node visual encodings.
         TODO: Elaborate on what these arguments are.
 
     ### Edges
@@ -165,7 +165,7 @@ def base_cloned(
     - `edge_color_by`: Edge metdata attribute key to color edges.
     - `edge_lw_by`: Edge metdata attribute key to set edge line width.
     - `edge_alpha_by`: Edge metdata attribute key to set edge transparency.
-    - `edge_aes_kwargs`: Keyword arguments to set node aesthetics appearances.
+    - `edge_enc_kwargs`: Keyword arguments to set node visual encodings.
         TODO: Elaborate on what these arguments are.
     """
     pos = node_layout_func(
@@ -175,7 +175,7 @@ def base_cloned(
         color_by=node_color_by,
         size_by=node_size_by,
         alpha_by=node_alpha_by,
-        aesthetics_kwargs=node_aes_kwargs,
+        encodings_kwargs=node_enc_kwargs,
         layout_kwargs=node_layout_kwargs,
     )
     pos_cloned = node_layout_func(
@@ -185,7 +185,7 @@ def base_cloned(
         color_by=node_color_by,
         size_by=node_size_by,
         alpha_by=node_alpha_by,
-        aesthetics_kwargs=node_aes_kwargs,
+        encodings_kwargs=node_enc_kwargs,
         layout_kwargs=cloned_node_layout_kwargs,
     )
     edge_line_func(
@@ -195,7 +195,7 @@ def base_cloned(
         color_by=edge_color_by,
         lw_by=edge_lw_by,
         alpha_by=edge_alpha_by,
-        aesthetics_kwargs=edge_aes_kwargs,
+        encodings_kwargs=edge_enc_kwargs,
         **edge_line_kwargs,
     )
 
@@ -285,11 +285,11 @@ functional_api_names = [
     "node_color_by",
     "node_alpha_by",
     "node_size_by",
-    "node_aes_kwargs",
+    "node_enc_kwargs",
     "edge_color_by",
     "edge_alpha_by",
     "edge_lw_by",
-    "edge_aes_kwargs",
+    "edge_enc_kwargs",
 ]
 
 object_api_names = [
