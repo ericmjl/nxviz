@@ -8,6 +8,15 @@ But once you try plotting anything with a significant number of nodes
 (one rule of thumb being 30 nodes or more),
 the visualization descends into a hairball mess.
 
+Ben Sneiderman once said,
+
+> "The purpose of visualization is insight, not picture."
+
+Hairballs, unfortunately, impede our ability to gain insight.
+Hairballs ultimately end up communicating
+that _everything is connected to everything_...
+and that is highly uninformative.
+What we need is a structured way of building graph visualizations.
 Is there a way out of this mess?
 
 One answer to the question is yes,
@@ -15,6 +24,10 @@ and `nxviz` is intended to be
 an implementation of network visualizations in Python
 that guides us network scientists towards thinking clearly
 about network visualizations.
+Just as a prism decomposes light into its constituent colours,
+an effective graph visualization
+will deconstruct a complex network into interesting structures.
+Our hope is that `nxviz` becomes that prism for you.
 
 ## Grammar of graph visualizations
 
