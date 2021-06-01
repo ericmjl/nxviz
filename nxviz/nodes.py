@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 from matplotlib.patches import Circle
 
-from nxviz import aesthetics, layouts
+from nxviz import encodings, layouts
 from nxviz.utils import node_table
 from nxviz.plots import rescale, rescale_arc, rescale_square
 
@@ -18,7 +18,7 @@ from nxviz.plots import rescale, rescale_arc, rescale_square
 def node_colors(nt: pd.DataFrame, color_by: Hashable):
     """Return pandas Series of node colors."""
     if color_by:
-        return aesthetics.data_color(nt[color_by])
+        return encodings.data_color(nt[color_by])
     return pd.Series(["blue"] * len(nt), name="color_by", index=nt.index)
 
 
@@ -27,23 +27,23 @@ def transparency(nt: pd.DataFrame, alpha_by: Hashable):
 
     Transparency must always be normalized to (0, 1)."""
     if alpha_by:
-        return aesthetics.data_transparency(nt[alpha_by])
+        return encodings.data_transparency(nt[alpha_by])
     return pd.Series([1.0] * len(nt), name="transparency", index=nt.index)
 
 
 def node_size(nt: pd.DataFrame, size_by: Hashable):
     """Return pandas Series of node sizes."""
     if size_by:
-        return aesthetics.data_size(nt[size_by])
+        return encodings.data_size(nt[size_by])
     return pd.Series([1.0] * len(nt), name="size", index=nt.index)
 
 
-def node_glyphs(nt, pos, node_color, alpha, size, **aesthetics_kwargs):
+def node_glyphs(nt, pos, node_color, alpha, size, **encodings_kwargs):
     """Draw circos glyphs to the matplotlib axes object."""
     patches = dict()
     for r, d in nt.iterrows():
         kw = {"fc": node_color[r], "alpha": alpha[r], "radius": size[r], "zorder": 2}
-        kw.update(aesthetics_kwargs)
+        kw.update(encodings_kwargs)
         c = Circle(xy=pos[r], **kw)
         patches[r] = c
     return pd.Series(patches)
@@ -58,7 +58,7 @@ def draw(
     alpha_by: Hashable = None,
     size_by: Hashable = None,
     layout_kwargs: Dict = {},
-    aesthetics_kwargs: Dict = {},
+    encodings_kwargs: Dict = {},
     rescale_func=rescale,
     ax=None,
 ):
@@ -75,12 +75,12 @@ def draw(
     - `size_by`: Quantitative node attribute key to set node size.
     - `layout_kwargs`: Keyword arguments to pass
         to the appropriate layout function.
-    - `aesthetics_kwargs`: A dictionary of kwargs
+    - `encodings_kwargs`: A dictionary of kwargs
         to determine the aesthetic properties of the node.
     - `linefunc_kwargs`: All other keyword arguments passed in
         will be passed onto the appropriate linefunc.
 
-    Special keyword arguments for `aesthetics_kwargs` include:
+    Special keyword arguments for `encodings_kwargs` include:
 
     - `size_scale`: A scaling factor for all node radii.
         Equivalent to multiplying all node radii by this number.
@@ -100,10 +100,10 @@ def draw(
     pos = layout_func(nt, group_by, sort_by, **layout_kwargs)
     node_color = node_colors(nt, color_by)
 
-    aesthetics_kwargs = deepcopy(aesthetics_kwargs)
-    alpha = transparency(nt, alpha_by) * aesthetics_kwargs.pop("alpha_scale", 1)
-    size = node_size(nt, size_by) * aesthetics_kwargs.pop("size_scale", 1)
-    patches = node_glyphs(nt, pos, node_color, alpha, size, **aesthetics_kwargs)
+    encodings_kwargs = deepcopy(encodings_kwargs)
+    alpha = transparency(nt, alpha_by) * encodings_kwargs.pop("alpha_scale", 1)
+    size = node_size(nt, size_by) * encodings_kwargs.pop("size_scale", 1)
+    patches = node_glyphs(nt, pos, node_color, alpha, size, **encodings_kwargs)
     for patch in patches:
         ax.add_patch(patch)
 
@@ -116,7 +116,7 @@ hive = partial(
     layout_func=layouts.hive,
     sort_by=None,
     layout_kwargs={"inner_radius": 8},
-    aesthetics_kwargs={"size_scale": 0.5},
+    encodings_kwargs={"size_scale": 0.5},
     rescale_func=rescale_square,
 )
 update_wrapper(hive, draw)
@@ -145,7 +145,7 @@ parallel = partial(
     draw,
     layout_func=layouts.parallel,
     sort_by=None,
-    aesthetics_kwargs={"size_scale": 0.5},
+    encodings_kwargs={"size_scale": 0.5},
 )
 update_wrapper(parallel, draw)
 parallel.__name__ = "nodes.parallel"
@@ -159,7 +159,7 @@ geo = partial(
     layout_func=layouts.geo,
     group_by=None,
     sort_by=None,
-    aesthetics_kwargs={"size_scale": 0.0015},
+    encodings_kwargs={"size_scale": 0.0015},
 )
 update_wrapper(geo, draw)
 geo.__name__ = "nodes.geo"

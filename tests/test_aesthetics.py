@@ -1,6 +1,6 @@
-"""Tests for aesthetics submodule."""
+"""Tests for encodings submodule."""
 
-from nxviz import aesthetics as aes
+from nxviz import encodings as aes
 import pytest
 import pandas as pd
 from random import choice

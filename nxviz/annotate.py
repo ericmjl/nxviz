@@ -9,7 +9,7 @@ from matplotlib.cm import ScalarMappable
 from matplotlib.colors import Normalize
 from matplotlib.patches import Patch, Rectangle
 
-from nxviz import aesthetics, layouts, utils
+from nxviz import encodings, layouts, utils
 from nxviz.geometry import circos_radius, item_theta
 from nxviz.polcart import to_cartesian
 
@@ -165,7 +165,7 @@ def matrix_block(G, group_by, color_by=None, ax=None, alpha=0.1):
     colors = pd.Series(["black"] * len(group_sizes), index=group_sizes.index)
     if color_by:
         color_data = pd.Series(group_sizes.index, index=group_sizes.index)
-        colors = aesthetics.data_color(color_data)
+        colors = encodings.data_color(color_data)
     # Generate patches first
     patches = []
     for label, position in starting_positions.to_dict().items():
@@ -190,7 +190,7 @@ def colormapping(data, legend_kwargs: Dict = {}, ax=None):
     If the color attribute is continuous, a colorbar will be added to the matplotlib figure.
     Otherwise, a legend will be added.
     """
-    cmap, data_family = aesthetics.data_cmap(data)
+    cmap, data_family = encodings.data_cmap(data)
     if ax is None:
         ax = plt.gca()
     if data_family == "continuous":
@@ -203,7 +203,7 @@ def colormapping(data, legend_kwargs: Dict = {}, ax=None):
         fig.colorbar(scalarmap)
     else:
         labels = data.drop_duplicates().sort_values()
-        cfunc = aesthetics.color_func(data)
+        cfunc = encodings.color_func(data)
         colors = labels.apply(cfunc)
         patchlist = []
         for color, label in zip(colors, labels):
