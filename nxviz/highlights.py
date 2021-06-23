@@ -20,7 +20,7 @@ def node(
     layout_func,
     group_by,
     sort_by=None,
-    # Aesthetic properties
+    # visual properties
     color="red",  # color
     radius=1,  # size
     alpha=1.0,  # transparency

@@ -6,8 +6,8 @@ Inspired heavily by the principles espoused in the grammar of graphics,
 nxviz provides ways to _compose_ a graph visualization together
 by adhering to the following recipe:
 
-1. Prioritize node placement, mapping data to position and aesthetic properties,
-2. Draw in edges, mapping data to aesthetic properties,
+1. Prioritize node placement, mapping data to position and visual properties,
+2. Draw in edges, mapping data to visual properties,
 3. Add in annotations and highlights on the graph.
 
 `nxviz` is simultaneously a data visualization research project,
