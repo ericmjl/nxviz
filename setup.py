@@ -14,6 +14,7 @@ setup(
     version="0.7.0",
     description="Graph Visualization Package",
     long_description=readme,
+    long_description_content_type="text/markdown",
     author="Eric J. Ma",
     author_email="ericmajinglong@gmail.com",
     url="https://github.com/ericmjl/nxviz",
