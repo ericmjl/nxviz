@@ -106,11 +106,15 @@ def draw(
         ax = plt.gca()
     if color_by in ("source_node_color", "target_node_color"):
         if not isinstance(G, nx.DiGraph):
-            raise ValueError("Special values of `color_by`,"
-                             " can only be set for directed graphs")
+            raise ValueError(
+                "Special values of `color_by`,"
+                " can only be set for directed graphs"
+            )
         elif not node_color_by:
-            raise ValueError("When setting `color_by` to special values,"
-                             "`node_color_by` also needs to be set.")
+            raise ValueError(
+                "When setting `color_by` to special values,"
+                "`node_color_by` also needs to be set."
+            )
     edge_color = edge_colors(et, nt, color_by, node_color_by)
     encodings_kwargs = deepcopy(encodings_kwargs)
     lw = line_width(et, lw_by) * encodings_kwargs.pop("lw_scale", 1.0)
