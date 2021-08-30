@@ -52,10 +52,14 @@ def base(
 
     ### Edges
 
-    - `edge_color_by`: Edge metdata attribute key to color edges.
+    - `edge_color_by`: Edge metdata attribute key to color edges. There
+        are two special value for this parameter when using directed
+        graphs: "source_node_color" and "target_node_color". It should
+        be noted that if these values are set, `node_color_by` also
+        needs to be set.
     - `edge_lw_by`: Edge metdata attribute key to set edge line width.
     - `edge_alpha_by`: Edge metdata attribute key to set edge transparency.
-    - `edge_enc_kwargs`: Keyword arguments to set node visual encodings.
+    - `edge_enc_kwargs`: Keyword arguments to set edge visual encodings.
         TODO: Elaborate on what these arguments are.
     """
     pos = node_layout_func(
@@ -72,6 +76,7 @@ def base(
         G,
         pos,
         color_by=edge_color_by,
+        node_color_by=node_color_by,
         lw_by=edge_lw_by,
         alpha_by=edge_alpha_by,
         encodings_kwargs=edge_enc_kwargs,
@@ -162,10 +167,14 @@ def base_cloned(
 
     ### Edges
 
-    - `edge_color_by`: Edge metdata attribute key to color edges.
+    - `edge_color_by`: Edge metdata attribute key to color edges. There
+        are two special value for this parameter when using directed
+        graphs: "source_node_color" and "target_node_color". It should
+        be noted that if these values are set, `node_color_by` also
+        needs to be set.
     - `edge_lw_by`: Edge metdata attribute key to set edge line width.
     - `edge_alpha_by`: Edge metdata attribute key to set edge transparency.
-    - `edge_enc_kwargs`: Keyword arguments to set node visual encodings.
+    - `edge_enc_kwargs`: Keyword arguments to set edge visual encodings.
         TODO: Elaborate on what these arguments are.
     """
     pos = node_layout_func(
@@ -193,6 +202,7 @@ def base_cloned(
         pos,
         pos_cloned=pos_cloned,
         color_by=edge_color_by,
+        node_color_by=node_color_by,
         lw_by=edge_lw_by,
         alpha_by=edge_alpha_by,
         encodings_kwargs=edge_enc_kwargs,

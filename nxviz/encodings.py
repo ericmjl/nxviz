@@ -103,7 +103,7 @@ def color_func(data: pd.Series) -> Callable:
     return partial(func, cmap=cmap, data=data)
 
 
-def data_color(data: pd.Series) -> pd.Series:
+def data_color(data: pd.Series, ref_data: pd.Series) -> pd.Series:
     """Return iterable of colors for a given data.
 
     `cfunc` gives users the ability to customize the color mapping of a node.
@@ -111,7 +111,7 @@ def data_color(data: pd.Series) -> pd.Series:
     and returns a matplotlib-compatible RGB(A) tuple or hexadecimal value.
     """
 
-    cfunc = color_func(data)
+    cfunc = color_func(ref_data)
     return data.apply(cfunc)
 
 

@@ -62,7 +62,7 @@ def test_data_cmap_errors(too_many_categories):
 )
 def test_data_color(data):
     """Test data_color."""
-    colors = aes.data_color(data)
+    colors = aes.data_color(data, data)
     assert isinstance(colors, pd.Series)
 
 
