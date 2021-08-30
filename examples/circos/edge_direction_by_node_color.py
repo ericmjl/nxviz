@@ -9,12 +9,14 @@ for n, d in G.nodes(data=True):
     G.nodes[n]["group"] = randint(0, 30)
 
 for (u, v, d) in G.edges(data=True):
-    d['weight'] = randint(0, 10)
+    d["weight"] = randint(0, 10)
 
-nv.circos(G,
-          group_by="group",
-          node_color_by="group",
-          edge_color_by="source_node_color",
-          edge_alpha_by='weight')
+nv.circos(
+    G,
+    group_by="group",
+    node_color_by="group",
+    edge_color_by="source_node_color",
+    edge_alpha_by="weight",
+)
 
 plt.show()
