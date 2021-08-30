@@ -107,8 +107,7 @@ def draw(
     if color_by in ("source_node_color", "target_node_color"):
         if not isinstance(G, nx.DiGraph):
             raise ValueError(
-                "Special values of `color_by`,"
-                " can only be set for directed graphs"
+                "Special values of `color_by`," " can only be set for directed graphs"
             )
         elif not node_color_by:
             raise ValueError(
