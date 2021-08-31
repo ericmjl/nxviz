@@ -18,7 +18,7 @@ from nxviz.plots import rescale, rescale_arc, rescale_square
 def node_colors(nt: pd.DataFrame, color_by: Hashable):
     """Return pandas Series of node colors."""
     if color_by:
-        return encodings.data_color(nt[color_by])
+        return encodings.data_color(nt[color_by], nt[color_by])
     return pd.Series(["blue"] * len(nt), name="color_by", index=nt.index)
 
 

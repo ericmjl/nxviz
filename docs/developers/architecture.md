@@ -105,7 +105,7 @@ for patch in patches:
 et = utils.edge_table(G)
 
 # 2. Obtain edge styling.
-edge_color = edges.edge_colors(et, color_by=None)
+edge_color = edges.edge_colors(et, nt=None, color_by=None, node_color_by=None)
 lw = np.sqrt(et["edge_value"])
 alpha = edges.transparency(et, alpha_by=None)
 
