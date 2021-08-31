@@ -36,7 +36,7 @@ def transparency(et: pd.DataFrame, alpha_by: Hashable):
 
 def edge_colors(
     et: pd.DataFrame,
-    nt: pd.Series,
+    nt: pd.DataFrame,
     color_by: Hashable,
     node_color_by: Hashable,
 ):
@@ -50,6 +50,24 @@ def edge_colors(
     elif color_by:
         return encodings.data_color(et[color_by], et[color_by])
     return pd.Series(["black"] * len(et), name="color_by")
+
+
+def validate_color_by(
+    G: nx.Graph,
+    color_by: Hashable,
+    node_color_by: Hashable,
+) -> None:
+    """Validate `node_color_by` and `G` when `color_by` has a special value."""
+    if color_by in ("source_node_color", "target_node_color"):
+        if not isinstance(G, nx.DiGraph):
+            raise ValueError(
+                "Special values of `color_by`, can only be set for directed graphs."
+            )
+        elif not node_color_by:
+            raise ValueError(
+                "When setting `color_by` to special values,"
+                " `node_color_by` also needs to be set."
+            )
 
 
 def draw(
@@ -71,11 +89,13 @@ def draw(
     - `G`: A NetworkX graph.
     - `pos`: A dictionary mapping for x,y coordinates of a node.
     - `lines_func`: One of the line drawing functions from `nxviz.lines`
-    - `color_by`: Categorical or quantitative edge attribute key to
-        color edges by. There are two special value for this parameter
-        when using directed graphs: "source_node_color" and
-        "target_node_color". It should be noted that if these values are
-        set, `node_color_by` also needs to be set.
+    - `color_by`: Categorical or quantitative edge attribute key to color edges by.
+        There are two special value for this parameter
+        when using directed graphs:
+        "source_node_color" and "target_node_color".
+        If these values are set, then `node_color_by` also needs to be set.
+    - `node_color_by`: Node metadata attribute key
+        that has been used to color nodes.
     - `node_color_by`: Node metadata attribute key that has been used to
         color nodes.
     - `lw_by`: Quantitative edge attribute key to determine line width.
@@ -104,16 +124,7 @@ def draw(
     et = edge_table(G)
     if ax is None:
         ax = plt.gca()
-    if color_by in ("source_node_color", "target_node_color"):
-        if not isinstance(G, nx.DiGraph):
-            raise ValueError(
-                "Special values of `color_by`," " can only be set for directed graphs"
-            )
-        elif not node_color_by:
-            raise ValueError(
-                "When setting `color_by` to special values,"
-                "`node_color_by` also needs to be set."
-            )
+    validate_color_by(G, color_by, node_color_by)
     edge_color = edge_colors(et, nt, color_by, node_color_by)
     encodings_kwargs = deepcopy(encodings_kwargs)
     lw = line_width(et, lw_by) * encodings_kwargs.pop("lw_scale", 1.0)
