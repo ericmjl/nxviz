@@ -123,17 +123,17 @@ def data_color(data: pd.Series, ref_data: pd.Series) -> pd.Series:
     return data.apply(cfunc)
 
 
-def data_transparency(data: pd.Series, ref_data:pd.Series) -> pd.Series:
+def data_transparency(data: pd.Series, ref_data: pd.Series) -> pd.Series:
     """Transparency based on value."""
     norm = Normalize(vmin=ref_data.min(), vmax=ref_data.max())
     return data.apply(norm)
 
 
-def data_size(data: pd.Series, ref_data:pd.Series) -> pd.Series:
+def data_size(data: pd.Series, ref_data: pd.Series) -> pd.Series:
     """Square root node size."""
     return data.apply(np.sqrt)
 
 
-def data_linewidth(data: pd.Series, ref_data:pd.Series) -> pd.Series:
+def data_linewidth(data: pd.Series, ref_data: pd.Series) -> pd.Series:
     """Line width scales linearly with property (by default)."""
     return data

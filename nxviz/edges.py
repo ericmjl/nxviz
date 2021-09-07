@@ -27,12 +27,14 @@ def line_width(et: pd.DataFrame, lw_by: Hashable):
     return pd.Series([1] * len(et), name="lw")
 
 
-def transparency(et: pd.DataFrame, alpha_by: Hashable, alpha_bounds: Tuple) -> pd.Series:
+def transparency(
+    et: pd.DataFrame, alpha_by: Hashable, alpha_bounds: Tuple
+) -> pd.Series:
     """Default edge line transparency function."""
     if alpha_by is not None:
         ref_data = et[alpha_by]
         if isinstance(alpha_bounds, tuple):
-            ref_data = pd.Series(alpha_bounds)    
+            ref_data = pd.Series(alpha_bounds)
         return encodings.data_transparency(et[alpha_by], ref_data)
     return pd.Series([0.1] * len(et), name="alpha")
 
@@ -118,10 +120,10 @@ def draw(
         The default transparency is 0.1,
         so an alpha_scale of any number greater than or equal to 10
         will result in 100% opaque lines.
-    - `alpha_bounds`: The bounds for transparency. 
+    - `alpha_bounds`: The bounds for transparency.
         Should be a tuple of `(lower, upper)` numbers.
         This keyword argument lets us manually set the bounds
-        that we wish to have for 0 opacity (i.e. transparent) 
+        that we wish to have for 0 opacity (i.e. transparent)
         to 1.0 opacity (i.e. opaque.)
 
     Everything else passed in here will be passed
@@ -138,7 +140,9 @@ def draw(
     lw = line_width(et, lw_by) * encodings_kwargs.pop("lw_scale", 1.0)
 
     alpha_bounds = encodings_kwargs.get("alpha_bounds", None)
-    alpha = transparency(et, alpha_by, alpha_bounds) * encodings_kwargs.pop("alpha_scale", 1.0)
+    alpha = transparency(et, alpha_by, alpha_bounds) * encodings_kwargs.pop(
+        "alpha_scale", 1.0
+    )
 
     aes_kw = {"facecolor": "none"}
     aes_kw.update(encodings_kwargs)
