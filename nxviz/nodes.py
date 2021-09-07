@@ -27,14 +27,14 @@ def transparency(nt: pd.DataFrame, alpha_by: Hashable):
 
     Transparency must always be normalized to (0, 1)."""
     if alpha_by:
-        return encodings.data_transparency(nt[alpha_by])
+        return encodings.data_transparency(nt[alpha_by], nt[alpha_by])
     return pd.Series([1.0] * len(nt), name="transparency", index=nt.index)
 
 
 def node_size(nt: pd.DataFrame, size_by: Hashable):
     """Return pandas Series of node sizes."""
     if size_by:
-        return encodings.data_size(nt[size_by])
+        return encodings.data_size(nt[size_by], nt[size_by])
     return pd.Series([1.0] * len(nt), name="size", index=nt.index)
 
 
