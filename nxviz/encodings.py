@@ -103,29 +103,37 @@ def color_func(data: pd.Series) -> Callable:
     return partial(func, cmap=cmap, data=data)
 
 
-def data_color(data: pd.Series) -> pd.Series:
+def data_color(data: pd.Series, ref_data: pd.Series) -> pd.Series:
     """Return iterable of colors for a given data.
 
     `cfunc` gives users the ability to customize the color mapping of a node.
     The only thing that we expect is that it takes in a value
     and returns a matplotlib-compatible RGB(A) tuple or hexadecimal value.
-    """
 
-    cfunc = color_func(data)
+    The function takes in `ref_data`
+    which is used to determine important colormap values (such as boundaries).
+    That colormap is then applied to the actual `data`.
+
+    ## Parameters
+
+    - `data`: The data on which to map colors.
+    - `ref_data`: The data on which the colormap is constructed.
+    """
+    cfunc = color_func(ref_data)
     return data.apply(cfunc)
 
 
-def data_transparency(data: pd.Series) -> pd.Series:
+def data_transparency(data: pd.Series, ref_data: pd.Series) -> pd.Series:
     """Transparency based on value."""
-    norm = Normalize(vmin=data.min(), vmax=data.max())
+    norm = Normalize(vmin=ref_data.min(), vmax=ref_data.max())
     return data.apply(norm)
 
 
-def data_size(data: pd.Series) -> pd.Series:
+def data_size(data: pd.Series, ref_data: pd.Series) -> pd.Series:
     """Square root node size."""
     return data.apply(np.sqrt)
 
 
-def data_linewidth(data: pd.Series) -> pd.Series:
+def data_linewidth(data: pd.Series, ref_data: pd.Series) -> pd.Series:
     """Line width scales linearly with property (by default)."""
     return data

@@ -16,4 +16,6 @@
 - Rabeez Riaz <19100165 (at) lums.edu.pk>
 - Erick Armingol <earmingol (at) eng.ucsd.edu>
 - Walter Hernandez <walter (dot) hernandez (dot) 18 (at) ucl.ac.uk>
-- Eduarda Centeno <eduardacenteno (at) hotmail.com)
+- Eduarda Centeno <eduardacenteno (at) hotmail.com>
+- Alireza Hosseini <alirezah320 (at) yahoo.com>
+- Yashrajsinh Jadeja (@Yashrajsinh-Jadeja)

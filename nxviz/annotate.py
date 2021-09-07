@@ -165,7 +165,7 @@ def matrix_block(G, group_by, color_by=None, ax=None, alpha=0.1):
     colors = pd.Series(["black"] * len(group_sizes), index=group_sizes.index)
     if color_by:
         color_data = pd.Series(group_sizes.index, index=group_sizes.index)
-        colors = encodings.data_color(color_data)
+        colors = encodings.data_color(color_data, color_data)
     # Generate patches first
     patches = []
     for label, position in starting_positions.to_dict().items():
