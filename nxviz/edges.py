@@ -7,7 +7,7 @@ Firstly,
 
 from copy import deepcopy
 from functools import partial, update_wrapper
-from typing import Callable, Dict, Hashable, Tuple
+from typing import Callable, Dict, Hashable, Tuple, Optional
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -28,7 +28,7 @@ def line_width(et: pd.DataFrame, lw_by: Hashable):
 
 
 def transparency(
-    et: pd.DataFrame, alpha_by: Hashable, alpha_bounds: Tuple
+    et: pd.DataFrame, alpha_by: Hashable, alpha_bounds: Optional[Tuple] = None
 ) -> pd.Series:
     """Default edge line transparency function."""
     if alpha_by is not None:
