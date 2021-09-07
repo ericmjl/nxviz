@@ -75,7 +75,7 @@ def test_data_color(data):
 )
 def test_data_size(data):
     """Test data_size."""
-    sizes = aes.data_size(data)
+    sizes = aes.data_size(data,data)
     assert isinstance(sizes, pd.Series)
     assert np.allclose(sizes, np.sqrt(data))
 
@@ -89,6 +89,6 @@ def test_data_size(data):
 )
 def test_data_linewidth(data):
     """Test data_linewidth."""
-    lw = aes.data_linewidth(data)
+    lw = aes.data_linewidth(data,data)
     assert isinstance(lw, pd.Series)
     assert np.allclose(lw, data)

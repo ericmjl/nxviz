@@ -9,10 +9,11 @@ import pytest
 
 
 @pytest.mark.usefixtures("dummyG")
-def test_api(dummyG):
+@pytest.mark.parametrize("alpha_bounds",[(None,),((0,1),)])
+def test_api(dummyG,alpha_bounds):
     """Tests that the high level APIs work properly."""
     apifuncs = nv.arc, nv.circos, nv.parallel, nv.hive, nv.matrix
-
+    encodings_kwargs = {'alpha_bounds':alpha_bounds}
     for func in apifuncs:
         fig, ax = plt.subplots()
         func(dummyG, group_by="group", sort_by="value", edge_alpha_by="edge_value")
