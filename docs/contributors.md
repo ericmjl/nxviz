@@ -18,3 +18,4 @@
 - Walter Hernandez <walter (dot) hernandez (dot) 18 (at) ucl.ac.uk>
 - Eduarda Centeno <eduardacenteno (at) hotmail.com>
 - Alireza Hosseini <alirezah320 (at) yahoo.com>
+- Yashrajsinh Jadeja (@Yashrajsinh-Jadeja)
