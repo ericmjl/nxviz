@@ -23,7 +23,7 @@ default_edge_kwargs = dict(facecolor="none", zorder=1)
 def line_width(et: pd.DataFrame, lw_by: Hashable):
     """Default edge line width function."""
     if lw_by is not None:
-        return encodings.data_linewidth(et[lw_by])
+        return encodings.data_linewidth(et[lw_by], et[lw_by])
     return pd.Series([1] * len(et), name="lw")
 
 
