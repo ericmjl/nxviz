@@ -112,7 +112,10 @@ def draw(
     node_color = node_colors(nt, color_by)
 
     encodings_kwargs = deepcopy(encodings_kwargs)
-    alpha = transparency(nt, alpha_by) * encodings_kwargs.pop("alpha_scale", 1)
+    alpha_bounds = encodings_kwargs.pop("alpha_bounds", None)
+    alpha = transparency(nt, alpha_by, alpha_bounds) * encodings_kwargs.pop(
+        "alpha_scale", 1
+    )
     size = node_size(nt, size_by) * encodings_kwargs.pop("size_scale", 1)
     patches = node_glyphs(nt, pos, node_color, alpha, size, **encodings_kwargs)
     for patch in patches:

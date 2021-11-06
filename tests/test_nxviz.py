@@ -9,14 +9,22 @@ import pytest
 
 
 @pytest.mark.usefixtures("dummyG")
-@pytest.mark.parametrize("alpha_bounds", [(None,), ((0, 1),)])
+@pytest.mark.parametrize("alpha_bounds", [None, (0, 6)])
 def test_api(dummyG, alpha_bounds):
     """Tests that the high level APIs work properly."""
     apifuncs = nv.arc, nv.circos, nv.parallel, nv.hive, nv.matrix
     encodings_kwargs = {"alpha_bounds": alpha_bounds}
     for func in apifuncs:
         fig, ax = plt.subplots()
-        func(dummyG, group_by="group", sort_by="value", edge_alpha_by="edge_value")
+        func(
+            dummyG,
+            group_by="group",
+            sort_by="value",
+            node_alpha_by="value",
+            edge_alpha_by="edge_value",
+            node_enc_kwargs=encodings_kwargs,
+            edge_enc_kwargs=encodings_kwargs,
+        )
 
 
 def test_classes(dummyG):

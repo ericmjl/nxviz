@@ -139,7 +139,7 @@ def draw(
     encodings_kwargs = deepcopy(encodings_kwargs)
     lw = line_width(et, lw_by) * encodings_kwargs.pop("lw_scale", 1.0)
 
-    alpha_bounds = encodings_kwargs.get("alpha_bounds", None)
+    alpha_bounds = encodings_kwargs.pop("alpha_bounds", None)
     alpha = transparency(et, alpha_by, alpha_bounds) * encodings_kwargs.pop(
         "alpha_scale", 1.0
     )
