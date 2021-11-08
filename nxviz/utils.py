@@ -235,3 +235,10 @@ def group_and_sort(
     if sort_criteria:
         node_table = node_table.sort_values(sort_criteria)
     return node_table
+
+
+def nonzero_sign(xy):
+    """
+    A sign function that won't return 0
+    """
+    return -1 if xy < 0 else 1

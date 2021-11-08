@@ -5,13 +5,14 @@ from typing import Dict, Hashable
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import networkx as nx
 from matplotlib.cm import ScalarMappable
 from matplotlib.colors import Normalize
 from matplotlib.patches import Patch, Rectangle
 
 from nxviz import encodings, layouts, utils
-from nxviz.geometry import circos_radius, item_theta
-from nxviz.polcart import to_cartesian
+from nxviz.geometry import circos_radius, item_theta, get_cartesian
+from nxviz.polcart import to_cartesian, to_degrees
 
 
 def text_alignment(x, y):
@@ -160,7 +161,6 @@ def matrix_block(G, group_by, color_by=None, ax=None, alpha=0.1):
     nt = utils.node_table(G)
     group_sizes = nt.groupby(group_by).apply(lambda df: len(df)) * 2
     starting_positions = group_sizes.cumsum() + 1 - group_sizes
-    starting_positions
 
     colors = pd.Series(["black"] * len(group_sizes), index=group_sizes.index)
     if color_by:
@@ -256,6 +256,77 @@ def node_labels(G, layout_func, group_by, sort_by, ax=None):
         ax.annotate(text=node, xy=pos[node], ha="center", va="center")
 
 
+def circos_labels(
+    G: nx.Graph,
+    group_by: Hashable = None,
+    sort_by: Hashable = None,
+    layout: str = "node_center",
+    radius: float = None,
+    radius_offset: float = 1,
+    ax=None,
+):
+    assert layout in ("node_center", "standard", "rotate", "numbers")
+
+    if ax is None:
+        ax = plt.gca()
+
+    nt = utils.node_table(G, group_by, sort_by)
+    nodes = list(nt.index)
+
+    if radius is None:
+        radius = circos_radius(len(nodes))
+
+    if layout in ("node_center", "numbers"):
+        radius_adjustment = radius / (radius + radius_offset)
+    else:
+        radius_adjustment = 1.02
+    radius += radius_offset
+
+    for i, (node, data) in enumerate(nt.iterrows()):
+        theta = item_theta(nodes, node)
+        x, y = to_cartesian(r=radius * radius_adjustment, theta=theta)
+        ha, va = text_alignment(x, y)
+
+        if layout == "numbers":
+            tx, _ = to_cartesian(r=radius, theta=theta)
+            tx *= 1 - np.log(np.cos(theta) * utils.nonzero_sign(np.cos(theta)))
+            tx += utils.nonzero_sign(x)
+
+            ty_numerator = (
+                2
+                * radius
+                * (theta % (utils.nonzero_sign(y) * utils.nonzero_sign(x) * np.pi))
+            )
+            ty_denominator = utils.nonzero_sign(x) * np.pi
+            ty = ty_numerator / ty_denominator
+
+            ax.annotate(
+                text="{} - {}".format(*((i, node) if (x > 0) else (node, i))),
+                xy=(tx, ty),
+                ha=ha,
+                va=va,
+            )
+            ax.annotate(text=i, xy=(x, y), ha="center", va="center")
+
+        elif layout == "rotate":
+            theta_deg = to_degrees(theta)
+            if -90 <= theta_deg <= 90:
+                rot = theta_deg
+            else:
+                rot = theta_deg - 180
+            ax.annotate(
+                text=node,
+                xy=(x, y),
+                ha=ha,
+                va="center",
+                rotation=rot,
+                rotation_mode="anchor",
+            )
+
+        else:
+            ax.annotate(text=node, xy=(x, y), ha=ha, va=va)
+
+
 parallel_labels = partial(node_labels, layout_func=layouts.parallel, sort_by=None)
 update_wrapper(parallel_labels, node_labels)
 parallel_labels.__name__ = "annotate.parallel_labels"
@@ -274,10 +345,3 @@ matrix_labels = partial(
 )
 update_wrapper(matrix_labels, node_labels)
 matrix_labels.__name__ = "annotate.matrix_labels"
-
-
-circos_labels = partial(
-    node_labels, layout_func=layouts.circos, group_by=None, sort_by=None
-)
-update_wrapper(circos_labels, node_labels)
-circos_labels.__name__ = "annotate.circos_labels"
