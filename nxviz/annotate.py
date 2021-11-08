@@ -11,7 +11,7 @@ from matplotlib.colors import Normalize
 from matplotlib.patches import Patch, Rectangle
 
 from nxviz import encodings, layouts, utils
-from nxviz.geometry import circos_radius, item_theta, get_cartesian
+from nxviz.geometry import circos_radius, item_theta
 from nxviz.polcart import to_cartesian, to_degrees
 
 
@@ -265,6 +265,7 @@ def circos_labels(
     radius_offset: float = 1,
     ax=None,
 ):
+    """Annotate node labels for circos plot."""
     assert layout in ("node_center", "standard", "rotate", "numbers")
 
     if ax is None:
