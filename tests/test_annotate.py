@@ -66,3 +66,11 @@ def test_node_labels(smallG):
     """Execution test for node labels."""
     ax = nv.arc(smallG)
     annotate.arc_labels(smallG)
+
+
+@pytest.mark.usefixtures("smallG")
+@pytest.mark.parametrize("layout", ["node_center", "standard", "numbers", "rotate"])
+def test_node_labels(smallG, layout):
+    """Execution test for circos node labels."""
+    ax = nv.circos(smallG)
+    annotate.circos_labels(smallG, layout=layout)
