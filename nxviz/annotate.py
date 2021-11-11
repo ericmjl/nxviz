@@ -356,6 +356,47 @@ def arc_labels(
         ax.annotate(node, xy=(x * 2, y_offset), ha=ha, va=va, rotation=rotation)
 
 
+def matrix_labels(
+    G: nx.Graph,
+    group_by: Hashable = None,
+    sort_by: Hashable = None,
+    layout: str = "node_center",
+    offset: float = -1.5,
+    x_ha: str = "right",
+    x_va: str = "top",
+    y_ha: str = "right",
+    y_va: str = "center",
+    x_rotation: float = 45,
+    y_rotation: float = 0,
+    ax=None,
+):
+    """Annotate node labels for matrix plot."""
+    assert layout in ("node_center", "standard")
+
+    if ax is None:
+        ax = plt.gca()
+
+    nt = utils.node_table(G, group_by, sort_by)
+
+    if layout == "node_center":
+        x_ha = "center"
+        x_va = "center"
+        y_ha = "center"
+        y_va = "center"
+        offset = 0
+        x_rotation = 0
+        y_rotation = 0
+
+    for i, (node, data) in enumerate(nt.iterrows()):
+        position = (i + 1) * 2
+
+        # Plot the x-axis labels
+        ax.annotate(node, xy=(position, offset), ha=x_ha, va=x_va, rotation=x_rotation)
+
+        # Plot the y-axis labels
+        ax.annotate(node, xy=(offset, position), ha=y_ha, va=y_va, rotation=y_rotation)
+
+
 parallel_labels = partial(node_labels, layout_func=layouts.parallel, sort_by=None)
 update_wrapper(parallel_labels, node_labels)
 parallel_labels.__name__ = "annotate.parallel_labels"
@@ -363,9 +404,3 @@ parallel_labels.__name__ = "annotate.parallel_labels"
 hive_labels = partial(node_labels, layout_func=layouts.hive, sort_by=None)
 update_wrapper(hive_labels, node_labels)
 hive_labels.__name__ = "annotate.hive_labels"
-
-matrix_labels = partial(
-    node_labels, layout_func=layouts.matrix, group_by=None, sort_by=None
-)
-update_wrapper(matrix_labels, node_labels)
-matrix_labels.__name__ = "annotate.matrix_labels"
