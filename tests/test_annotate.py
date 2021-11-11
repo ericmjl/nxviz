@@ -66,3 +66,27 @@ def test_node_labels(smallG):
     """Execution test for node labels."""
     ax = nv.arc(smallG)
     annotate.arc_labels(smallG)
+
+
+@pytest.mark.usefixtures("smallG")
+@pytest.mark.parametrize("layout", ["node_center", "standard", "numbers", "rotate"])
+def test_circos_labels(smallG, layout):
+    """Execution test for circos node labels."""
+    ax = nv.circos(smallG)
+    annotate.circos_labels(smallG, layout=layout)
+
+
+@pytest.mark.usefixtures("smallG")
+@pytest.mark.parametrize("layout", ["node_center", "standard"])
+def test_arc_labels(smallG, layout):
+    """Execution test for arc node labels."""
+    ax = nv.arc(smallG)
+    annotate.arc_labels(smallG, layout=layout)
+
+
+@pytest.mark.usefixtures("smallG")
+@pytest.mark.parametrize("layout", ["node_center", "standard"])
+def test_matrix_labels(smallG, layout):
+    """Execution test for matrix node labels."""
+    ax = nv.matrix(smallG)
+    annotate.matrix_labels(smallG, layout=layout)

@@ -7,19 +7,19 @@ from .polcart import to_cartesian
 from typing import List, Hashable
 
 
-def item_theta(nodelist: List[Hashable], node: Hashable):
+def item_theta(itemlist: List[Hashable], item: Hashable):
     """
     Maps node to an angle in radians.
 
-    :param nodelist: Nodelist from the graph.
-    :param node: The node of interest. Must be in the nodelist.
-    :returns: theta -- the angle of the node in radians.
+    :param itemlist: Item list from the graph.
+    :param item: The item of interest. Must be in the itemlist.
+    :returns: theta -- the angle of the item in radians.
     """
-    assert len(nodelist) > 0, "nodelist must be a list of items."
-    assert node in nodelist, "node must be inside nodelist."
+    assert len(itemlist) > 0, "itemlist must be a list of items."
+    assert item in itemlist, "item must be inside itemlist."
 
-    i = nodelist.index(node)
-    theta = i * 2 * np.pi / len(nodelist)
+    i = itemlist.index(item)
+    theta = i * 2 * np.pi / len(itemlist)
 
     return theta
 
@@ -56,7 +56,7 @@ def circos_radius(n_nodes: int, node_radius: float = 1.0):
     a / sin(A) = b / sin(B) = c / sin(C)
 
     :param n_nodes: the number of nodes in the plot.
-    :param node_r: the radius of each node.
+    :param node_radius: the radius of each node.
     :returns: Origin-to-node centre radius.
     """
     A = 2 * np.pi / n_nodes  # noqa
