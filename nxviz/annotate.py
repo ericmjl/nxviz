@@ -331,6 +331,31 @@ def circos_labels(
             ax.annotate(text=node, xy=(x, y), ha=ha, va=va)
 
 
+def arc_labels(
+    G: nx.Graph,
+    group_by: Hashable = None,
+    sort_by: Hashable = None,
+    layout: str = "node_center",
+    y_offset: float = -1,
+    ha: str = "right",
+    va: str = "top",
+    rotation: float = 45,
+    ax=None,
+):
+    """Annotate node labels for arc plot."""
+    assert layout in ("node_center", "standard")
+    if layout == "node_center":
+        return node_labels(G, layouts.arc, group_by, sort_by)
+
+    if ax is None:
+        ax = plt.gca()
+
+    nt = utils.node_table(G, group_by, sort_by)
+
+    for x, (node, data) in enumerate(nt.iterrows()):
+        ax.annotate(node, xy=(x * 2, y_offset), ha=ha, va=va, rotation=rotation)
+
+
 parallel_labels = partial(node_labels, layout_func=layouts.parallel, sort_by=None)
 update_wrapper(parallel_labels, node_labels)
 parallel_labels.__name__ = "annotate.parallel_labels"
@@ -338,11 +363,6 @@ parallel_labels.__name__ = "annotate.parallel_labels"
 hive_labels = partial(node_labels, layout_func=layouts.hive, sort_by=None)
 update_wrapper(hive_labels, node_labels)
 hive_labels.__name__ = "annotate.hive_labels"
-
-arc_labels = partial(node_labels, layout_func=layouts.arc, group_by=None, sort_by=None)
-update_wrapper(arc_labels, node_labels)
-arc_labels.__name__ = "annotate.arc_labels"
-
 
 matrix_labels = partial(
     node_labels, layout_func=layouts.matrix, group_by=None, sort_by=None
