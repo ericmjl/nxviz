@@ -1,3 +1,4 @@
+# Author: Alireza Hosseini
 from random import randint
 
 import matplotlib.pyplot as plt
