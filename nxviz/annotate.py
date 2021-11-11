@@ -267,6 +267,8 @@ def circos_labels(
 ):
     """Annotate node labels for circos plot."""
     assert layout in ("node_center", "standard", "rotate", "numbers")
+    if layout == "node_center":
+        return node_labels(G, layouts.circos, group_by, sort_by)
 
     if ax is None:
         ax = plt.gca()
@@ -277,7 +279,7 @@ def circos_labels(
     if radius is None:
         radius = circos_radius(len(nodes))
 
-    if layout in ("node_center", "numbers"):
+    if layout == "numbers":
         radius_adjustment = radius / (radius + radius_offset)
     else:
         radius_adjustment = 1.02
@@ -324,6 +326,7 @@ def circos_labels(
                 rotation_mode="anchor",
             )
 
+        # Standard layout
         else:
             ax.annotate(text=node, xy=(x, y), ha=ha, va=va)
 
