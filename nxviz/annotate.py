@@ -15,7 +15,7 @@ from nxviz.geometry import circos_radius, item_theta
 from nxviz.polcart import to_cartesian, to_degrees
 
 
-def text_alignment(x, y):
+def text_alignment(x: float, y: float):
     """
     Align text labels based on the x- and y-axis coordinate values.
 
@@ -46,15 +46,23 @@ def text_alignment(x, y):
     return ha, va
 
 
+def validate_fontdict(fontdict: Dict):
+    """Validate `fontdict` keys."""
+    valid_keys = {"family", "size", "stretch", "style", "variant", "weight"}
+    assert set(fontdict) <= valid_keys
+
+
 def circos_group(
-    G,
+    G: nx.Graph,
     group_by: Hashable,
     radius: float = None,
     radius_offset: float = 1,
+    midpoint: bool = True,
+    fontdict: Dict = {},
     ax=None,
-    midpoint=True,
 ):
     """Text annotation of node grouping variable on a circos plot."""
+    validate_fontdict(fontdict)
     nt = utils.node_table(G)
     groups = nt.groupby(group_by).apply(lambda df: len(df)).sort_index()
     proportions = groups / groups.sum()
@@ -73,11 +81,18 @@ def circos_group(
     for label, theta in radians.to_dict().items():
         x, y = to_cartesian(radius, theta)
         ha, va = text_alignment(x, y)
-        ax.annotate(label, xy=(x, y), ha=ha, va=va)
+        ax.annotate(label, xy=(x, y), ha=ha, va=va, **fontdict)
 
 
-def hive_group(G, group_by, ax=None, offset=np.pi / 12):
+def hive_group(
+    G: nx.Graph,
+    group_by: Hashable,
+    offset: float = np.pi / 12,
+    fontdict: Dict = {},
+    ax=None,
+):
     """Text annotation of hive plot groups."""
+    validate_fontdict(fontdict)
     nt = utils.node_table(G)
     groups = sorted(nt[group_by].unique())
 
@@ -89,13 +104,22 @@ def hive_group(G, group_by, ax=None, offset=np.pi / 12):
         radius = 2 * (8 + len(nt[nt[group_by] == grp]) + 1)
         x, y = to_cartesian(radius, theta)
         ha, va = text_alignment(x, y)
-        ax.annotate(grp, xy=(x, y), ha=ha, va=va)
+        ax.annotate(grp, xy=(x, y), ha=ha, va=va, **fontdict)
 
 
 def arc_group(
-    G, group_by, ax=None, midpoint=True, y_offset=-1, rotation=45, ha="right", va="top"
+    G: nx.Graph,
+    group_by: Hashable,
+    midpoint: bool = True,
+    y_offset: float = -1,
+    rotation: float = 45,
+    ha: str = "right",
+    va: str = "top",
+    fontdict: Dict = {},
+    ax=None,
 ):
     """Annotate arc group."""
+    validate_fontdict(fontdict)
     if ax is None:
         ax = plt.gca()
     nt = utils.node_table(G)
@@ -109,13 +133,21 @@ def arc_group(
     for label, starting_point in starting_points.to_dict().items():
         x = starting_point
         y = y_offset
-        ax.annotate(label, xy=(x, y), ha=ha, va=va, rotation=rotation)
+        ax.annotate(label, xy=(x, y), ha=ha, va=va, rotation=rotation, **fontdict)
 
 
 def parallel_group(
-    G, group_by, ax=None, y_offset=-0.3, rotation=45, ha="right", va="top"
+    G: nx.Graph,
+    group_by: Hashable,
+    y_offset: float = -0.3,
+    rotation: float = 45,
+    ha: str = "right",
+    va: str = "top",
+    fontdict: Dict = {},
+    ax=None,
 ):
     """Annotate parallel plot groups."""
+    validate_fontdict(fontdict)
     if ax is None:
         ax = plt.gca()
     nt = utils.node_table(G)
@@ -125,12 +157,21 @@ def parallel_group(
     for i, label in enumerate(groups):
         x = i * 4
         y = y_offset
-        ax.annotate(label, xy=(x, y), ha=ha, va=va, rotation=rotation)
+        ax.annotate(label, xy=(x, y), ha=ha, va=va, rotation=rotation, **fontdict)
     ax.relim()
 
 
-def matrix_group(G, group_by, ax=None, offset=-3.0, xrotation=0, yrotation=90):
+def matrix_group(
+    G: nx.Graph,
+    group_by: Hashable,
+    offset: float = -3,
+    xrotation: float = 0,
+    yrotation: float = 90,
+    fontdict: Dict = {},
+    ax=None,
+):
     """Annotate matrix plot groups."""
+    validate_fontdict(fontdict)
     if ax is None:
         ax = plt.gca()
     nt = utils.node_table(G)
@@ -145,15 +186,30 @@ def matrix_group(G, group_by, ax=None, offset=-3.0, xrotation=0, yrotation=90):
         # Plot the x-axis labels
         y = offset
         x = position
-        ax.annotate(label, xy=(x, y), ha="center", va="center", rotation=xrotation)
+        ax.annotate(
+            label,
+            xy=(x, y),
+            ha="center",
+            va="center",
+            rotation=xrotation,
+            **fontdict,
+        )
 
         # Plot the y-axis labels
         x = offset
         y = position
-        ax.annotate(label, xy=(x, y), ha="center", va="center", rotation=yrotation)
+        ax.annotate(
+            label, xy=(x, y), ha="center", va="center", rotation=yrotation, **fontdict
+        )
 
 
-def matrix_block(G, group_by, color_by=None, ax=None, alpha=0.1):
+def matrix_block(
+    G: nx.Graph,
+    group_by: Hashable,
+    color_by: Hashable = None,
+    alpha: float = 0.1,
+    ax=None,
+):
     """Annotate group blocks on a matrix plot.
 
     Most useful for highlighting the within- vs between-group edges.
@@ -184,7 +240,7 @@ def matrix_block(G, group_by, color_by=None, ax=None, alpha=0.1):
         ax.add_patch(patch)
 
 
-def colormapping(data, legend_kwargs: Dict = {}, ax=None):
+def colormapping(data: pd.Series, legend_kwargs: Dict = {}, ax=None):
     """Annotate node color mapping.
 
     If the color attribute is continuous, a colorbar will be added to the matplotlib figure.
@@ -220,8 +276,8 @@ def colormapping(data, legend_kwargs: Dict = {}, ax=None):
 
 
 def node_colormapping(
-    G,
-    color_by,
+    G: nx.Graph,
+    color_by: Hashable,
     legend_kwargs: Dict = {"loc": "upper right", "bbox_to_anchor": (0.0, 1.0)},
     ax=None,
 ):
@@ -232,9 +288,9 @@ def node_colormapping(
 
 
 def edge_colormapping(
-    G,
-    color_by,
-    legend_kwargs={"loc": "lower right", "bbox_to_anchor": (0.0, 0.0)},
+    G: nx.Graph,
+    color_by: Hashable,
+    legend_kwargs: Dict = {"loc": "lower right", "bbox_to_anchor": (0.0, 0.0)},
     ax=None,
 ):
     """Annotate edge color mapping."""
@@ -245,15 +301,16 @@ def edge_colormapping(
     colormapping(data, legend_kwargs, ax)
 
 
-def node_labels(G, layout_func, group_by, sort_by, ax=None):
+def node_labels(G, layout_func, group_by, sort_by, fontdict={}, ax=None):
     """Annotate node labels."""
+    validate_fontdict(fontdict)
     if ax is None:
         ax = plt.gca()
 
     nt = utils.node_table(G)
     pos = layout_func(nt, group_by, sort_by)
     for node in G.nodes():
-        ax.annotate(text=node, xy=pos[node], ha="center", va="center")
+        ax.annotate(text=node, xy=pos[node], ha="center", va="center", **fontdict)
 
 
 def circos_labels(
@@ -263,13 +320,15 @@ def circos_labels(
     layout: str = "node_center",
     radius: float = None,
     radius_offset: float = 1,
+    fontdict: Dict = {},
     ax=None,
 ):
     """Annotate node labels for circos plot."""
     assert layout in ("node_center", "standard", "rotate", "numbers")
     if layout == "node_center":
-        return node_labels(G, layouts.circos, group_by, sort_by)
+        return node_labels(G, layouts.circos, group_by, sort_by, fontdict)
 
+    validate_fontdict(fontdict)
     if ax is None:
         ax = plt.gca()
 
@@ -308,6 +367,7 @@ def circos_labels(
                 xy=(tx, ty),
                 ha=ha,
                 va=va,
+                **fontdict,
             )
             ax.annotate(text=i, xy=(x, y), ha="center", va="center")
 
@@ -324,11 +384,12 @@ def circos_labels(
                 va="center",
                 rotation=rot,
                 rotation_mode="anchor",
+                **fontdict,
             )
 
         # Standard layout
         else:
-            ax.annotate(text=node, xy=(x, y), ha=ha, va=va)
+            ax.annotate(text=node, xy=(x, y), ha=ha, va=va, **fontdict)
 
 
 def arc_labels(
@@ -340,20 +401,29 @@ def arc_labels(
     ha: str = "right",
     va: str = "top",
     rotation: float = 45,
+    fontdict: Dict = {},
     ax=None,
 ):
     """Annotate node labels for arc plot."""
     assert layout in ("node_center", "standard")
     if layout == "node_center":
-        return node_labels(G, layouts.arc, group_by, sort_by)
+        return node_labels(G, layouts.arc, group_by, sort_by, fontdict)
 
+    validate_fontdict(fontdict)
     if ax is None:
         ax = plt.gca()
 
     nt = utils.node_table(G, group_by, sort_by)
 
     for x, (node, data) in enumerate(nt.iterrows()):
-        ax.annotate(node, xy=(x * 2, y_offset), ha=ha, va=va, rotation=rotation)
+        ax.annotate(
+            node,
+            xy=(x * 2, y_offset),
+            ha=ha,
+            va=va,
+            rotation=rotation,
+            **fontdict,
+        )
 
 
 def matrix_labels(
@@ -368,11 +438,12 @@ def matrix_labels(
     y_va: str = "center",
     x_rotation: float = 45,
     y_rotation: float = 0,
+    fontdict: Dict = {},
     ax=None,
 ):
     """Annotate node labels for matrix plot."""
     assert layout in ("node_center", "standard")
-
+    validate_fontdict(fontdict)
     if ax is None:
         ax = plt.gca()
 
@@ -391,10 +462,24 @@ def matrix_labels(
         position = (i + 1) * 2
 
         # Plot the x-axis labels
-        ax.annotate(node, xy=(position, offset), ha=x_ha, va=x_va, rotation=x_rotation)
+        ax.annotate(
+            node,
+            xy=(position, offset),
+            ha=x_ha,
+            va=x_va,
+            rotation=x_rotation,
+            **fontdict,
+        )
 
         # Plot the y-axis labels
-        ax.annotate(node, xy=(offset, position), ha=y_ha, va=y_va, rotation=y_rotation)
+        ax.annotate(
+            node,
+            xy=(offset, position),
+            ha=y_ha,
+            va=y_va,
+            rotation=y_rotation,
+            **fontdict,
+        )
 
 
 parallel_labels = partial(node_labels, layout_func=layouts.parallel, sort_by=None)
