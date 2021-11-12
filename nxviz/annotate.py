@@ -199,12 +199,7 @@ def matrix_group(
         x = offset
         y = position
         ax.annotate(
-            label,
-            xy=(x, y),
-            ha="center",
-            va="center",
-            rotation=yrotation,
-            **fontdict
+            label, xy=(x, y), ha="center", va="center", rotation=yrotation, **fontdict
         )
 
 
