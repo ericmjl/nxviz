@@ -21,5 +21,5 @@ docs:
 
 release:
 	rm dist/*
-	python setup.py sdist bdist_wheel
+	python -m build
 	twine upload dist/*

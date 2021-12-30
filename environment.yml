@@ -4,6 +4,7 @@ channels:
 dependencies:
   - python>=3.8
   - black
+  - build
   - bump2version>=1.0.1
   - click
   - coverage
