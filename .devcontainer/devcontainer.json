@@ -2,11 +2,12 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.134.1/containers/python-3-miniconda
 {
 	"name": "nxviz development container",
-	"context": "..",
-	"dockerFile": "Dockerfile",
+	"build": {
+		"context": "..",
+		"dockerfile": "Dockerfile"
+	},
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
-		"terminal.integrated.shell.linux": "/bin/bash",
 		"python.pythonPath": "/opt/conda/bin/python",
 		"python.linting.enabled": true,
 		"python.linting.pylintEnabled": true,
@@ -19,7 +20,7 @@
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip install -e . && python -m ipykernel install --name nxviz",
+	"postCreateCommand": "pip install -e . && python -m ipykernel install --name nxviz && pre-commit install",
 	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
 	// "remoteUser": "vscode"
 }
