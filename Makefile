@@ -21,5 +21,5 @@ docs:
 
 release:
 	rm dist/*
-	python -m build
+	python -m build -w -s
 	twine upload dist/*
