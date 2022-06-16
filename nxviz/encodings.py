@@ -36,12 +36,7 @@ def data_cmap(data: pd.Series, palette: Optional[Union[Dict, List]] = None) -> T
                 base_cmap.__dict__[f"Set3_{num_categories}"].mpl_colors
             )
         else:
-            if isinstance(palette, dict):
-                pal = [palette[i] for i in data.values]
-            else:
-                pal = [col for _, col in zip(data.index, cycle(palette))]
-                
-            cmap = ListedColormap(pal)
+            cmap = palette
     elif data_family == "ordinal":
         cmap = get_cmap("viridis")
     elif data_family == "continuous":
@@ -76,7 +71,9 @@ def divergent_color_func(val, cmap, data: pd.Series):
     return cmap(norm(val))
 
 
-def discrete_color_func(val, cmap, data: pd.Series):
+def discrete_color_func(
+    val, cmap, data: pd.Series, palette: Optional[Union[Dict, List]] = None
+):
     """Return RGB corresponding to a value.
 
     ## Parameters
@@ -85,8 +82,15 @@ def discrete_color_func(val, cmap, data: pd.Series):
     - `cmap`: A Matplotlib cmap
     - `data`: Pandas series.
     """
-    colors = sorted(data.unique())
-    return cmap.colors[colors.index(val)]
+    if palette is not None:
+        if isinstance(palette, dict):
+            return palette[val]
+        else:
+            pal = dict(zip(data.unique(), cycle(palette)))
+            return pal[val]
+    else:
+        colors = sorted(data.unique())
+        return cmap.colors[colors.index(val)]
 
 
 def ordinal_color_func(val, cmap, data):
@@ -103,7 +107,9 @@ def ordinal_color_func(val, cmap, data):
     return cmap(norm(val))
 
 
-def color_func(data: pd.Series, palette: Optional[Union[Dict, List]] = None) -> Callable:
+def color_func(
+    data: pd.Series, palette: Optional[Union[Dict, List]] = None
+) -> Callable:
     """Return a color function that takes in a value and returns an RGB(A) tuple.
 
     This will do the mapping to the continuous and discrete color functions.
@@ -112,10 +118,12 @@ def color_func(data: pd.Series, palette: Optional[Union[Dict, List]] = None) -> 
     func = discrete_color_func
     if data_family in ["continuous", "ordinal"]:
         func = continuous_color_func
-    return partial(func, cmap=cmap, data=data)
+    return partial(func, cmap=cmap, data=data, palette=palette)
 
 
-def data_color(data: pd.Series, ref_data: pd.Series, palette: Optional[Union[Dict, List]] = None) -> pd.Series:
+def data_color(
+    data: pd.Series, ref_data: pd.Series, palette: Optional[Union[Dict, List]] = None
+) -> pd.Series:
     """Return iterable of colors for a given data.
 
     `cfunc` gives users the ability to customize the color mapping of a node.

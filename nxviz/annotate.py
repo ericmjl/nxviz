@@ -263,8 +263,12 @@ def colormapping(
         fig = plt.gcf()
         fig.colorbar(scalarmap)
     else:
-        labels = data.drop_duplicates().sort_values()
-        cfunc = encodings.color_func(data, palette)
+        if (palette is not None) and (isinstance(palette, dict)):
+            labels = pd.Series(list(palette.keys()))
+        else:
+            labels = pd.Series(data.unique())
+        cmap, _ = encodings.data_cmap(labels, palette)
+        cfunc = encodings.color_func(labels, palette)
         colors = labels.apply(cfunc)
         patchlist = []
         for color, label in zip(colors, labels):
