@@ -1,6 +1,7 @@
 """Functions to encode data inside visual properties of nodes and edges."""
 from functools import partial
-from typing import Callable, Tuple
+from typing import Callable, Tuple, Optional, Union, Dict, List
+from itertools import cycle
 
 import numpy as np
 import pandas as pd
@@ -12,24 +13,35 @@ from palettable.colorbrewer import qualitative, sequential
 from nxviz.utils import infer_data_family
 
 
-def data_cmap(data: pd.Series) -> Tuple:
+def data_cmap(data: pd.Series, palette: Optional[Union[Dict, List]] = None) -> Tuple:
     """Return a colormap for data attribute.
 
     Returns both the cmap and data family.
     """
     data_family = infer_data_family(data)
     if data_family == "categorical":
-        base_cmap = qualitative
-        num_categories = max(len(data.unique()), 3)
-        if num_categories > 12:
-            raise ValueError(
-                f"It appears you have >12 categories for the key {data.name}. "
-                "Because it's difficult to discern >12 categories, "
-                "and because colorbrewer doesn't have a qualitative colormap "
-                "with greater than 12 categories, "
-                "nxviz does not support plotting with >12 categories."
+        if palette is None:
+            base_cmap = qualitative
+            num_categories = max(len(data.unique()), 3)
+            if num_categories > 12:
+                raise ValueError(
+                    f"It appears you have >12 categories for the key {data.name}. "
+                    "Because it's difficult to discern >12 categories, "
+                    "and because colorbrewer doesn't have a qualitative colormap "
+                    "with greater than 12 categories, "
+                    "nxviz does not support plotting with >12 categories. "
+                    "Please provide your own palette."
+                )
+            cmap = ListedColormap(
+                base_cmap.__dict__[f"Set3_{num_categories}"].mpl_colors
             )
-        cmap = ListedColormap(base_cmap.__dict__[f"Set3_{num_categories}"].mpl_colors)
+        else:
+            if isinstance(palette, dict):
+                pal = [palette[i] for i in data.values]
+            else:
+                pal = [col for _, col in zip(data.index, cycle(palette))]
+                
+            cmap = ListedColormap(pal)
     elif data_family == "ordinal":
         cmap = get_cmap("viridis")
     elif data_family == "continuous":
@@ -91,19 +103,19 @@ def ordinal_color_func(val, cmap, data):
     return cmap(norm(val))
 
 
-def color_func(data: pd.Series) -> Callable:
+def color_func(data: pd.Series, palette: Optional[Union[Dict, List]] = None) -> Callable:
     """Return a color function that takes in a value and returns an RGB(A) tuple.
 
     This will do the mapping to the continuous and discrete color functions.
     """
-    cmap, data_family = data_cmap(data)
+    cmap, data_family = data_cmap(data, palette)
     func = discrete_color_func
     if data_family in ["continuous", "ordinal"]:
         func = continuous_color_func
     return partial(func, cmap=cmap, data=data)
 
 
-def data_color(data: pd.Series, ref_data: pd.Series) -> pd.Series:
+def data_color(data: pd.Series, ref_data: pd.Series, palette: Optional[Union[Dict, List]] = None) -> pd.Series:
     """Return iterable of colors for a given data.
 
     `cfunc` gives users the ability to customize the color mapping of a node.
@@ -118,8 +130,12 @@ def data_color(data: pd.Series, ref_data: pd.Series) -> pd.Series:
 
     - `data`: The data on which to map colors.
     - `ref_data`: The data on which the colormap is constructed.
+    - `palette`: Optional custom palette of colours for plotting categorical groupings
+        in a list/dictionary. Colours must be values `matplotlib.colors.ListedColormap`
+        can interpret. If a dictionary is provided, key and record corresponds to
+        category and colour respectively.
     """
-    cfunc = color_func(ref_data)
+    cfunc = color_func(ref_data, palette)
     return data.apply(cfunc)
 
 
