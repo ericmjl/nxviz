@@ -118,7 +118,9 @@ def color_func(
     func = discrete_color_func
     if data_family in ["continuous", "ordinal"]:
         func = continuous_color_func
-    return partial(func, cmap=cmap, data=data, palette=palette)
+        return partial(func, cmap=cmap, data=data)
+    else:
+        return partial(func, cmap=cmap, data=data, palette=palette)
 
 
 def data_color(
