@@ -15,7 +15,9 @@ from nxviz.utils import node_table
 from nxviz.plots import rescale, rescale_arc, rescale_square
 
 
-def node_colors(nt: pd.DataFrame, color_by: Hashable, palette: Optional[Union[Dict, List]] = None):
+def node_colors(
+    nt: pd.DataFrame, color_by: Hashable, palette: Optional[Union[Dict, List]] = None
+):
     """Return pandas Series of node colors."""
     if color_by:
         return encodings.data_color(nt[color_by], nt[color_by], palette)

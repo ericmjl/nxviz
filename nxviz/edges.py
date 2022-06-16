@@ -50,9 +50,7 @@ def edge_colors(
     if color_by in ("source_node_color", "target_node_color"):
         edge_select_by = color_by.split("_")[0]
         return encodings.data_color(
-            et[edge_select_by].apply(nt[node_color_by].get),
-            nt[node_color_by],
-            palette
+            et[edge_select_by].apply(nt[node_color_by].get), nt[node_color_by], palette
         )
     elif color_by:
         return encodings.data_color(et[color_by], et[color_by], palette)
