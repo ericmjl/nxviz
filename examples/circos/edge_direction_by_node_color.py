@@ -8,7 +8,7 @@ G = nx.erdos_renyi_graph(n=30, p=0.1, directed=True)
 for n, d in G.nodes(data=True):
     G.nodes[n]["group"] = randint(0, 30)
 
-for (u, v, d) in G.edges(data=True):
+for u, v, d in G.edges(data=True):
     d["weight"] = randint(0, 10)
 
 nv.circos(

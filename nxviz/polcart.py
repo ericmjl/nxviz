@@ -25,7 +25,7 @@ def to_polar(x, y):
     Converts cartesian x, y to polar r, theta.
     """
     theta = atan2(y, x)
-    r = sqrt(x ** 2 + y ** 2)
+    r = sqrt(x**2 + y**2)
 
     if theta < 0:
         theta += 2 * np.pi
