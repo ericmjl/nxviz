@@ -41,7 +41,7 @@ nav:
 plugins:
   - search
   - mknotebooks:
-      execute: true
+      execute: false
       write_markdown: true
       allow_errors: false
       timeout: 1200
