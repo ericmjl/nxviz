@@ -1,6 +1,6 @@
 """Annotation submodule."""
 from functools import partial, update_wrapper
-from typing import Dict, Hashable
+from typing import Dict, Hashable, Union, Optional, List
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -240,13 +240,18 @@ def matrix_block(
         ax.add_patch(patch)
 
 
-def colormapping(data: pd.Series, legend_kwargs: Dict = {}, ax=None):
+def colormapping(
+    data: pd.Series,
+    legend_kwargs: Dict = {},
+    ax=None,
+    palette: Optional[Union[Dict, List]] = None,
+):
     """Annotate node color mapping.
 
     If the color attribute is continuous, a colorbar will be added to the matplotlib figure.
     Otherwise, a legend will be added.
     """
-    cmap, data_family = encodings.data_cmap(data)
+    cmap, data_family = encodings.data_cmap(data, palette)
     if ax is None:
         ax = plt.gca()
     if data_family == "continuous":
@@ -258,8 +263,12 @@ def colormapping(data: pd.Series, legend_kwargs: Dict = {}, ax=None):
         fig = plt.gcf()
         fig.colorbar(scalarmap)
     else:
-        labels = data.drop_duplicates().sort_values()
-        cfunc = encodings.color_func(data)
+        if (palette is not None) and (isinstance(palette, dict)):
+            labels = pd.Series(list(palette.keys()))
+        else:
+            labels = pd.Series(data.unique())
+        cmap, _ = encodings.data_cmap(labels, palette)
+        cfunc = encodings.color_func(labels, palette)
         colors = labels.apply(cfunc)
         patchlist = []
         for color, label in zip(colors, labels):
@@ -280,11 +289,12 @@ def node_colormapping(
     color_by: Hashable,
     legend_kwargs: Dict = {"loc": "upper right", "bbox_to_anchor": (0.0, 1.0)},
     ax=None,
+    palette: Optional[Union[Dict, List]] = None,
 ):
     """Annotate node color mapping."""
     nt = utils.node_table(G)
     data = nt[color_by]
-    colormapping(data, legend_kwargs, ax)
+    colormapping(data, legend_kwargs, ax, palette)
 
 
 def edge_colormapping(
@@ -292,13 +302,14 @@ def edge_colormapping(
     color_by: Hashable,
     legend_kwargs: Dict = {"loc": "lower right", "bbox_to_anchor": (0.0, 0.0)},
     ax=None,
+    palette: Optional[Union[Dict, List]] = None,
 ):
     """Annotate edge color mapping."""
     if ax is None:
         ax = plt.gca()
     et = utils.edge_table(G)
     data = et[color_by]
-    colormapping(data, legend_kwargs, ax)
+    colormapping(data, legend_kwargs, ax, palette)
 
 
 def node_labels(G, layout_func, group_by, sort_by, fontdict={}, ax=None):

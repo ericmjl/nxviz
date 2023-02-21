@@ -7,7 +7,7 @@ Firstly,
 
 from copy import deepcopy
 from functools import partial, update_wrapper
-from typing import Callable, Dict, Hashable, Tuple, Optional
+from typing import Callable, Dict, Hashable, Tuple, Optional, Union, List
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -44,16 +44,16 @@ def edge_colors(
     nt: pd.DataFrame,
     color_by: Hashable,
     node_color_by: Hashable,
+    palette: Optional[Union[Dict, List]] = None,
 ):
     """Default edge line color function."""
     if color_by in ("source_node_color", "target_node_color"):
         edge_select_by = color_by.split("_")[0]
         return encodings.data_color(
-            et[edge_select_by].apply(nt[node_color_by].get),
-            nt[node_color_by],
+            et[edge_select_by].apply(nt[node_color_by].get), nt[node_color_by], palette
         )
     elif color_by:
-        return encodings.data_color(et[color_by], et[color_by])
+        return encodings.data_color(et[color_by], et[color_by], palette)
     return pd.Series(["black"] * len(et), name="color_by")
 
 
@@ -85,6 +85,7 @@ def draw(
     alpha_by: Hashable = None,
     ax=None,
     encodings_kwargs: Dict = {},
+    palette: Optional[Union[Dict, List]] = None,
     **linefunc_kwargs,
 ):
     """Draw edges to matplotlib axes.
@@ -108,6 +109,10 @@ def draw(
     - `ax`: Matplotlib axes object to plot onto.
     - `encodings_kwargs`: A dictionary of kwargs
         to determine the visual properties of the edge.
+    - `palette`: Optional custom palette of colours for plotting categorical groupings
+        in a list/dictionary. Colours must be values `matplotlib.colors.ListedColormap`
+        can interpret. If a dictionary is provided, key and record corresponds to
+        category and colour respectively.
     - `linefunc_kwargs`: All other keyword arguments passed in
         will be passed onto the appropriate linefunc.
 
@@ -135,7 +140,7 @@ def draw(
     if ax is None:
         ax = plt.gca()
     validate_color_by(G, color_by, node_color_by)
-    edge_color = edge_colors(et, nt, color_by, node_color_by)
+    edge_color = edge_colors(et, nt, color_by, node_color_by, palette)
     encodings_kwargs = deepcopy(encodings_kwargs)
     lw = line_width(et, lw_by) * encodings_kwargs.pop("lw_scale", 1.0)
 

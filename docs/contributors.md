@@ -19,3 +19,4 @@
 - Eduarda Centeno <eduardacenteno (at) hotmail.com>
 - Alireza Hosseini <alirezatheh (at) gmail.com>
 - Yashrajsinh Jadeja (@Yashrajsinh-Jadeja)
+- Kelvin Tuong <@zktuong>

@@ -2,7 +2,7 @@
 
 from copy import deepcopy
 from functools import partial, update_wrapper
-from typing import Callable, Dict, Hashable, Optional, Tuple
+from typing import Callable, Dict, Hashable, Optional, Tuple, Union, List
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -15,10 +15,12 @@ from nxviz.utils import node_table
 from nxviz.plots import rescale, rescale_arc, rescale_square
 
 
-def node_colors(nt: pd.DataFrame, color_by: Hashable):
+def node_colors(
+    nt: pd.DataFrame, color_by: Hashable, palette: Optional[Union[Dict, List]] = None
+):
     """Return pandas Series of node colors."""
     if color_by:
-        return encodings.data_color(nt[color_by], nt[color_by])
+        return encodings.data_color(nt[color_by], nt[color_by], palette)
     return pd.Series(["blue"] * len(nt), name="color_by", index=nt.index)
 
 
@@ -67,6 +69,7 @@ def draw(
     encodings_kwargs: Dict = {},
     rescale_func=rescale,
     ax=None,
+    palette: Optional[Union[Dict, List]] = None,
 ):
     """Draw nodes to matplotlib axes.
 
@@ -83,8 +86,10 @@ def draw(
         to the appropriate layout function.
     - `encodings_kwargs`: A dictionary of kwargs
         to determine the visual properties of the node.
-    - `linefunc_kwargs`: All other keyword arguments passed in
-        will be passed onto the appropriate linefunc.
+    - `palette`: Optional custom palette of colours for plotting categorical groupings
+        in a list/dictionary. Colours must be values `matplotlib.colors.ListedColormap`
+        can interpret. If a dictionary is provided, key and record corresponds to
+        category and colour respectively.
 
     Special keyword arguments for `encodings_kwargs` include:
 
@@ -109,7 +114,7 @@ def draw(
         ax = plt.gca()
     nt = node_table(G)
     pos = layout_func(nt, group_by, sort_by, **layout_kwargs)
-    node_color = node_colors(nt, color_by)
+    node_color = node_colors(nt, color_by, palette)
 
     encodings_kwargs = deepcopy(encodings_kwargs)
     alpha_bounds = encodings_kwargs.pop("alpha_bounds", None)

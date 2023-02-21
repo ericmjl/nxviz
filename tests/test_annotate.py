@@ -54,6 +54,43 @@ def test_node_colormapping(dummyG):
     annotate.node_colormapping(dummyG, color_by="group")
 
 
+@pytest.mark.usefixtures("manygroupG", "tab20")
+def test_node_colormapping_node_palette(manygroupG, tab20):
+    """Execution test for node_colormapping with many groupings."""
+    with pytest.raises(ValueError):
+        ax = nv.circos(manygroupG, group_by="group", node_color_by="group")
+        annotate.node_colormapping(manygroupG, color_by="group")
+
+    ax = nv.circos(
+        manygroupG, group_by="group", node_color_by="group", node_palette=tab20
+    )
+    annotate.node_colormapping(manygroupG, color_by="group", palette=tab20)
+    paldict = dict(
+        zip(
+            list(set([manygroupG.nodes[n]["group"] for n in manygroupG.nodes()])), tab20
+        )
+    )
+    ax = nv.circos(
+        manygroupG, group_by="group", node_color_by="group", node_palette=paldict
+    )
+    annotate.node_colormapping(manygroupG, color_by="group", palette=paldict)
+
+
+@pytest.mark.usefixtures("manygroupG", "tab20")
+def test_node_colormapping_edge_palette(manygroupG, tab20):
+    """Execution test for node_colormapping with many groupings."""
+    ax = nv.circos(
+        manygroupG,
+        group_by="group",
+        node_color_by="group",
+        edge_color_by="edge_group",
+        node_palette=tab20,
+        edge_palette=tab20,
+    )
+    annotate.node_colormapping(manygroupG, color_by="group", palette=tab20)
+    annotate.edge_colormapping(manygroupG, color_by="edge_group", palette=tab20)
+
+
 @pytest.mark.usefixtures("dummyG")
 def test_edge_colormapping(dummyG):
     """Execution test for edge_colormapping."""
