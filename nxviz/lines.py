@@ -1,6 +1,5 @@
 """Patch generators for edges."""
 
-
 from itertools import product
 from typing import Dict, Iterable, List
 
