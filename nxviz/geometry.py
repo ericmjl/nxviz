@@ -1,6 +1,7 @@
 """
 Utility geometry functions that can help with drawing to screen.
 """
+
 import numpy as np
 
 from .polcart import to_cartesian

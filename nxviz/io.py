@@ -1,4 +1,5 @@
 """Deprecated module no longer used."""
+
 import pandas as pd
 from networkx import Graph, MultiGraph
 

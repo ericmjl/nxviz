@@ -1,6 +1,5 @@
 """Integration tests that operate at the mid-level API."""
 
-
 from nxviz import nodes, edges
 import pytest
 
