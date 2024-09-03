@@ -58,7 +58,7 @@ jobs:
 
       # https://github.com/actions/download-artifact
       - name: Download environment tarball
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: nxviz-tarball
 
@@ -82,7 +82,7 @@ jobs:
 
       # https://github.com/actions/download-artifact
       - name: Download environment tarball
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: nxviz-tarball
 
