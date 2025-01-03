@@ -31,8 +31,6 @@ setup(
             "mkdocs-material",
             "mknotebooks",
             "jupyter",
-            "jupyterlab",
-            "jupyterlab_code_formatter",
         ],
         "tests": ["hypothesis", "pytest-cov", "pre-commit", "pylint"],
     },
