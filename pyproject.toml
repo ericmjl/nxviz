@@ -83,18 +83,29 @@ tests = ["hypothesis", "pytest-cov", "pre-commit", "pylint"]
 channels = ["conda-forge"]
 platforms = ["osx-arm64", "linux-64", "win-64"]
 
+[tool.pixi.dependencies]
+python = ">=3.10"
+
+[tool.pixi.feature.py310.dependencies]
+python = "~=3.10.0"
+[tool.pixi.feature.py312.dependencies]
+python = "~=3.12.0"
+[tool.pixi.feature.py313.dependencies]
+python = "~=3.13.0"
+
 [tool.pixi.pypi-dependencies]
 nxviz = { path = ".", editable = true }
 
 [tool.pixi.environments]
 default = { solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
-tests = { features = ["tests"], solve-group = "default" }
-all = { features = ["docs", "tests"], solve-group = "default" }
+py310 = ["py310", "docs", "tests"]
+py312 = ["py312", "docs", "tests"]
+py313 = ["py313", "docs", "tests"]
 
 [tool.pixi.tasks]
 test = "pytest"
-docs = "make docs"
+mkdocs = "make docs"
 
 [build-system]
 requires = ["setuptools"]
