@@ -9,16 +9,16 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
 
-      - name: Install black
-        run: python -m pip install black
-
-      - name: Run black
-        run: black --config pyproject.toml --check .
+      - name: Black
+        uses: psf/black@stable
+        with:
+          options: "--config pyproject.toml --check"
+          src: "."
 
   interrogate:
     name: Check interrogate compliance.
@@ -26,13 +26,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
 
-      - name: Install interrogate
-        run: python -m pip install interrogate
-
-      - name: Run interrogate
-        run: interrogate .
+      - name: Interrogate
+        uses: JackMcKew/python-interrogate-check@main
