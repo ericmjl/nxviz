@@ -81,11 +81,13 @@ docs = [
 tests = ["hypothesis", "pytest-cov", "pre-commit", "pylint"]
 
 [tool.pixi.feature.py310.dependencies]
-python = "~=3.10"
+python = "<3.11.0"
 [tool.pixi.feature.py311.dependencies]
-python = "~=3.11"
+python = "<3.12.0"
 [tool.pixi.feature.py312.dependencies]
-python = "~=3.12"
+python = "<3.13.0"
+[tool.pixi.feature.py313.dependencies]
+python = "<3.14.0"
 
 [tool.pixi.project]
 channels = ["conda-forge"]
@@ -101,6 +103,7 @@ tests = { features = ["tests"], solve-group = "default" }
 py310 = { features = ["docs", "tests", "py310"], solve-group = "all" }
 py311 = { features = ["docs", "tests", "py311"], solve-group = "all" }
 py312 = { features = ["docs", "tests", "py312"], solve-group = "all" }
+py313 = { features = ["docs", "tests", "py313"], solve-group = "all" }
 
 [tool.pixi.tasks]
 test = "pytest"

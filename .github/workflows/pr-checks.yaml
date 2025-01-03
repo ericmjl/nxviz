@@ -9,15 +9,15 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
-    - uses: pre-commit/action@v3.0.1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - uses: pre-commit/action@v3.0.1
   build-environment:
     needs: pre-commit
     strategy:
       max-parallel: 10
       matrix:
-        environment: [py310, py311, py312]
+        environment: [py310, py311, py312, py313]
     runs-on: ubuntu-latest
     name: Build and test on ${{ matrix.environment }}
     steps:
@@ -40,8 +40,11 @@ jobs:
         # https://www.bradmcgonigle.com/blog/github-action-for-continuous-deployment
       # - NETLIFY_SITE_ID maps to the netlify site's API ID
       # - NETLIFY_AUTH_TOKEN maps to netlify's Personal Access Token that I set on a per-user basis
+  netlify-deploy:
+    needs: build-environment
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to Netlify
-        if: matrix.environment == 'py312'
         uses: netlify/actions/cli@master
         with:
           args: deploy --site ${{ secrets.NETLIFY_SITE_ID }} --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} --dir=site/
