@@ -19,7 +19,7 @@ jobs:
       matrix:
         environment: [py310, py311, py312]
     runs-on: ubuntu-latest
-    name: Build conda environment
+    name: Build and test on ${{ matrix.environment }}
     steps:
       - uses: actions/checkout@v4
         name: Checkout repository

@@ -79,7 +79,6 @@ docs = [
   "jupyter",
 ]
 tests = ["hypothesis", "pytest-cov", "pre-commit", "pylint"]
-all = ["nxviz[test,docs]"]
 
 [tool.pixi.feature.py310.dependencies]
 python = "~=3.10"
@@ -99,10 +98,9 @@ nxviz = { path = ".", editable = true }
 default = { solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
 tests = { features = ["tests"], solve-group = "default" }
-all = { features = ["all"], solve-group = "default" }
-py310 = { features = ["py310"], solve-group = "all" }
-py311 = { features = ["py311"], solve-group = "all" }
-py312 = { features = ["py312"], solve-group = "all" }
+py310 = { features = ["docs", "tests", "py310"], solve-group = "all" }
+py311 = { features = ["docs", "tests", "py311"], solve-group = "all" }
+py312 = { features = ["docs", "tests", "py312"], solve-group = "all" }
 
 [tool.pixi.tasks]
 test = "pytest"
