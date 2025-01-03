@@ -88,6 +88,8 @@ python = ">=3.10"
 
 [tool.pixi.feature.py310.dependencies]
 python = "~=3.10.0"
+[tool.pixi.feature.py311.dependencies]
+python = "~=3.11.0"
 [tool.pixi.feature.py312.dependencies]
 python = "~=3.12.0"
 [tool.pixi.feature.py313.dependencies]
@@ -100,6 +102,7 @@ nxviz = { path = ".", editable = true }
 default = { solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
 py310 = ["py310", "docs", "tests"]
+py311 = ["py311", "docs", "tests"]
 py312 = ["py312", "docs", "tests"]
 py313 = ["py313", "docs", "tests"]
 

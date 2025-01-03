@@ -17,7 +17,7 @@ jobs:
     strategy:
       max-parallel: 10
       matrix:
-        environment: [py310, py312, py313]
+        environment: [py310, py311, py312, py313]
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     name: Build and test
