@@ -262,7 +262,7 @@ def colormapping(
             norm=norm,
         )
         fig = plt.gcf()
-        fig.colorbar(scalarmap)
+        fig.colorbar(scalarmap, ax = ax, )
     else:
         if (palette is not None) and (isinstance(palette, dict)):
             labels = pd.Series(list(palette.keys()))
