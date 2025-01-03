@@ -16,8 +16,9 @@ jobs:
         shell: bash -l {0}
 
     steps:
-      - uses: actions/checkout@v4
-        name: Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
 
       - name: Setup Pixi Environment
         uses: prefix-dev/setup-pixi@v0.8.1
