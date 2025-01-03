@@ -47,7 +47,7 @@ name = "nxviz"
 version = "0.7.5"
 description = "Graph Visualization Package"
 authors = [{ name = "Eric J. Ma", email = "ericmajinglong@gmail.com" }]
-requires-python = ">= 3.10"
+requires-python = ">=3.10"
 dependencies = [
   "setuptools",
   "matplotlib>=3.3.3",
@@ -81,6 +81,13 @@ docs = [
 tests = ["hypothesis", "pytest-cov", "pre-commit", "pylint"]
 all = ["nxviz[test,docs]"]
 
+[tool.pixi.feature.py310.dependencies]
+python = "~=3.10"
+[tool.pixi.feature.py311.dependencies]
+python = "~=3.11"
+[tool.pixi.feature.py312.dependencies]
+python = "~=3.12"
+
 [tool.pixi.project]
 channels = ["conda-forge"]
 platforms = ["osx-arm64", "linux-64", "win-64"]
@@ -92,7 +99,7 @@ nxviz = { path = ".", editable = true }
 default = { solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
 tests = { features = ["tests"], solve-group = "default" }
-all = { features = ["all", "tests", "docs"], solve-group = "default" }
+all = { features = ["all"], solve-group = "default" }
 py310 = { features = ["py310"], solve-group = "all" }
 py311 = { features = ["py311"], solve-group = "all" }
 py312 = { features = ["py312"], solve-group = "all" }
@@ -107,12 +114,3 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = ["nxviz"]
-
-[tool.pixi.feature.py310.dependencies]
-python = "3.10.*"
-
-[tool.pixi.feature.py311.dependencies]
-python = "3.11.*"
-
-[tool.pixi.feature.py312.dependencies]
-python = "3.12.*"
