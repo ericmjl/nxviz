@@ -42,7 +42,9 @@ jobs:
           python -m pip install ".[tests,docs]"
 
       - name: Run conda-pack
-        run: conda pack -n nxviz -o nxviz.tar.gz
+        run: |
+            conda activate nxviz
+            conda pack -n nxviz -o nxviz.tar.gz
 
       # See: https://github.com/actions/upload-artifact
       - name: Upload environment
