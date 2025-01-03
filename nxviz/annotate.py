@@ -245,7 +245,6 @@ def colormapping(
     data: pd.Series,
     legend_kwargs: Dict = {},
     ax=None,
-    fig=None,
     palette: Optional[Union[Dict, List]] = None,
 ):
     """Annotate node color mapping.
