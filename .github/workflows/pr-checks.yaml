@@ -27,6 +27,7 @@ jobs:
       - name: Setup micromamba
         uses: mamba-org/setup-micromamba@v2
         with:
+          environment-name: nxviz
           environment-file: environment.yml
           cache-environment: true
           cache-downloads: true
@@ -43,7 +44,6 @@ jobs:
 
       - name: Run conda-pack
         run: |
-            conda activate nxviz
             conda pack -n nxviz -o nxviz.tar.gz
 
       # See: https://github.com/actions/upload-artifact
