@@ -36,70 +36,17 @@ jobs:
           post-cleanup: "all"
           create-args: >-
             python=${{ matrix.config.python-version }}
-            conda-pack
 
       - name: Build environment
         run: |
           python -m pip install ".[tests,docs]"
 
-      - name: Run conda-pack
+      - name: Test with pytest
         run: |
-            conda pack -n nxviz -o nxviz.tar.gz
-
-      # See: https://github.com/actions/upload-artifact
-      - name: Upload environment
-        uses: actions/upload-artifact@v4
-        with:
-          name: nxviz-tarball
-          path: nxviz.tar.gz
-
-  unit-tests:
-    name: Run unit tests
-    runs-on: ubuntu-latest
-    needs: build-environment
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # https://github.com/actions/download-artifact
-      - name: Download environment tarball
-        uses: actions/download-artifact@v4
-        with:
-          name: nxviz-tarball
-
-      - name: Unpack environment and activate it
-        run: |
-          bash scripts/ci/unpack_environment.sh
-
-      - name: Run tests
-        run: |
-          source /tmp/nxviz/bin/activate
-          python -m pip install -e ".[tests]"
-
-  docs:
-    name: Build static site docs
-    runs-on: ubuntu-latest
-    needs: build-environment
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # https://github.com/actions/download-artifact
-      - name: Download environment tarball
-        uses: actions/download-artifact@v4
-        with:
-          name: nxviz-tarball
-
-      - name: Unpack environment and activate it
-        run: |
-          bash scripts/ci/unpack_environment.sh
+          python -m pytest --cov=nxviz
 
       - name: Build docs
         run: |
-          source /tmp/nxviz/bin/activate
-          python -m ipykernel install --user --name nxviz
           make docs
 
       # https://www.bradmcgonigle.com/blog/github-action-for-continuous-deployment
