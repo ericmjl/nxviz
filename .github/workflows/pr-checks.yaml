@@ -38,9 +38,9 @@ jobs:
           pixi run -e ${{ matrix.environment }} test
           pixi run -e ${{ matrix.environment }} mkdocs
 
-        # https://www.bradmcgonigle.com/blog/github-action-for-continuous-deployment
-      # - NETLIFY_SITE_ID maps to the netlify site's API ID
-      # - NETLIFY_AUTH_TOKEN maps to netlify's Personal Access Token that I set on a per-user basis
+  # https://www.bradmcgonigle.com/blog/github-action-for-continuous-deployment
+  # - NETLIFY_SITE_ID maps to the netlify site's API ID
+  # - NETLIFY_AUTH_TOKEN maps to netlify's Personal Access Token that I set on a per-user basis
   netlify-deploy:
     needs: build-environment
     runs-on: ubuntu-latest
