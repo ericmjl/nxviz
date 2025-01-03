@@ -31,7 +31,6 @@ jobs:
 
       - name: Build environment
         run: |
-          conda activate nxviz
           python -m ipykernel install --user --name nxviz
           python -m pip install ".[docs]"
           make docs
