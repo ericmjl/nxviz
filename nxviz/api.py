@@ -1,6 +1,5 @@
 """High level nxviz plotting API."""
 
-
 from functools import partial, update_wrapper
 from typing import Callable, Dict, Hashable, Optional, Union, List
 

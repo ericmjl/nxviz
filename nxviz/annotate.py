@@ -1,4 +1,5 @@
 """Annotation submodule."""
+
 from functools import partial, update_wrapper
 from typing import Dict, Hashable, Union, Optional, List
 
