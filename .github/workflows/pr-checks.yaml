@@ -34,8 +34,8 @@ jobs:
 
       - name: Test build, unit tests and docs
         run: |
-          pixi run test
-          pixi run docs
+          pixi run -e ${{ matrix.environment }} test
+          pixi run -e ${{ matrix.environment }} docs
 
         # https://www.bradmcgonigle.com/blog/github-action-for-continuous-deployment
       # - NETLIFY_SITE_ID maps to the netlify site's API ID
