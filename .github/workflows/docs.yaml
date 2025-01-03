@@ -23,6 +23,7 @@ jobs:
       - name: Setup micromamba
         uses: mamba-org/setup-micromamba@v2
         with:
+          environment-name: nxviz
           environment-file: environment.yml
           post-cleanup: "all"
           create-args: >-
