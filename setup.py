@@ -22,6 +22,10 @@ setup(
     package_dir={"nxviz": "nxviz"},
     include_package_data=True,
     install_requires=requirements,
+    extras_require={
+        "docs": ["pycodestyle", "pyprojroot", "sphinx", "mkdocs", "mkdocs-material"],
+        "tests": ["hypothesis", "pytest-cov", "pre-commit", "pylint"],
+    },
     license="MIT license",
     keywords="nxviz",
     classifiers=[
