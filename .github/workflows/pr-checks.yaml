@@ -30,7 +30,7 @@ jobs:
           environments: ${{ matrix.environment }}
           pixi-version: v0.39.2
           cache: true
-          cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+          cache-write: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
 
       - name: Test build, unit tests and docs
         run: |
