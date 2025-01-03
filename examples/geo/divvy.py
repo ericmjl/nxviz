@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 from nxviz import GeoPlot
 
-with open("divvy.pkl", 'rb') as f:
+with open("divvy.pkl", "rb") as f:
     G = pickle.load(f)
 print(list(G.nodes(data=True))[0])
 G_new = G.copy()
