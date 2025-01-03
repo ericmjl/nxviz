@@ -14,12 +14,8 @@ jobs:
       - uses: pre-commit/action@v3.0.1
   build-environment:
     needs: pre-commit
-    strategy:
-      max-parallel: 10
-      matrix:
-        environment: [py310, py311, py312, py313]
     runs-on: ubuntu-latest
-    name: Build and test on ${{ matrix.environment }}
+    name: Build and test
     steps:
       - uses: actions/checkout@v4
         name: Checkout repository
@@ -27,15 +23,15 @@ jobs:
       - name: Setup Pixi Environment
         uses: prefix-dev/setup-pixi@v0.8.1
         with:
-          environments: ${{ matrix.environment }}
+          environments: all
           pixi-version: v0.39.2
           cache: true
           cache-write: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
 
       - name: Test build, unit tests and docs
         run: |
-          pixi run -e ${{ matrix.environment }} test
-          pixi run -e ${{ matrix.environment }} docs
+          pixi run -e all test
+          pixi run -e all docs
 
         # https://www.bradmcgonigle.com/blog/github-action-for-continuous-deployment
       # - NETLIFY_SITE_ID maps to the netlify site's API ID

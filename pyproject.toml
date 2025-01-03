@@ -47,7 +47,6 @@ name = "nxviz"
 version = "0.7.5"
 description = "Graph Visualization Package"
 authors = [{ name = "Eric J. Ma", email = "ericmajinglong@gmail.com" }]
-requires-python = ">=3.10"
 dependencies = [
   "setuptools",
   "matplotlib>=3.3.3",
@@ -80,15 +79,6 @@ docs = [
 ]
 tests = ["hypothesis", "pytest-cov", "pre-commit", "pylint"]
 
-[tool.pixi.feature.py310.dependencies]
-python = "<3.11.0"
-[tool.pixi.feature.py311.dependencies]
-python = "<3.12.0"
-[tool.pixi.feature.py312.dependencies]
-python = "<3.13.0"
-[tool.pixi.feature.py313.dependencies]
-python = "<3.14.0"
-
 [tool.pixi.project]
 channels = ["conda-forge"]
 platforms = ["osx-arm64", "linux-64", "win-64"]
@@ -100,10 +90,7 @@ nxviz = { path = ".", editable = true }
 default = { solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
 tests = { features = ["tests"], solve-group = "default" }
-py310 = { features = ["docs", "tests", "py310"], solve-group = "all" }
-py311 = { features = ["docs", "tests", "py311"], solve-group = "all" }
-py312 = { features = ["docs", "tests", "py312"], solve-group = "all" }
-py313 = { features = ["docs", "tests", "py313"], solve-group = "all" }
+all = { features = ["docs", "tests"], solve-group = "default" }
 
 [tool.pixi.tasks]
 test = "pytest"
