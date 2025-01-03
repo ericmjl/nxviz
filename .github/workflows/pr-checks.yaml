@@ -33,9 +33,6 @@ jobs:
           cache-environment-key: environment-${{ env.cache-version }}-${{ matrix.config.os }}
           cache-downloads-key: downloads-${{ env.cache-version }}-${{ matrix.config.os }}
           post-cleanup: "all"
-          condarc: |
-            channels:
-              - conda-forge
           create-args: >-
             python=${{ matrix.config.python-version }}
             conda-pack
