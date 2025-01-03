@@ -54,6 +54,7 @@ jobs:
       # - NETLIFY_SITE_ID maps to the netlify site's API ID
       # - NETLIFY_AUTH_TOKEN maps to netlify's Personal Access Token that I set on a per-user basis
       - name: Deploy to Netlify
+        if: matrix.config.os == 'ubuntu-latest' && matrix.config.python-version == '3.12'
         uses: netlify/actions/cli@master
         with:
           args: deploy --site ${{ secrets.NETLIFY_SITE_ID }} --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} --dir=site/
