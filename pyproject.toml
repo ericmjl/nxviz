@@ -40,6 +40,81 @@ color = true
 
 [tool.pytest.ini_options]
 addopts = "-v --cov --cov-report term-missing"
-testpaths = [
-    "tests",
+testpaths = ["tests"]
+
+[project]
+name = "nxviz"
+version = "0.7.5"
+description = "Graph Visualization Package"
+authors = [{ name = "Eric J. Ma", email = "ericmajinglong@gmail.com" }]
+requires-python = ">= 3.10"
+dependencies = [
+  "setuptools",
+  "matplotlib>=3.3.3",
+  "more-itertools>=8.6.0",
+  "networkx>=2.5",
+  "numpy>=1.19.4",
+  "palettable>=3.3.0",
+  "pandas>=1.2.0",
+  "seaborn>=0.11.1",
 ]
+license = { file = "LICENSE" }
+readme = "README.md"
+keywords = ["nxviz", "networkx", "visualization", "graph"]
+classifiers = [
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: English",
+  "Programming Language :: Python :: 3",
+]
+
+[project.optional-dependencies]
+docs = [
+  "pycodestyle",
+  "pyprojroot",
+  "sphinx",
+  "mkdocs",
+  "mkdocs-material",
+  "mknotebooks",
+  "jupyter",
+]
+tests = ["hypothesis", "pytest-cov", "pre-commit", "pylint"]
+all = ["nxviz[test,docs]"]
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["osx-arm64", "linux-64", "win-64"]
+
+[tool.pixi.pypi-dependencies]
+nxviz = { path = ".", editable = true }
+
+[tool.pixi.environments]
+default = { solve-group = "default" }
+docs = { features = ["docs"], solve-group = "default" }
+tests = { features = ["tests"], solve-group = "default" }
+all = { features = ["all", "tests", "docs"], solve-group = "default" }
+
+[tool.pixi.tasks]
+test = "pytest"
+docs = "make docs"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["nxviz"]
+
+[feature.py310.dependencies]
+python = "3.10.*"
+
+[feature.py311.dependencies]
+python = "3.11.*"
+
+[feature.py312.dependencies]
+python = "3.12.*"
+
+[environments]
+py310 = ["py310"]
+py311 = ["py311"]
+py312 = ["py312"]

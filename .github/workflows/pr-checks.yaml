@@ -17,47 +17,27 @@ jobs:
     strategy:
       max-parallel: 10
       matrix:
-        config:
-          - { python-version: "3.10", os: ubuntu-latest }
-          - { python-version: "3.11", os: ubuntu-latest }
-          - { python-version: "3.12", os: ubuntu-latest }
-          - { python-version: "3.10", os: macos-latest }
-          - { python-version: "3.11", os: macos-latest }
-          - { python-version: "3.12", os: macos-latest }
-    runs-on: ${{ matrix.config.os }}
+        environment: [py310, py311, py312]
+    runs-on: ubuntu-latest
     name: Build conda environment
     steps:
       - uses: actions/checkout@v4
         name: Checkout repository
 
-      # See: https://github.com/mamba-org/setup-micromamba
-      - name: Setup micromamba
-        uses: mamba-org/setup-micromamba@v2
+      - name: Setup Pixi Environment
+        uses: prefix-dev/setup-pixi@v0.8.1
         with:
-          environment-name: nxviz
-          environment-file: environment.yml
-          cache-environment: true
-          cache-downloads: true
-          cache-environment-key: environment-${{ env.cache-version }}-${{ matrix.config.os }}
-          cache-downloads-key: downloads-${{ env.cache-version }}-${{ matrix.config.os }}
-          post-cleanup: "all"
-          create-args: >-
-            python=${{ matrix.config.python-version }}
-
-      - name: Build environment
+          environments: ${{ matrix.environment }}
+          pixi-version: v0.39.2
+          cache: true
+          cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+      
+      - name: Test build, unit tests and docs
         run: |
-          python -m pip install ".[tests,docs]"
-          python -m ipykernel install --user --name nxviz # setup kernel
-
-      - name: Test with pytest
-        run: |
-          python -m pytest --cov=nxviz
-
-      - name: Build docs
-        run: |
-          make docs
-
-      # https://www.bradmcgonigle.com/blog/github-action-for-continuous-deployment
+          pixi run -e all test
+          pixi run -e all docs
+      
+        # https://www.bradmcgonigle.com/blog/github-action-for-continuous-deployment
       # - NETLIFY_SITE_ID maps to the netlify site's API ID
       # - NETLIFY_AUTH_TOKEN maps to netlify's Personal Access Token that I set on a per-user basis
       - name: Deploy to Netlify
