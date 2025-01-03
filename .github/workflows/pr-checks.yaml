@@ -3,7 +3,7 @@ name: Pull request checks
 on: [pull_request]
 
 env:
-  cache-version: "cache-v1"
+  cache-version: "cache-v2"
 
 jobs:
   pre-commit:
