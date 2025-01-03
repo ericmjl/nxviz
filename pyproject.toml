@@ -92,7 +92,7 @@ nxviz = { path = ".", editable = true }
 default = { solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
 tests = { features = ["tests"], solve-group = "default" }
-all = { features = ["tests", "docs"], solve-group = "default" }
+all = { features = ["all", "tests", "docs"], solve-group = "default" }
 py310 = { features = ["py310"], solve-group = "all" }
 py311 = { features = ["py311"], solve-group = "all" }
 py312 = { features = ["py312"], solve-group = "all" }
