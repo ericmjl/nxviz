@@ -23,7 +23,14 @@ setup(
     include_package_data=True,
     install_requires=requirements,
     extras_require={
-        "docs": ["pycodestyle", "pyprojroot", "sphinx", "mkdocs", "mkdocs-material"],
+        "docs": [
+            "pycodestyle",
+            "pyprojroot",
+            "sphinx",
+            "mkdocs",
+            "mkdocs-material",
+            "mknotebooks",
+        ],
         "tests": ["hypothesis", "pytest-cov", "pre-commit", "pylint"],
     },
     license="MIT license",
