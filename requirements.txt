@@ -1,3 +1,4 @@
+setuptools
 matplotlib>=3.3.3
 more-itertools>=8.6.0
 networkx>=2.5

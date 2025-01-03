@@ -39,7 +39,7 @@ jobs:
 
       - name: Build environment
         run: |
-          python -m pip install .
+          python -m pip install ".[tests,docs]"
 
       - name: Run conda-pack
         run: conda pack -n nxviz -o nxviz.tar.gz
@@ -73,7 +73,7 @@ jobs:
       - name: Run tests
         run: |
           source /tmp/nxviz/bin/activate
-          python -m pip install -e .
+          python -m pip install -e ".[tests]"
 
   docs:
     name: Build static site docs
