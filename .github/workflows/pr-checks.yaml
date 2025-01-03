@@ -40,7 +40,6 @@ jobs:
       - name: Build environment
         run: |
           python -m pip install ".[tests,docs]"
-          python -m ipykernel install --user --name nxviz # setup kernel
 
       - name: Test with pytest
         run: |
