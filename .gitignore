@@ -71,3 +71,8 @@ target/
 .ipynb_checkpoints
 site/
 *.md.tmp
+
+# pixi environments
+.pixi
+*.egg-info
+pixi.lock

@@ -16,27 +16,20 @@ jobs:
         shell: bash -l {0}
 
     steps:
-      - uses: actions/checkout@v2
-        name: Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # See: https://github.com/marketplace/actions/setup-miniconda
-      - name: Setup miniconda
-        uses: conda-incubator/setup-miniconda@v2
+      - name: Setup Pixi Environment
+        uses: prefix-dev/setup-pixi@v0.8.1
         with:
-          auto-update-conda: true
-          miniforge-variant: Mambaforge
-          channels: conda-forge
-          python-version: 3.9
-          activate-environment: nxviz
-          environment-file: environment.yml
-          use-mamba: true
+          environments: docs
+          pixi-version: v0.39.2
+          cache: false
+          cache-write: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
 
-      - name: Build environment
+      - name: Build docs
         run: |
-          conda activate nxviz
-          python -m ipykernel install --user --name nxviz
-          python -m pip install .
-          make docs
+          pixi run -e docs mkdocs
 
       - name: Deploy website
         uses: peaceiris/actions-gh-pages@v3

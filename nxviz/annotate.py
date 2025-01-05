@@ -1,4 +1,5 @@
 """Annotation submodule."""
+
 from functools import partial, update_wrapper
 from typing import Dict, Hashable, Union, Optional, List
 
@@ -252,6 +253,7 @@ def colormapping(
     Otherwise, a legend will be added.
     """
     cmap, data_family = encodings.data_cmap(data, palette)
+    fig = plt.gcf()  # Get the current figure
     if ax is None:
         ax = plt.gca()
     if data_family == "continuous":
@@ -260,8 +262,10 @@ def colormapping(
             cmap=cmap,
             norm=norm,
         )
-        fig = plt.gcf()
-        fig.colorbar(scalarmap)
+        fig.colorbar(
+            scalarmap,
+            ax=ax,
+        )
     else:
         if (palette is not None) and (isinstance(palette, dict)):
             labels = pd.Series(list(palette.keys()))
@@ -280,8 +284,7 @@ def colormapping(
             # bbox_to_anchor=(0.5, -0.05),
         )
         kwargs.update(legend_kwargs)
-        legend = plt.legend(handles=patchlist, **kwargs)
-        ax.add_artist(legend)
+        ax.legend(handles=patchlist, **kwargs)
 
 
 def node_colormapping(
@@ -305,8 +308,6 @@ def edge_colormapping(
     palette: Optional[Union[Dict, List]] = None,
 ):
     """Annotate edge color mapping."""
-    if ax is None:
-        ax = plt.gca()
     et = utils.edge_table(G)
     data = et[color_by]
     colormapping(data, legend_kwargs, ax, palette)

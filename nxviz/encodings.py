@@ -1,4 +1,5 @@
 """Functions to encode data inside visual properties of nodes and edges."""
+
 from functools import partial
 from typing import Callable, Tuple, Optional, Union, Dict, List
 from itertools import cycle
