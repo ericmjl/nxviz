@@ -33,7 +33,7 @@ jobs:
 
       - name: Interrogate
         uses: JackMcKew/python-interrogate-check@main
-    
+
   pre-commit:
     name: Check pre-commit compliance.
     runs-on: ubuntu-latest
