@@ -8,7 +8,7 @@ on:
 jobs:
   build-docs:
     runs-on: ubuntu-latest
-    name: Build conda environment
+    name: Build docs
 
     # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
     defaults:
@@ -24,7 +24,7 @@ jobs:
         with:
           environments: docs
           pixi-version: v0.39.2
-          cache: false
+          cache: True
           cache-write: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
 
       - name: Build docs
