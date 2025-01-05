@@ -1,3 +1,3 @@
 """Pytest configuration."""
 
-from .fixtures.graphs import dummyG, geoG, manygroupG, smallG
+from .fixtures.graphs import dummyG, geoG, manygroupG, smallG, tab20

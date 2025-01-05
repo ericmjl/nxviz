@@ -1,6 +1,6 @@
 [tool.black]
 line-length = 88
-target-version = ['py38']
+target-version = ['py311']
 include = '\.pyi?$'
 exclude = '''
 
@@ -40,6 +40,103 @@ color = true
 
 [tool.pytest.ini_options]
 addopts = "-v --cov --cov-report term-missing"
-testpaths = [
-    "tests",
+testpaths = ["tests"]
+
+[project]
+name = "nxviz"
+version = "0.7.5"
+description = "Graph Visualization Package"
+authors = [{ name = "Eric J. Ma", email = "ericmajinglong@gmail.com" }]
+dependencies = [
+  "setuptools",
+  "matplotlib>=3.3.3",
+  "more-itertools>=8.6.0",
+  "networkx>=2.5",
+  "numpy>=1.19.4",
+  "palettable>=3.3.0",
+  "pandas>=1.2.0",
+  "seaborn>=0.11.1",
 ]
+license = { file = "LICENSE" }
+readme = "README.md"
+keywords = ["nxviz", "networkx", "visualization", "graph"]
+classifiers = [
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: English",
+  "Programming Language :: Python :: 3",
+]
+
+[project.optional-dependencies]
+docs = [
+  "pycodestyle",
+  "pyprojroot",
+  "sphinx",
+  "mkdocs",
+  "mkdocs-material",
+  "mknotebooks",
+  "jupyter",
+]
+tests = ["hypothesis", "pytest-cov", "pre-commit", "pylint"]
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["osx-arm64", "linux-64", "win-64"]
+
+[tool.pixi.dependencies]
+python = ">=3.10"
+
+[tool.pixi.feature.py310.dependencies]
+python = "~=3.10.0"
+[tool.pixi.feature.py311.dependencies]
+python = "~=3.11.0"
+[tool.pixi.feature.py312.dependencies]
+python = "~=3.12.0"
+[tool.pixi.feature.py313.dependencies]
+python = "~=3.13.0"
+
+[tool.pixi.pypi-dependencies]
+nxviz = { path = ".", editable = true }
+
+[tool.pixi.environments]
+default = { solve-group = "default" }
+docs = { features = ["docs"], solve-group = "default" }
+py310 = ["py310", "docs", "tests"]
+py311 = ["py311", "docs", "tests"]
+py312 = ["py312", "docs", "tests"]
+py313 = ["py313", "docs", "tests"]
+
+[tool.pixi.tasks]
+test = "pytest"
+mkdocs = "make docs"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["nxviz"]
+
+[tool.tox]
+envlist = ["py26", "py27", "py33", "py34", "py35", "flake8"]
+
+[tool.tox.envs.py26]
+setenv = { "PYTHONPATH" = "{toxinidir}:{toxinidir}/nxviz" }
+commands = ["pip install -U pip", "py.test --basetemp={envtmpdir}"]
+
+[tool.tox.envs.py27]
+inherit = "py26"
+
+[tool.tox.envs.py33]
+inherit = "py26"
+
+[tool.tox.envs.py34]
+inherit = "py26"
+
+[tool.tox.envs.py35]
+inherit = "py26"
+
+[tool.tox.envs.flake8]
+basepython = "python"
+deps = ["flake8"]
+commands = ["flake8 nxviz"]

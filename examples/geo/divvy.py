@@ -1,9 +1,11 @@
+import pickle
 import networkx as nx
 import matplotlib.pyplot as plt
 
 from nxviz import GeoPlot
 
-G = nx.read_gpickle("divvy.pkl")
+with open("divvy.pkl", "rb") as f:
+    G = pickle.load(f)
 print(list(G.nodes(data=True))[0])
 G_new = G.copy()
 for n1, n2, d in G.edges(data=True):
