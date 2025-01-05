@@ -4,4 +4,4 @@ channels:
 dependencies:
   - pip
   - pip:
-      - -r requirements.txt
+      - . # Installs the package using pyproject.toml

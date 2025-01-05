@@ -116,3 +116,27 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = ["nxviz"]
+
+[tool.tox]
+envlist = ["py26", "py27", "py33", "py34", "py35", "flake8"]
+
+[tool.tox.envs.py26]
+setenv = { "PYTHONPATH" = "{toxinidir}:{toxinidir}/nxviz" }
+commands = ["pip install -U pip", "py.test --basetemp={envtmpdir}"]
+
+[tool.tox.envs.py27]
+inherit = "py26"
+
+[tool.tox.envs.py33]
+inherit = "py26"
+
+[tool.tox.envs.py34]
+inherit = "py26"
+
+[tool.tox.envs.py35]
+inherit = "py26"
+
+[tool.tox.envs.flake8]
+basepython = "python"
+deps = ["flake8"]
+commands = ["flake8 nxviz"]
