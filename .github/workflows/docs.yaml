@@ -25,7 +25,6 @@ jobs:
           environments: docs
           pixi-version: v0.39.2
           cache: false
-          cache-write: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
 
       - name: Build docs
         run: |
