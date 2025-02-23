@@ -75,7 +75,6 @@ site/
 # pixi environments
 .pixi
 *.egg-info
-pixi.lock
 
 # SQLite database
 message_log.db
