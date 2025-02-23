@@ -37,6 +37,9 @@ nav:
   - Examples Gallery:
       - Matrix Plot: examples/matrix.ipynb
       - Geo Plot: examples/geo.ipynb
+      - Arc Node Labels: examples/arc_node_labels.ipynb
+      - Circos Node Labels: examples/circos_node_labels.ipynb
+      - Matrix Node Labels: examples/matrix_node_labels.ipynb
 
 plugins:
   - search

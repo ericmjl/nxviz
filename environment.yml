@@ -1,7 +1,0 @@
-name: nxviz
-channels:
-  - conda-forge
-dependencies:
-  - pip
-  - pip:
-      - . # Installs the package using pyproject.toml
