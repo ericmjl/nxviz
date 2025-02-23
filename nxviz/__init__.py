@@ -12,6 +12,7 @@ from .api import (
     MatrixPlot,
     CircosPlot,
 )
+from .version import version
 
 import warnings
 
