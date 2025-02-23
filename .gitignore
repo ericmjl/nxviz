@@ -76,3 +76,6 @@ site/
 .pixi
 *.egg-info
 pixi.lock
+
+# SQLite database
+message_log.db

@@ -37,7 +37,12 @@ from nxviz.polcart import (
 
 
 @given(
-    floats(min_value=-1e6, max_value=1e6, allow_infinity=False, allow_nan=False),
+    # We use min_value=0.01 because:
+    # 1. r must be positive in polar coordinates
+    # 2. Values very close to zero (between 0 and 0.01) can lead to numerical instability
+    #    when converting between polar and cartesian coordinates, as the angle becomes
+    #    poorly defined when r approaches 0.
+    floats(min_value=0.01, max_value=1e6, allow_infinity=False, allow_nan=False),
     floats(
         min_value=0,
         max_value=2 * np.pi,
@@ -47,14 +52,15 @@ from nxviz.polcart import (
 )
 def test_convert_rt(r, theta):
     """Test for conversion of polar to cartesian coordinates."""
-    assume(r > 0.01 and r < 1e6)
-    assume(np.isfinite(r) and np.isfinite(theta))
-
+    # Convert to cartesian
     x, y = to_cartesian(r, theta)
+
+    # Convert back to polar
     r_new, theta_new = to_polar(x, y)
 
+    # Check that we get back the original values
     assert np.allclose(r, r_new)
-    assert np.allclose(abs(theta_new), abs(theta))
+    assert np.allclose(theta, theta_new)
 
 
 @given(floats())
