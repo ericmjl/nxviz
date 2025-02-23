@@ -16,6 +16,19 @@ from .version import version
 
 import warnings
 
+__all__ = [
+    "arc",
+    "hive",
+    "circos",
+    "parallel",
+    "matrix",
+    "geo",
+    "ArcPlot",
+    "HivePlot",
+    "MatrixPlot",
+    "CircosPlot",
+    "version",
+]
 
 warnings.warn(
     """
