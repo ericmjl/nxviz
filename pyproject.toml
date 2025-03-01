@@ -57,7 +57,7 @@ dependencies = [
   "pandas>=1.2.0",
   "seaborn>=0.11.1",
 ]
-license = { file = "LICENSE" }
+license = "MIT"
 readme = "README.md"
 keywords = ["nxviz", "networkx", "visualization", "graph"]
 classifiers = [
