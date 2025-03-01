@@ -57,7 +57,6 @@ dependencies = [
   "pandas>=1.2.0",
   "seaborn>=0.11.1",
 ]
-license = "MIT"
 readme = "README.md"
 keywords = ["nxviz", "networkx", "visualization", "graph"]
 classifiers = [
@@ -113,10 +112,10 @@ test = "pytest"
 docs = "mkdocs build"
 
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling>=1.18.0"]  # Use a version that supports metadata 2.4
+build-backend = "hatchling.build"
 
-[tool.setuptools]
+[tool.hatch.build]
 packages = ["nxviz"]
 
 [tool.tox]
