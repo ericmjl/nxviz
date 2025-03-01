@@ -40,6 +40,7 @@ jobs:
         with:
           python-version: 3.11
 
+      # We need the `uv` binary to install bump2version.
       - name: Install uv
         uses: astral-sh/setup-uv@v3
 
@@ -84,12 +85,11 @@ jobs:
         run: git tag | grep ${{ env.version_number }}
 
       - name: Install llamabot package
-        run: uv pip install -e .[cli]
+        run: uv pip install llamabot[cli]
 
       - name: Write release notes
         if: github.event_name != 'pull_request'
         env:
-          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           llamabot configure default-model --model-name="${{ secrets.DEFAULT_LANGUAGE_MODEL }}"
