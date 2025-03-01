@@ -44,7 +44,7 @@ testpaths = ["tests"]
 
 [project]
 name = "nxviz"
-version = "0.7.5"
+version = "0.7.6"
 description = "Graph Visualization Package"
 authors = [{ name = "Eric J. Ma", email = "ericmajinglong@gmail.com" }]
 dependencies = [
