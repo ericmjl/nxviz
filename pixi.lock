@@ -5949,8 +5949,8 @@ packages:
   requires_python: '>=3.10'
 - pypi: .
   name: nxviz
-  version: 0.7.5
-  sha256: e478ac1955dce8a7b46f08ec8c0254e114e0de8bec3cefdd847e8bab49ef313a
+  version: 0.7.6
+  sha256: 5d39bcfdf81de854728240b94c5a84a6d6c9ff651fd2f7bbb8d7251dae98e278
   requires_dist:
   - setuptools
   - matplotlib>=3.3.3
