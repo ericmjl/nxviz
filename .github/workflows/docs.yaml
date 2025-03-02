@@ -28,7 +28,7 @@ jobs:
 
       - name: Build docs
         run: |
-          pixi run -e docs mkdocs
+          pixi run -e docs docs
 
       - name: Deploy website
         uses: peaceiris/actions-gh-pages@v3
