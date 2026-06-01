@@ -2,6 +2,7 @@ from random import choice
 
 import matplotlib.pyplot as plt
 import networkx as nx
+
 from nxviz.plots import CircosPlot
 
 G = nx.barbell_graph(m1=10, m2=3)

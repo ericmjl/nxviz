@@ -4,6 +4,7 @@ Displays different node_size with ArcPlot
 
 import matplotlib.pyplot as plt
 import networkx as nx
+
 from nxviz.plots import ArcPlot
 
 G = nx.Graph()

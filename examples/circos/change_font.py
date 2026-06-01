@@ -3,8 +3,10 @@ Shows how to rotate node labels. This increaes legibility for longer labels.
 """
 
 from random import choice
+
 import matplotlib.pyplot as plt
 import networkx as nx
+
 from nxviz import CircosPlot
 
 G = nx.barbell_graph(m1=20, m2=3)

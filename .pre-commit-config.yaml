@@ -9,19 +9,6 @@ repos:
     rev: 0.8.1
     hooks:
       - id: nbstripout
-  - repo: https://github.com/econchick/interrogate
-    rev: 1.5.0
-    hooks:
-      - id: interrogate
-        args: [-c, pyproject.toml]
-        additional_dependencies: [setuptools]
-  - repo: https://github.com/jsh9/pydoclint
-    rev: 0.3.8
-    hooks:
-      - id: pydoclint
-        args:
-          - "--config=pyproject.toml"
-        exclude: ^(examples|docs|tests)/
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.7
     hooks:

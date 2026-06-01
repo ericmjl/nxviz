@@ -4,6 +4,7 @@ Displays different edge_widths with ArcPlot, see also Issue #291
 
 import matplotlib.pyplot as plt
 import networkx as nx
+
 from nxviz.plots import ArcPlot
 
 G = nx.DiGraph()
