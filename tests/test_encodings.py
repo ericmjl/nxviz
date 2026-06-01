@@ -1,10 +1,12 @@
 """Tests for encodings submodule."""
 
-from nxviz import encodings as aes
-import pytest
-import pandas as pd
 from random import choice
+
 import numpy as np
+import pandas as pd
+import pytest
+
+from nxviz import encodings as aes
 
 
 def categorical_series():

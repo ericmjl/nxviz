@@ -1,11 +1,9 @@
 """Tests for nxviz high level API."""
 
-from itertools import cycle
+import pytest
 from matplotlib import pyplot as plt
 
 import nxviz as nv
-
-import pytest
 
 
 @pytest.mark.usefixtures("dummyG")

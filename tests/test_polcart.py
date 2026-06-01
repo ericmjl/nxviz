@@ -1,9 +1,9 @@
 """Tests for polcart submodule."""
 
 import numpy as np
-
-from hypothesis import assume, given, settings
+from hypothesis import assume, given
 from hypothesis.strategies import floats
+
 from nxviz.polcart import (
     to_cartesian,
     to_degrees,
@@ -12,7 +12,6 @@ from nxviz.polcart import (
     to_proper_radians,
     to_radians,
 )
-
 
 # @given(
 #     floats(min_value=-1e3, max_value=1e3, allow_infinity=False, allow_nan=False),

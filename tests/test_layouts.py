@@ -1,10 +1,11 @@
 """Tests for node layouts."""
 
-from nxviz.utils import node_table
-from nxviz import layouts
-import pytest
-import pandas as pd
 import numpy as np
+import pandas as pd
+import pytest
+
+from nxviz import layouts
+from nxviz.utils import node_table
 
 
 def get_pos_df(G, layout, group_by=None, sort_by=None, **layout_kwargs):

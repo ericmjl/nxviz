@@ -1,11 +1,9 @@
 """Tests for utilities."""
 
-import pytest
-
 import os
 
 import matplotlib.pyplot as plt
-
+import pytest
 from matplotlib.testing.compare import compare_images
 
 from nxviz.utils import (

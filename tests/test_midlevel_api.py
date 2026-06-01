@@ -1,7 +1,8 @@
 """Integration tests that operate at the mid-level API."""
 
-from nxviz import nodes, edges
 import pytest
+
+from nxviz import edges, nodes
 
 
 @pytest.mark.usefixtures("dummyG")
