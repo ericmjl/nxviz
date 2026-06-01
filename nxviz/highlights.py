@@ -1,17 +1,16 @@
 """Highlights onto a particular graph."""
 
-from typing import Callable, Hashable
-
-from networkx.drawing import layout
-from nxviz import layouts, lines, utils
-from matplotlib.patches import Circle, Rectangle
-import matplotlib.pyplot as plt
+from copy import deepcopy
 from functools import partial, update_wrapper
+from typing import Hashable
+
+import matplotlib.pyplot as plt
+import networkx as nx
 import numpy as np
 import pandas as pd
-from copy import deepcopy
+from matplotlib.patches import Circle, Rectangle
 
-import networkx as nx
+from nxviz import layouts, lines, utils
 
 
 def node(

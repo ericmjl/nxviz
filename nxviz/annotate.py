@@ -1,12 +1,12 @@
 """Annotation submodule."""
 
 from functools import partial, update_wrapper
-from typing import Dict, Hashable, Union, Optional, List
+from typing import Dict, Hashable, List, Optional, Union
 
 import matplotlib.pyplot as plt
+import networkx as nx
 import numpy as np
 import pandas as pd
-import networkx as nx
 from matplotlib.cm import ScalarMappable
 from matplotlib.colors import Normalize
 from matplotlib.patches import Patch, Rectangle

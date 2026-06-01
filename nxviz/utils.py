@@ -1,10 +1,10 @@
 """Utility functions."""
 
+import warnings
 from collections import Counter
+from typing import Hashable, Iterable
 
 import pandas as pd
-import warnings
-from typing import Iterable
 
 
 def is_data_homogenous(data_container: Iterable):
@@ -40,17 +40,17 @@ def infer_data_type(data_container: Iterable):
 
     """
     warnings.warn(
-        "`infer_data_type` is deprecated! " "Please use `infer_data_family` instead!"
+        "`infer_data_type` is deprecated! Please use `infer_data_family` instead!"
     )
     # Defensive programming checks.
     # 0. Ensure that we are dealing with lists or tuples, and nothing else.
-    assert isinstance(data_container, list) or isinstance(
-        data_container, tuple
-    ), "data_container should be a list or tuple."
+    assert isinstance(data_container, list) or isinstance(data_container, tuple), (
+        "data_container should be a list or tuple."
+    )
     # 1. Don't want to deal with only single values.
-    assert (
-        len(set(data_container)) > 1
-    ), "There should be more than one value in the data container."
+    assert len(set(data_container)) > 1, (
+        "There should be more than one value in the data container."
+    )
     # 2. Don't want to deal with mixed data.
     assert is_data_homogenous(data_container), "Data are not of a homogenous type!"
 
@@ -191,9 +191,6 @@ def node_table(G, group_by=None, sort_by=None):
     return df
 
 
-import networkx as nx
-
-
 def edge_table(G) -> pd.DataFrame:
     """Return the edge table of a graph.
 
@@ -219,9 +216,6 @@ def edge_table(G) -> pd.DataFrame:
             row["target"] = v
             data.append(row)
     return pd.DataFrame(data)
-
-
-from typing import Hashable, Iterable
 
 
 def group_and_sort(

@@ -2,10 +2,11 @@
 Utility geometry functions that can help with drawing to screen.
 """
 
+from typing import Hashable, List
+
 import numpy as np
 
 from .polcart import to_cartesian
-from typing import List, Hashable
 
 
 def item_theta(itemlist: List[Hashable], item: Hashable):

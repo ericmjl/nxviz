@@ -1,26 +1,43 @@
-[tool.black]
-line-length = 88
-target-version = ['py311']
-include = '\.pyi?$'
-exclude = '''
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-(
-  /(
-      \.eggs         # exclude a few common directories in the
-    | \.git          # root of the project
-    | \.hg
-    | \.mypy_cache
-    | \.tox
-    | \.venv
-    | _build
-    | buck-out
-    | build
-    | dist
-  )/
-  | foo.py           # also separately exclude a file named foo.py in
-                     # the root of the project
-)
-'''
+[tool.hatch.build.targets.wheel]
+packages = ["nxviz"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
 
 [tool.interrogate]
 ignore-init-method = true
@@ -31,7 +48,7 @@ ignore-private = false
 ignore-property-decorators = false
 ignore-module = false
 fail-under = 100
-exclude = ["setup.py", "docs", "build", "examples"]
+exclude = ["setup.py", "docs", "build", "examples", "notebooks", ".agents"]
 ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
 verbose = 2
 quiet = false
@@ -40,50 +57,67 @@ color = true
 
 [tool.pytest.ini_options]
 addopts = "-v --cov --cov-report term-missing"
-testpaths = ["tests"]
+testpaths = [
+    "tests",
+]
+
+[tool.pydoclint]
+style = "sphinx"
+exclude = "\\.git|\\.tox|tests/data"
+require-return-section-when-returning-nothing = false
+arg-type-hints-in-docstring = false
+check-return-types = false
+
+[tool.coverage.run]
+omit = [
+    "tests/*",
+]
 
 [project]
 name = "nxviz"
 version = "0.7.6"
 description = "Graph Visualization Package"
 authors = [{ name = "Eric J. Ma", email = "ericmajinglong@gmail.com" }]
+requires-python = ">=3.10"
 dependencies = [
-  "setuptools",
-  "matplotlib>=3.3.3",
-  "more-itertools>=8.6.0",
-  "networkx>=2.5",
-  "numpy>=1.19.4",
-  "palettable>=3.3.0",
-  "pandas>=1.2.0",
-  "seaborn>=0.11.1",
+    "matplotlib>=3.3.3",
+    "more-itertools>=8.6.0",
+    "networkx>=2.5",
+    "numpy>=1.19.4",
+    "palettable>=3.3.0",
+    "pandas>=1.2.0",
+    "seaborn>=0.11.1",
 ]
 readme = "README.md"
 keywords = ["nxviz", "networkx", "visualization", "graph"]
 classifiers = [
-  "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
-  "Natural Language :: English",
-  "Programming Language :: Python :: 3",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
 ]
 
 [project.optional-dependencies]
 docs = [
-  "pycodestyle",
-  "pyprojroot",
-  "sphinx",
-  "mkdocs",
-  "mkdocs-material",
-  "mknotebooks",
-  "jupyter",
+    "pycodestyle",
+    "pyprojroot",
+    "sphinx",
+    "mkdocs",
+    "mkdocs-material",
+    "mknotebooks",
+    "jupyter",
 ]
-tests = ["hypothesis", "pytest-cov", "pre-commit", "pylint", "pytest"]
+tests = ["hypothesis", "pytest-cov", "pre-commit", "pytest"]
 
-[tool.pixi.project]
+[tool.pixi.workspace]
 channels = ["conda-forge"]
-platforms = ["osx-arm64", "linux-64", "win-64"]
+platforms = ["osx-arm64", "linux-64"]
 
 [tool.pixi.dependencies]
 python = ">=3.10"
+
+[tool.pixi.pypi-dependencies]
+nxviz = { path = ".", editable = true }
 
 [tool.pixi.feature.py310.dependencies]
 python = "~=3.10.0"
@@ -94,50 +128,41 @@ python = "~=3.12.0"
 [tool.pixi.feature.py313.dependencies]
 python = "~=3.13.0"
 
-[tool.pixi.pypi-dependencies]
-nxviz = { path = ".", editable = true }
+[tool.pixi.feature.tests.dependencies]
+pytest = "*"
+pytest-cov = "*"
+hypothesis = "*"
 
-[tool.pixi.environments]
-default = { solve-group = "default" }
-docs = { features = ["docs"], solve-group = "default" }
-py310 = ["py310", "docs", "tests"]
-py311 = ["py311", "docs", "tests"]
-py312 = ["py312", "docs", "tests"]
-py313 = ["py313", "docs", "tests"]
+[tool.pixi.feature.docs.dependencies]
+mkdocs = "*"
+mkdocs-material = "*"
+mknotebooks = "*"
+
+[tool.pixi.feature.devtools.dependencies]
+pre-commit = "*"
+hatch = "*"
+ruff = "*"
 
 [tool.pixi.feature.tests.tasks]
 test = "pytest"
 
+[tool.pixi.feature.devtools.tasks]
+lint = "pre-commit run --all-files"
+commit = "git commit"
+
 [tool.pixi.feature.docs.tasks]
-docs = "mkdocs build"
+build-docs = "mkdocs build"
+serve-docs = "mkdocs serve"
 
-[build-system]
-requires = ["hatchling>=1.18.0"]  # Use a version that supports metadata 2.4
-build-backend = "hatchling.build"
+[tool.pixi.feature.setup.tasks]
+setup = "pre-commit autoupdate && pre-commit install --install-hooks"
+update = "pre-commit autoupdate"
 
-[tool.hatch.build]
-packages = ["nxviz"]
-
-[tool.tox]
-envlist = ["py26", "py27", "py33", "py34", "py35", "flake8"]
-
-[tool.tox.envs.py26]
-setenv = { "PYTHONPATH" = "{toxinidir}:{toxinidir}/nxviz" }
-commands = ["pip install -U pip", "py.test --basetemp={envtmpdir}"]
-
-[tool.tox.envs.py27]
-inherit = "py26"
-
-[tool.tox.envs.py33]
-inherit = "py26"
-
-[tool.tox.envs.py34]
-inherit = "py26"
-
-[tool.tox.envs.py35]
-inherit = "py26"
-
-[tool.tox.envs.flake8]
-basepython = "python"
-deps = ["flake8"]
-commands = ["flake8 nxviz"]
+[tool.pixi.environments]
+default = { features = ["tests", "devtools", "setup"], solve-group = "default" }
+docs = { features = ["docs"], solve-group = "default" }
+tests = { features = ["tests", "setup"], solve-group = "default" }
+py310 = ["py310", "docs", "tests"]
+py311 = ["py311", "docs", "tests"]
+py312 = ["py312", "docs", "tests"]
+py313 = ["py313", "docs", "tests"]

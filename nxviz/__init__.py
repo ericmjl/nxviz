@@ -1,20 +1,20 @@
 """Top-level nxviz API."""
 
+import warnings
+
 from .api import (
-    arc,
-    hive,
-    circos,
-    parallel,
-    matrix,
-    geo,
     ArcPlot,
+    CircosPlot,
     HivePlot,
     MatrixPlot,
-    CircosPlot,
+    arc,
+    circos,
+    geo,
+    hive,
+    matrix,
+    parallel,
 )
-from .version import version
-
-import warnings
+from importlib.metadata import version
 
 __all__ = [
     "arc",

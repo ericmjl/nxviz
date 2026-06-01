@@ -1,15 +1,14 @@
 """Functions to encode data inside visual properties of nodes and edges."""
 
 from functools import partial
-from typing import Callable, Tuple, Optional, Union, Dict, List
 from itertools import cycle
+from typing import Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
-
 from matplotlib.cm import get_cmap
-from matplotlib.colors import ListedColormap, Normalize, BoundaryNorm
-from palettable.colorbrewer import qualitative, sequential
+from matplotlib.colors import BoundaryNorm, ListedColormap, Normalize
+from palettable.colorbrewer import qualitative
 
 from nxviz.utils import infer_data_family
 

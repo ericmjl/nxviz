@@ -7,7 +7,7 @@ Firstly,
 
 from copy import deepcopy
 from functools import partial, update_wrapper
-from typing import Callable, Dict, Hashable, Tuple, Optional, Union, List
+from typing import Callable, Dict, Hashable, List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 from nxviz import encodings, lines
-from nxviz.utils import node_table, edge_table
+from nxviz.utils import edge_table, node_table
 
 default_edge_kwargs = dict(facecolor="none", zorder=1)
 
