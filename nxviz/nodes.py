@@ -2,17 +2,16 @@
 
 from copy import deepcopy
 from functools import partial, update_wrapper
-from typing import Callable, Dict, Hashable, Optional, Tuple, Union, List
+from typing import Callable, Dict, Hashable, List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
 import networkx as nx
-import numpy as np
 import pandas as pd
 from matplotlib.patches import Circle
 
 from nxviz import encodings, layouts
-from nxviz.utils import node_table
 from nxviz.plots import rescale, rescale_arc, rescale_square
+from nxviz.utils import node_table
 
 
 def node_colors(

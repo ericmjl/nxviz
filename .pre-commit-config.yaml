@@ -5,11 +5,35 @@ repos:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
-  - repo: https://github.com/psf/black
-    rev: 25.1.0
-    hooks:
-      - id: black
   - repo: https://github.com/kynan/nbstripout
     rev: 0.8.1
     hooks:
       - id: nbstripout
+  - repo: https://github.com/econchick/interrogate
+    rev: 1.5.0
+    hooks:
+      - id: interrogate
+        args: [-c, pyproject.toml]
+        exclude: ^(notebooks|\.agents)/
+  - repo: https://github.com/jsh9/pydoclint
+    rev: 0.3.8
+    hooks:
+      - id: pydoclint
+        args:
+          - "--config=pyproject.toml"
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.7
+    hooks:
+      - id: ruff-check
+        args: [--fix, --exit-non-zero-on-fix, --config, pyproject.toml]
+      - id: ruff-format
+        args: [--config, pyproject.toml]
+  - repo: local
+    hooks:
+      - id: pixi-install
+        name: Keep lockfile up-to-date
+        entry: pixi install
+        language: system
+        always_run: true
+        require_serial: true
+        pass_filenames: false

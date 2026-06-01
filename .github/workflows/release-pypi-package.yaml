@@ -24,6 +24,9 @@ jobs:
   deploy-package:
     runs-on: ubuntu-latest
     name: ${{ github.event_name == 'pull_request' && '(Dry Run) ' || '' }}Publish Python Package to PyPI
+    permissions:
+      id-token: write
+      contents: write
 
     defaults:
       run:
@@ -35,12 +38,6 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Setup Python environment
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.11
-
-      # We need the `uv` binary to install bump2version.
       - name: Install uv
         uses: astral-sh/setup-uv@v3
 
@@ -51,19 +48,14 @@ jobs:
           cache: true
           cache-write: ${{ github.event_name == 'push' }}
 
-      - name: Set up Python
-        run: |
-          uv tool install bump2version
-
       - name: Set version name
         run: echo "VERSION_NAME=${{ github.event.inputs.version_name || env.DEFAULT_VERSION_NAME }}" >> $GITHUB_ENV
 
-      - name: Dry run bump2version
-        run: |
-          bump2version --dry-run ${{ env.VERSION_NAME }} --allow-dirty --verbose
+      - name: Dry run version bump
+        run: uv version --dry-run --bump ${{ env.VERSION_NAME }}
 
       - name: Store new version number
-        run: echo "version_number=`bump2version --dry-run --list ${{ env.VERSION_NAME }} | grep new_version | sed -r s,"^.*=",,`" >> $GITHUB_ENV
+        run: echo "version_number=$(uv version --dry-run --bump ${{ env.VERSION_NAME }} | awk '{print $2}')" >> $GITHUB_ENV
 
       - name: Display new version number
         run: |
@@ -78,38 +70,36 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
 
-      - name: Run bump2version
-        run: bump2version ${{ env.VERSION_NAME }} --verbose
-
-      - name: Ensure tag creation
-        run: git tag | grep ${{ env.version_number }}
-
-      - name: Install llamabot package
-        run: uv pip install llamabot[cli]
+      - name: Bump version
+        run: uv version --bump ${{ env.VERSION_NAME }}
 
       - name: Write release notes
         if: github.event_name != 'pull_request'
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
+          uv tool install llamabot[cli] --python 3.12 --python-preference only-managed --force
           llamabot configure default-model --model-name="${{ secrets.DEFAULT_LANGUAGE_MODEL }}"
           llamabot git write-release-notes
 
-      - name: Commit release notes
+      - name: Commit version bump and release notes
         if: github.event_name != 'pull_request'
         run: |
           uv tool install pre-commit
           pre-commit run --all-files || pre-commit run --all-files
           git add .
-          git commit -m "Add release notes for ${{ env.version_number }}"
+          git commit -m "Release v${{ env.version_number }}"
+
+      - name: Create tag
+        if: github.event_name != 'pull_request'
+        run: git tag v${{ env.version_number }}
 
       - name: Build package
-        run: |
-          uv build --sdist --wheel
+        run: uv build --sdist --wheel
 
       - name: Publish package
         if: github.event_name != 'pull_request'
-        run: uv publish --token ${{ secrets.PYPI_API_TOKEN }}
+        uses: pypa/gh-action-pypi-publish@release/v1
 
       - name: Push changes with tags
         if: github.event_name != 'pull_request'

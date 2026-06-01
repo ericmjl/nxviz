@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Build documentation
 
-    # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
     defaults:
       run:
         shell: bash -l {0}
@@ -19,26 +18,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Pixi Environment
-        uses: prefix-dev/setup-pixi@v0.8.1
+      - uses: prefix-dev/setup-pixi@v0.8.1
         with:
+          cache: true
           environments: docs
-          pixi-version: v0.39.2
-          cache: false
 
       - name: Build docs
-        run: |
-          pixi run -e docs docs
+        run: pixi run build-docs
 
       - name: Deploy website
         uses: peaceiris/actions-gh-pages@v3
         with:
-          # https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-set-personal-access-token-personal_token
           personal_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
+          publish_dir: site
           publish_branch: gh-pages
           allow_empty_commit: false
           keep_files: false
           force_orphan: true
           enable_jekyll: false
-          disable_nojekyll: false

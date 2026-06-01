@@ -1,5 +1,6 @@
 """Polar/cartesian conversions functions."""
 
+import numpy as np
 from numpy import arctan2 as atan2
 from numpy import cos, pi, sin, sqrt
 
@@ -15,9 +16,6 @@ def to_cartesian(r, theta, proper=False):
     y = r * sin(theta)
 
     return x, y
-
-
-import numpy as np
 
 
 def to_polar(x, y):
