@@ -1,6 +1,7 @@
+from random import randint
+
 import matplotlib.pyplot as plt
 import networkx as nx
-from random import randint
 
 import nxviz as nv
 

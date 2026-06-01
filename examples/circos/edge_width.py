@@ -4,6 +4,7 @@ Shows different edge widths on CircusPlot
 
 import matplotlib.pyplot as plt
 import networkx as nx
+
 from nxviz.plots import CircosPlot
 
 nodelist = [("a"), ("b"), ("c"), ("d"), ("e"), ("f")]

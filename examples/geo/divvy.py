@@ -1,5 +1,5 @@
 import pickle
-import networkx as nx
+
 import matplotlib.pyplot as plt
 
 from nxviz import GeoPlot
