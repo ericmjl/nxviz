@@ -1,6 +1,7 @@
 """Top-level nxviz API."""
 
 import warnings
+from importlib.metadata import version
 
 from .api import (
     ArcPlot,
@@ -14,7 +15,6 @@ from .api import (
     matrix,
     parallel,
 )
-from importlib.metadata import version
 
 __all__ = [
     "arc",

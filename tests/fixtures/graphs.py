@@ -1,10 +1,10 @@
 """Graph generator fixtures."""
 
 from itertools import cycle
-import numpy as np
-import networkx as nx
-import pytest
 
+import networkx as nx
+import numpy as np
+import pytest
 
 categories = [
     "sun",

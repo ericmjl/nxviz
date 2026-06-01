@@ -1,11 +1,12 @@
 """Tests for geometry module."""
 
-import numpy as np
 from random import choice
 
-import nxviz.polcart as polcart
-from hypothesis import assume, given, settings
+import numpy as np
+from hypothesis import assume, given
 from hypothesis.strategies import floats, integers, lists
+
+import nxviz.polcart as polcart
 from nxviz.geometry import (
     circos_radius,
     correct_negative_angle,

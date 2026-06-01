@@ -9,14 +9,10 @@ the following issue:
 
 # from test_utils import diff_plots, corresponding_lists
 
-from random import random
 from matplotlib import pyplot as plt
 
-import networkx as nx
-
-
 # from nxviz import ArcPlot, CircosPlot, GeoPlot, MatrixPlot
-from nxviz.plots import despine, respine, rescale, rescale_arc, rescale_square
+from nxviz.plots import despine, respine
 
 # from matplotlib.testing.decorators import _image_directories
 

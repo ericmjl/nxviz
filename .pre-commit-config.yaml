@@ -14,20 +14,23 @@ repos:
     hooks:
       - id: interrogate
         args: [-c, pyproject.toml]
-        exclude: ^(notebooks|\.agents)/
+        additional_dependencies: [setuptools]
   - repo: https://github.com/jsh9/pydoclint
     rev: 0.3.8
     hooks:
       - id: pydoclint
         args:
           - "--config=pyproject.toml"
+        exclude: ^(examples|docs|tests)/
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.7
     hooks:
       - id: ruff-check
         args: [--fix, --exit-non-zero-on-fix, --config, pyproject.toml]
+        exclude: ^(examples|docs)/
       - id: ruff-format
         args: [--config, pyproject.toml]
+        exclude: ^(examples|docs)/
   - repo: local
     hooks:
       - id: pixi-install
