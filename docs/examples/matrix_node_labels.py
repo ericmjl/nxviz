@@ -1,8 +1,13 @@
 # /// script
-# requires-python = ">=3.13"
+# requires-python = ">=3.12"
 # dependencies = [
 #     "marimo>=0.23.8",
+#     "matplotlib>=3.3.3",
+#     "networkx>=2.5",
+#     "nxviz",
 # ]
+# [tool.uv.sources]
+# nxviz = { path = "../..", editable = true }
 # ///
 import marimo
 
