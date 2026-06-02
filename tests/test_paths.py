@@ -1,7 +1,6 @@
 """Tests for nxviz.paths module — backend-agnostic edge path coordinate computation."""
 
 import numpy as np
-import pandas as pd
 import pytest
 
 from nxviz import paths
