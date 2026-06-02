@@ -3,7 +3,7 @@
 Defines the PlotBackend protocol and a factory function get_backend().
 """
 
-from typing import Any, Dict, Hashable, List, Optional, Protocol, Tuple, Union
+from typing import Any, Dict, Hashable, List, Optional, Protocol
 
 import numpy as np
 import pandas as pd
@@ -89,9 +89,7 @@ def get_backend(name: str = "matplotlib") -> Any:
     """
     if name not in BACKEND_REGISTRY:
         available = ", ".join(sorted(BACKEND_REGISTRY.keys()))
-        raise ValueError(
-            f"Unknown backend '{name}'. Available backends: {available}"
-        )
+        raise ValueError(f"Unknown backend '{name}'. Available backends: {available}")
 
     module_path, class_name = BACKEND_REGISTRY[name].rsplit(".", 1)
     try:
