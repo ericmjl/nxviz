@@ -22,12 +22,12 @@ NOTEBOOKS=(
 for nb in "${NOTEBOOKS[@]}"; do
   if [ -f "$nb" ]; then
     md="${nb%.py}.md"
-    uvx marimo export md "$nb" -o "$md"
+    python -m marimo export md "$nb" -o "$md"
     echo "Exported $nb -> $md"
   fi
 done
 
-uvx zensical build
+python -m zensical build
 
 mkdir -p "$NOTEBOOKS_DIR"
 
@@ -35,7 +35,7 @@ for nb in "${NOTEBOOKS[@]}"; do
   if [ -f "$nb" ]; then
     stem=$(basename "${nb%.py}")
     html="$NOTEBOOKS_DIR/${stem}.html"
-    uvx marimo export html "$nb" -o "$html" --sandbox --include-code \
+    python -m marimo export html "$nb" -o "$html" --sandbox --include-code \
       && echo "Exported $nb -> $html" \
       || echo "Warning: $nb failed to execute, skipping HTML export"
   fi

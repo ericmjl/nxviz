@@ -55,6 +55,10 @@ The `tests` environment includes plotly for backend tests. To install the pixi e
 pixi install
 ```
 
+## CI Requirements
+
+CI must be green before merging. When fixing CI failures, uphold all repo standards (no mocking, no private methods, no comments, ruff formatting, etc.). Run `pixi run lint` and `pixi run test` locally before pushing.
+
 ## Coding Standards
 
 ### No underscore-prefixed private methods
