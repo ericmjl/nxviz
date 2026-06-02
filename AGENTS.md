@@ -104,3 +104,26 @@ Do not add comments unless explicitly asked. Code should be self-documenting thr
 - Core deps (matplotlib, networkx, numpy, pandas, palettable, seaborn) stay in `[project.dependencies]`
 - Optional deps (plotly) go in `[project.optional-dependencies]` as extras
 - pixi features handle dev/test/doc tooling
+
+### Marimo notebooks (PEP 723 inline script metadata)
+
+All marimo notebooks in `docs/` use PEP 723 inline script metadata with `[tool.uv.sources]` for local path dependencies. The format is:
+
+```python
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "marimo>=0.23.8",
+#     "matplotlib>=3.3.3",
+#     "networkx>=2.5",
+#     "nxviz",
+# ]
+# [tool.uv.sources]
+# nxviz = { path = "../..", editable = true }
+# ///
+```
+
+Key points:
+- Use `[tool.uv.sources]` to declare local path dependencies (not `@` URL syntax in the dependency string)
+- Notebooks are two levels deep under `docs/` (e.g. `docs/api/`, `docs/examples/`), so the path to the project root is `"../.."`
+- The `editable = true` flag installs nxviz in editable mode so changes to the source are reflected
