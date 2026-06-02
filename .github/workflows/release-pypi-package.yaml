@@ -100,6 +100,8 @@ jobs:
       - name: Publish package
         if: github.event_name != 'pull_request'
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
 
       - name: Push changes with tags
         if: github.event_name != 'pull_request'
