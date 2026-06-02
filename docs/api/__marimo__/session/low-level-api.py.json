@@ -1,0 +1,361 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.8",
+    "script_metadata_hash": "5d5a5160cb914770d66384ca48812ffc"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "1d0db38904205bec4d6f6f6a1f6cec3e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "b68c5bb3198d3f233a582c81a5f0b0a2",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"low-level-api\">Low-level API</h1>\n<span class=\"paragraph\">The <code>nxviz</code> low level API is one that provides the most flexibility for constructing rational graph visualizations.</span>\n<span class=\"paragraph\">As always, with rational graph visualizations,\nthere is a process involved that helps us compose together beautiful visualizations.\nWe first concern ourselves with the node placement\nusing the layout functions.\nThen, we concern ourselves with data-driven visual styling of the nodes.\nAfter that, we figure out how to draw edges (whether as lines or bezier curves)\nand style them according to data.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "c336249af4ee060e6ce5f29c484ce3a3",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "53f5c8583cfe6c23aa83b5e1296534db",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"example\">Example</h2>\n<span class=\"paragraph\">As an example, let's see how we make can make customizations to the Circos plot by using the low-level API.</span>\n<span class=\"paragraph\">For some of these things, we might be able to accomplish them using the higher level API,\nbut we will intentionally show the low-level way of handling these customizations\nso that you can have a feel for how you can implement low-level customizations.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "1342dae739b92eaf083803dda1bf32f7",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "No module named 'networkx'",
+          "traceback": null
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "<span class=\"codehilite\"><div class=\"highlight\"><pre><span></span><span class=\"gt\">Traceback (most recent call last):</span>\n  File <span class=\"nb\">&quot;/var/folders/36/vb250n_s0zncstw3sk74qfxr0000gn/T/marimo_71974/__marimo__cell_lEQa_.py&quot;</span>, line <span class=\"m\">3</span>, in <span class=\"n\">&lt;module&gt;</span>\n<span class=\"w\">    </span><span class=\"kn\">import</span><span class=\"w\"> </span><span class=\"nn\">networkx</span><span class=\"w\"> </span><span class=\"k\">as</span><span class=\"w\"> </span><span class=\"nn\">nx</span>\n<span class=\"gr\">ModuleNotFoundError</span>: <span class=\"n\">No module named &#39;networkx&#39;</span>\n</pre></div>\n</span>",
+          "mimetype": "application/vnd.marimo+traceback"
+        }
+      ]
+    },
+    {
+      "id": "PKri",
+      "code_hash": "f5d1b0844717f2778c6bdf8d5e3e9f62",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"node-and-edge-table\">Node and Edge Table</h2>\n<span class=\"paragraph\">The node and edge tables are the low-level data structures that are used in creating network visualizations.\nThese are pandas DataFrames.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "9590007e09e8ca612e2d00d0f5d65685",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "b7e166c106b9d4fa2ef28111f21702cd",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">The node table is indexed by node ID, and all of the metadata attributes are stored as columns.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "91ddba522d2007fbfffdb43712a029e2",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "8beb7e3480028ef9e1ec42cd934959ab",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">For the edge table, the \"source\" and \"target\" columns are the node IDs in the node table.\nEvery other column is a metadata field.\nThe index carries no semantic meaning here.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "39996fb9a46414129dfefe41bdcfc389",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"circos-layout\">Circos layout</h2>\n<span class=\"paragraph\">Following the principles of rational graph visualization,\nwe start by declaring the layout that we want.\nSince in our example we'll be using the Circos plot layout,\nlet's start by obtaining the (x, y) coordinate positions of each node that we want to plot.</span>\n<span class=\"paragraph\">The <code>nxviz.layouts</code> module contains the circos plot layout function that we'll want.\nUnderneath the hood, it uses pandas' group-by and sorting functionality\nto get nodes into the correct order that we want.\nIf you wish to group and sort in a customized fashion,\nthen you'll have to implement the functionality yourself.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "9257f5c004ad176ebb17865468972a30",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "4e197ac7b7a0129a0667fbbbdc0a027e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"node-styling\">Node styling</h2>\n<span class=\"paragraph\">Next, we concern ourselves with the styling of the nodes.\nHere, the <code>nxviz.encodings</code> submodule becomes useful for us.</span>\n<span class=\"paragraph\">When drawing nodes, their color, transparency, and size can be most naturally mapped to data.</span>\n<ul>\n<li>Transparency requires that a <em>quantitative</em> value be mappable to the interval (0, 1).</li>\n<li>Size requires that a <em>quantitative</em> value be mappable to the positive floats (0, +inf).</li>\n<li>Color is the trickiest of them all:<ul>\n<li>A categorical variable should be mapped to a categorical colormap.</li>\n<li>A continuous variable should be mapped to a continuous colormap.</li>\n</ul>\n</li>\n</ul>\n<span class=\"paragraph\">The choice of colormap is always going to be dependent on the user.\nIf you're looking for a guide on how to choose colormaps,\nthe <a href=\"http://blogs.nature.com/methagora/2013/07/data-visualization-points-of-view.html\" rel=\"noopener noreferrer\" target=\"_blank\">Points of View</a> guide to colors is a very good resource to start with.</span>\n<span class=\"paragraph\">How do we handle styling of nodes?\nThe primary way of doing so is to have a Python function\nthat maps from the node table's column of values (passed in as a pandas Series)\nto any color specification that matplotlib can handle:</span>\n<ul>\n<li>Strings: \"black\", \"yellow\", \"blue\", etc.</li>\n<li>RGB(A): <code>(0.1, 0.8, 0.3, 0.5)</code></li>\n<li>Hexadecimal: <code>#FFFFFF</code>, <code>#000000</code>, <code>#A7C91F</code></li>\n</ul>\n<span class=\"paragraph\">Here's two examples, one using a highly custom mapping, and the other using matplotlib's color maps.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "ddc1aa4eb45d4bea69c8c254a2db56f2",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "e7fb5ac01c308061038c0490de8c1189",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">We can now combine everything together, into something that basically reconstructs\n<code>nodes.draw</code>.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "430d1cb627c7100aee348f8081323b89",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "No module named 'nxviz'",
+          "traceback": null
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "<span class=\"codehilite\"><div class=\"highlight\"><pre><span></span><span class=\"gt\">Traceback (most recent call last):</span>\n  File <span class=\"nb\">&quot;/var/folders/36/vb250n_s0zncstw3sk74qfxr0000gn/T/marimo_71974/__marimo__cell_ZHCJ_.py&quot;</span>, line <span class=\"m\">3</span>, in <span class=\"n\">&lt;module&gt;</span>\n<span class=\"w\">    </span><span class=\"kn\">from</span><span class=\"w\"> </span><span class=\"nn\">nxviz</span><span class=\"w\"> </span><span class=\"kn\">import</span> <span class=\"n\">nodes</span><span class=\"p\">,</span> <span class=\"n\">plots</span>\n<span class=\"gr\">ModuleNotFoundError</span>: <span class=\"n\">No module named &#39;nxviz&#39;</span>\n</pre></div>\n</span>",
+          "mimetype": "application/vnd.marimo+traceback"
+        }
+      ]
+    },
+    {
+      "id": "ROlb",
+      "code_hash": "18355d00c46fdfa31132c820590b3e7c",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "qnkX",
+      "code_hash": "67791c9ebefd51f9a2485ef4201bf1f0",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Voila! We now have a sonic hedgehog-style node layout! Pretty cool, isn't it?</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TqIu",
+      "code_hash": "4daf28545aa33a5d122f963e74fab43d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"adding-in-edges\">Adding in edges</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "d194dd7733bc1decd7f5d36718984c6e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Once the node layout is complete, customizing the edge styling is a matter of concerning ourselves with:</span>\n<ol>\n<li>Line width</li>\n<li>Transparency</li>\n<li>Color</li>\n</ol>\n<span class=\"paragraph\">We could customize more, but these three are the most commonly-used for mapping data to style.\nAs with node layouts, we basically have to re-create <code>nxviz.edges.draw</code>\nwith customized data-to-style mapping functions.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "DnEU",
+      "code_hash": "3332f84d6cafc55b414a95d49413a33f",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ulZA",
+      "code_hash": "8c8dda04825f9e97a50c06f9824f8a43",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ecfG",
+      "code_hash": "d92b190af79de1c2a089efaa299a4bcf",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Looking at the plot, we might find that expressing the edges' <code>edge_value</code> as line width might not be that effective. Instead, we might want to express it using alpha.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Pvdt",
+      "code_hash": "3f3b31173c928d089cad4fc24087b1d3",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZBYS",
+      "code_hash": "374d07dd4374d1c144a0be17927cb78a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Looking at this plot, it's a lot easier for us to see the important edges (as visualized by the alpha value).</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "aLJB",
+      "code_hash": "420d0695a0fce11f8125f0f7d6c5e10e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"conclusion\">Conclusion</h2>\n<span class=\"paragraph\">Throughout this notebook, we dropped down from the mid-level API to the low-level API,\nwhere we get to customize node and edge styling to our heart's content.\nThe patterns are easy to follow.\nFor nodes, we customize the <strong>size, color and transparency</strong>.\nFor edges we customize the <strong>line width, color, and transparency</strong>.\nWe can then compose them together into the plots we see above.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

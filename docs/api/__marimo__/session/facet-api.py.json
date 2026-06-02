@@ -1,0 +1,355 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.8",
+    "script_metadata_hash": "5d5a5160cb914770d66384ca48812ffc"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "1d0db38904205bec4d6f6f6a1f6cec3e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "7072ca30b16b6489e76aedb4d0395aa6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"panels-and-faceting\">Panels and Faceting</h1>\n<span class=\"paragraph\">In this notebook, we will introduce how to make graph visualization panels!</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "c336249af4ee060e6ce5f29c484ce3a3",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "bcfc950ab8180f0e664c50c106e4650d",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "No module named 'matplotlib'",
+          "traceback": null
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "<span class=\"codehilite\"><div class=\"highlight\"><pre><span></span><span class=\"gt\">Traceback (most recent call last):</span>\n  File <span class=\"nb\">&quot;/var/folders/36/vb250n_s0zncstw3sk74qfxr0000gn/T/marimo_72242/__marimo__cell_bkHC_.py&quot;</span>, line <span class=\"m\">3</span>, in <span class=\"n\">&lt;module&gt;</span>\n<span class=\"w\">    </span><span class=\"kn\">import</span><span class=\"w\"> </span><span class=\"nn\">matplotlib.pyplot</span><span class=\"w\"> </span><span class=\"k\">as</span><span class=\"w\"> </span><span class=\"nn\">plt</span>\n<span class=\"gr\">ModuleNotFoundError</span>: <span class=\"n\">No module named &#39;matplotlib&#39;</span>\n</pre></div>\n</span>",
+          "mimetype": "application/vnd.marimo+traceback"
+        }
+      ]
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "d0176bf9af4346b95deb3cef6b07a62d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"example-graph\">Example graph</h2>\n<span class=\"paragraph\">Here's an example graph. It has both quantiative and qualitative data encoded on the nodes and edges.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "d3e46364761fb65a94685dfadb3c8a2d",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "93f07129ef8f39c7902407fd8abf3b5e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"non-paneld-version\">Non-panel'd version</h2>\n<span class=\"paragraph\">Let's see what happens if we just try to plot all nodes and all edges together.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "2ece4a71d5cd3491b29ddf9e97421865",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "95dd5167ef7c25fc590db465713c2583",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">This isn't particularly useful.\nThe edges are over-populated on the visualization.\nIf there were structure in the graph that were interesting,\nwe'd find it hard to elucidate.\nHere, we can rely on the principle of small multiples\nto design a more effective visualizations.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "dc942cca48062f2d938e7a9c8aeb483d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"nxviz-faceting-api\"><code>nxviz</code> faceting API</h2>\n<span class=\"paragraph\">Graph visualization panels are the solution here.\nWe use categorical metadata on nodes or edges\nto facet our visualizations.\n(Faceting refers to creating subplots that contain a subset of the full dataset,\nso that one can optimize for visual clarity.)</span>\n<span class=\"paragraph\">Because nodes are more easily arranged than edges,\nwe can facet our graph out by edge categories into <strong>panels</strong>.\nAs such, one subcategory of graph visualization panels\nis defined by a faceting of our graph by edge categories.\nHere are some examples.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "666fc5760a8872b25265073e8c09e078",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "No module named 'nxviz'",
+          "traceback": null
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "<span class=\"codehilite\"><div class=\"highlight\"><pre><span></span><span class=\"gt\">Traceback (most recent call last):</span>\n  File <span class=\"nb\">&quot;/var/folders/36/vb250n_s0zncstw3sk74qfxr0000gn/T/marimo_72242/__marimo__cell_Kclp_.py&quot;</span>, line <span class=\"m\">1</span>, in <span class=\"n\">&lt;module&gt;</span>\n<span class=\"w\">    </span><span class=\"kn\">from</span><span class=\"w\"> </span><span class=\"nn\">nxviz</span><span class=\"w\"> </span><span class=\"kn\">import</span> <span class=\"n\">annotate</span><span class=\"p\">,</span> <span class=\"n\">facet</span>\n<span class=\"gr\">ModuleNotFoundError</span>: <span class=\"n\">No module named &#39;nxviz&#39;</span>\n</pre></div>\n</span>",
+          "mimetype": "application/vnd.marimo+traceback"
+        }
+      ]
+    },
+    {
+      "id": "emfo",
+      "code_hash": "e20e0477d3e99e758ca7ae3bd93d88c8",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"arc-panel\">Arc Panel</h3></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "0fb1aaf22fd8210c3db8cbcb49f2d312",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "1f70ff5ee8152051883e78613fff5f24",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"circos-panel\">Circos Panel</h3></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "64eb016b3b8b1b0aa8cfcbece1c3d49f",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "5dfe2a127e137598efe5dab3fc531b5b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"matrix-panel\">Matrix Panel</h3></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ROlb",
+      "code_hash": "56c26fbc31115d3fae1b27c698b0bc71",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "qnkX",
+      "code_hash": "c31c56c9adc6f584de5f9dc0ffc84f49",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"hive-panel\">Hive Panel</h3>\n<span class=\"paragraph\">Hive panels are a special type of panel.\nBecause hive plots alone can plot either 2 or 3 categories of nodes,\nit can't handle situations where there are more than 3 categories of nodes.\nHere is where a panel of hive plots comes in:\neach plot in the panel handles 3 of the categories that are present.\nAs such, you will have <marimo-tex class=\"arithmatex\">||({K}\\choose{3}||)</marimo-tex> plots to plot.\nFor this reason, we don't recommend having more than 6 categories,\notherwise you'll end up with a lot of plots to look at.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TqIu",
+      "code_hash": "fb7df0e6d6a22390b44de4b38711e3bf",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "ff3e17767bfca3cf290f44db83da72c5",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"custom-panels\">Custom panels</h2>\n<span class=\"paragraph\">While there are plot-specific faceting APIs,\nyou can use the building blocks in there to compose your own.</span>\n<span class=\"paragraph\">In this example,\nwe'll show you how to create a facet where we show\nonly edges that are associated with a particular group of nodes.\nFor this, the key function to use is <code>node_group_edges</code>,\nwhich yields graphs that contains edges attached to a particular group,\nas well as the group itself.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "DnEU",
+      "code_hash": "76477216e199904c9f791233d5e082c8",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "No module named 'nxviz'",
+          "traceback": null
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "<span class=\"codehilite\"><div class=\"highlight\"><pre><span></span><span class=\"gt\">Traceback (most recent call last):</span>\n  File <span class=\"nb\">&quot;/var/folders/36/vb250n_s0zncstw3sk74qfxr0000gn/T/marimo_72242/__marimo__cell_DnEU_.py&quot;</span>, line <span class=\"m\">3</span>, in <span class=\"n\">&lt;module&gt;</span>\n<span class=\"w\">    </span><span class=\"kn\">from</span><span class=\"w\"> </span><span class=\"nn\">nxviz.facet</span><span class=\"w\"> </span><span class=\"kn\">import</span> <span class=\"n\">n_rows_cols</span><span class=\"p\">,</span> <span class=\"n\">node_group_edges</span>\n<span class=\"gr\">ModuleNotFoundError</span>: <span class=\"n\">No module named &#39;nxviz&#39;</span>\n</pre></div>\n</span>",
+          "mimetype": "application/vnd.marimo+traceback"
+        }
+      ]
+    },
+    {
+      "id": "ulZA",
+      "code_hash": "02fb7bc0fdbda4c4e90aa165e507e47f",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ecfG",
+      "code_hash": "1372f50299d17379855971476b01e7cc",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"development-pattern\">Development pattern</h2>\n<span class=\"paragraph\">The core of faceting in nxviz is to return an iterator of graphs\nthat contain either</span>\n<ol>\n<li>a subset of nodes,</li>\n<li>a subset of edges,</li>\n<li>or a subset of nodes and edges.</li>\n</ol>\n<span class=\"paragraph\">Using one of the faceting functions as an example to illustrate:</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Pvdt",
+      "code_hash": "a7a00e5e1596e213e8ed0d15b65a00f1",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZBYS",
+      "code_hash": "b5beeb06ffdf50317545fe5b47a09c2b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">The pattern is essentially to identify the exact groups that exist,\niterate over these groups,\nand yield a graph that contains any one of the aforementioned three subsets\nalongside the group.\nThat function pattern makes faceting consistent.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

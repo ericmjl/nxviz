@@ -156,7 +156,7 @@ lint = "pre-commit run --all-files"
 commit = "git commit"
 
 [tool.pixi.feature.docs.tasks]
-build-docs = "python build_docs.py"
+build-docs = "bash build_docs.sh"
 serve-docs = "zensical serve"
 
 [tool.pixi.feature.setup.tasks]
