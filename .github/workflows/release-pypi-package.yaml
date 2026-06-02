@@ -55,7 +55,7 @@ jobs:
         run: uv version --dry-run --bump ${{ env.VERSION_NAME }}
 
       - name: Store new version number
-        run: echo "version_number=$(uv version --dry-run --bump ${{ env.VERSION_NAME }} | awk '{print $2}')" >> $GITHUB_ENV
+        run: echo "version_number=$(uv version --dry-run --bump ${{ env.VERSION_NAME }} | awk '{print $4}')" >> $GITHUB_ENV
 
       - name: Display new version number
         run: |
