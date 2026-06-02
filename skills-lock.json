@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": {
+    "atomic-commits": {
+      "source": "ericmjl/skills",
+      "sourceType": "github",
+      "skillPath": "skills/atomic-commits/SKILL.md",
+      "computedHash": "90ff70490b9cf0878c7ffa26d4b5b83cf968592c82160c25c58d1c985cdc8598"
+    },
+    "design-driven-dev": {
+      "source": "ericmjl/skills",
+      "sourceType": "github",
+      "skillPath": "skills/design-driven-dev/SKILL.md",
+      "computedHash": "a51884c57445503bfa8854e2b659889bf4c6bcea02b3ecd0e6c8290e5b9aa8a5"
+    },
+    "marimo-pair": {
+      "source": "marimo-team/marimo-pair",
+      "sourceType": "github",
+      "skillPath": "skills/marimo-pair/SKILL.md",
+      "computedHash": "d2b0a585d449096a985e1fe20a6a6fff4991ab3004a7757b1d5a03cfa8bd28ea"
+    }
+  }
+}
