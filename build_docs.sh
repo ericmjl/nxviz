@@ -53,7 +53,7 @@ done
 for nb in "${NOTEBOOKS[@]}"; do
   if [ -f "$nb" ]; then
     stem=$(basename "${nb%.py}")
-    html_url="/notebooks/${stem}.html"
+    html_target="../../notebooks/${stem}.html"
     page_dir="$SITE_DIR/${nb#$DOCS_DIR/}"
     page_dir="${page_dir%.py}"
     mkdir -p "$page_dir"
@@ -61,12 +61,12 @@ for nb in "${NOTEBOOKS[@]}"; do
     cat > "$page_dir/index.html" <<HTMLEOF
 <!DOCTYPE html>
 <html><head>
-<meta http-equiv="refresh" content="0;url=${html_url}">
+<meta http-equiv="refresh" content="0;url=${html_target}">
 <title>${title}</title>
 </head><body>
-<p>Redirecting to <a href="${html_url}">executed notebook</a>...</p>
+<p>Redirecting to <a href="${html_target}">executed notebook</a>...</p>
 </body></html>
 HTMLEOF
-    echo "Created redirect $page_dir/index.html -> $html_url"
+    echo "Created redirect $page_dir/index.html -> $html_target"
   fi
 done
