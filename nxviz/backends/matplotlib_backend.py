@@ -6,15 +6,11 @@ Wraps the existing matplotlib rendering code as a PlotBackend implementation.
 from typing import Any, Dict, Hashable, List, Optional
 
 import matplotlib.pyplot as plt
-import networkx as nx
 import numpy as np
 import pandas as pd
-from matplotlib.patches import Arc, Circle, Path, PathPatch
+from matplotlib.patches import Circle
 
 from nxviz import lines
-from nxviz.geometry import correct_hive_angles
-from nxviz.plots import aspect_equal, despine, rescale, rescale_arc, rescale_square
-from nxviz.polcart import to_cartesian, to_polar, to_radians
 
 
 class MatplotlibBackend:
@@ -78,13 +74,9 @@ class MatplotlibBackend:
         elif line_type == "arc":
             patches = lines.arc(et, pos, colors, alphas, lw, aes_kw)
         elif line_type == "hive":
-            patches = lines.hive(
-                et, pos, pos_cloned, colors, alphas, lw, aes_kw
-            )
+            patches = lines.hive(et, pos, pos_cloned, colors, alphas, lw, aes_kw)
         elif line_type == "matrix":
-            patches = lines.matrix(
-                et, pos, pos_cloned, colors, alphas, lw, aes_kw
-            )
+            patches = lines.matrix(et, pos, pos_cloned, colors, alphas, lw, aes_kw)
         else:
             patches = lines.line(et, pos, colors, alphas, lw, aes_kw)
 
