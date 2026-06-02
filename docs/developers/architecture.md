@@ -159,6 +159,61 @@ and doing trigonometric calculations.
 (These are heavily used in plots with circular layouts,
 such as the Circos and Hive plots.)
 
+## Backend System
+
+nxviz supports multiple rendering backends behind a unified API.
+The default backend is matplotlib (unchanged from previous versions).
+An optional Plotly backend provides interactive web-based plots.
+
+### Switching backends
+
+Users switch backends by adding a single `backend=` parameter:
+
+```python
+import nxviz as nv
+
+# Static (default, matplotlib)
+ax = nv.circos(G, group_by="group", sort_by="value", node_color_by="group")
+
+# Interactive (plotly) — one parameter change
+fig = nv.circos(G, group_by="group", sort_by="value", node_color_by="group", backend="plotly")
+fig.show()
+```
+
+All parameters (`group_by`, `sort_by`, `node_color_by`, etc.) work identically across backends.
+
+### Architecture: Compute vs. Render
+
+The pipeline has two phases:
+
+1. **Compute phase** (backend-agnostic): `layouts`, `encodings`, `geometry`, `polcart`, `utils`
+   produce node positions (`pos` dict), visual encodings (color/size/alpha Series),
+   and edge path coordinates.
+2. **Render phase** (backend-specific): A `PlotBackend` implementation draws nodes,
+   edges, and annotations onto its native canvas.
+
+The `nxviz.paths` module extracts backend-agnostic edge path coordinates
+from the matplotlib-specific `nxviz.lines` module.
+The `nxviz.backend` module defines the `PlotBackend` protocol
+and a `get_backend()` factory.
+
+### Available backends
+
+- **matplotlib** (default): Static plots, returns `matplotlib.axes.Axes`.
+  No extra dependencies.
+- **plotly** (optional): Interactive plots with hover/zoom/pan,
+  returns `plotly.graph_objects.Figure`.
+  Install with `pip install nxviz[plotly]`.
+
+### Key modules
+
+| Module | Role |
+|--------|------|
+| `nxviz.backend` | `PlotBackend` protocol + `get_backend()` factory |
+| `nxviz.paths` | Backend-agnostic edge path coordinate computation |
+| `nxviz.backends.matplotlib_backend` | Matplotlib rendering implementation |
+| `nxviz.backends.plotly_backend` | Plotly rendering implementation |
+
 ## Utils
 
 The `nxviz.utils` module is a catch-all

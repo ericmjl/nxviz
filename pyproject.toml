@@ -108,6 +108,7 @@ docs = [
     "jupyter",
 ]
 tests = ["hypothesis", "pytest-cov", "pre-commit", "pytest"]
+plotly = ["plotly>=5.0"]
 
 [tool.pixi.workspace]
 channels = ["conda-forge"]
@@ -128,6 +129,18 @@ python = "~=3.13.0"
 pytest = "*"
 pytest-cov = "*"
 hypothesis = "*"
+
+[tool.pixi.feature.tests.pypi-dependencies]
+plotly = ">=5.0"
+
+[tool.pixi.feature.explore.dependencies]
+
+[tool.pixi.feature.explore.pypi-dependencies]
+marimo = ">=0.10.0"
+plotly = ">=5.0"
+
+[tool.pixi.feature.explore.tasks]
+marimo = "marimo"
 
 [tool.pixi.feature.docs.dependencies]
 mkdocs = "*"
@@ -156,7 +169,9 @@ update = "pre-commit autoupdate"
 
 [tool.pixi.environments]
 default = { features = ["tests", "devtools", "setup"], solve-group = "default" }
+dev = { features = ["tests", "devtools", "explore", "setup"], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
 tests = { features = ["tests", "setup"], solve-group = "default" }
+explore = { features = ["explore"], solve-group = "default" }
 py312 = ["py312", "docs", "tests"]
 py313 = ["py313", "docs", "tests"]
