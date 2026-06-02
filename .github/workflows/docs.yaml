@@ -38,6 +38,7 @@ jobs:
           path: site
 
   deploy:
+    if: github.event_name == 'push'
     needs: build
     runs-on: ubuntu-latest
     name: Deploy to GitHub Pages
