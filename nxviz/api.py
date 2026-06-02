@@ -7,7 +7,6 @@ from typing import Callable, Dict, Hashable, List, Optional, Union
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
-import pandas as pd
 
 from nxviz import edges, nodes
 from nxviz.plots import aspect_equal, despine
@@ -37,34 +36,12 @@ def backend_plot(
     line_type: str = "circos",
 ):
     """Render a plot using a backend object (non-matplotlib path)."""
-    from nxviz import encodings, paths
+    from nxviz import paths
     from nxviz.utils import edge_table, node_table
 
     nt = node_table(G)
 
-    layout_func = node_layout_func
-    from functools import partial as _p
-
-    if isinstance(layout_func, partial):
-        layout_func_inner = layout_func.func
-        fixed_kwargs = layout_func.keywords
-        layout_func_to_use = _p(layout_func_inner, **fixed_kwargs)
-    else:
-        layout_func_to_use = layout_func
-
-    from nxviz import layouts
-
-    if isinstance(layout_func_to_use, partial):
-        actual_layout = layout_func_to_use.args[0] if layout_func_to_use.args else None
-    else:
-        actual_layout = None
-
-    pos = node_layout_func.keywords.get("layout_func", layouts.circos)
-    if isinstance(pos, partial):
-        pass
-
     layout_func_resolved = resolve_layout_func(node_layout_func)
-    rescale_func_resolved = resolve_rescale_func(node_layout_func)
 
     pos = layout_func_resolved(nt, group_by, sort_by, **node_layout_kwargs)
 
@@ -89,9 +66,9 @@ def backend_plot(
     enc_kw_edge = deepcopy(edge_enc_kwargs)
     lw = edges.line_width(et, edge_lw_by) * enc_kw_edge.pop("lw_scale", 1.0)
     alpha_bounds_e = enc_kw_edge.pop("alpha_bounds", None)
-    edge_alpha = edges.transparency(et, edge_alpha_by, alpha_bounds_e) * enc_kw_edge.pop(
-        "alpha_scale", 1.0
-    )
+    edge_alpha = edges.transparency(
+        et, edge_alpha_by, alpha_bounds_e
+    ) * enc_kw_edge.pop("alpha_scale", 1.0)
 
     if pos_cloned is not None:
         pass

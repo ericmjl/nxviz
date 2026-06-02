@@ -141,9 +141,7 @@ class TestPlotlyBackendDrawEdges:
         alphas = pd.Series([0.1] * len(et))
         lw = pd.Series([1.0] * len(et))
 
-        plotly_backend.draw_edges(
-            fig, et, pos, path_coords, colors, alphas, lw, "line"
-        )
+        plotly_backend.draw_edges(fig, et, pos, path_coords, colors, alphas, lw, "line")
         edge_traces = [t for t in fig.data if getattr(t, "name", None) == "edges"]
         assert len(edge_traces) > 0
 

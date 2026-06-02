@@ -4,7 +4,7 @@ Provides interactive web-based network visualizations using Plotly.
 Requires plotly>=5.0 to be installed (pip install nxviz[plotly]).
 """
 
-from typing import Any, Dict, Hashable, List, Optional, Tuple
+from typing import Dict, Hashable, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -166,16 +166,13 @@ class PlotlyBackend:
     ) -> None:
         """Draw edges on the Plotly figure."""
         hover_text = edge_hover_text(et)
-        aes_kw = kwargs.get("aes_kw", {})
 
         if line_type == "matrix":
             self.draw_matrix_edges(
                 axes, et, path_coords, colors, alphas, lw, hover_text
             )
         else:
-            self.draw_curve_edges(
-                axes, et, path_coords, colors, alphas, lw, hover_text
-            )
+            self.draw_curve_edges(axes, et, path_coords, colors, alphas, lw, hover_text)
 
     def draw_curve_edges(
         self,
