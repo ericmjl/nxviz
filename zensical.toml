@@ -1,0 +1,52 @@
+[project]
+site_name = "nxviz: Rational Graph Visualization in Python"
+site_url = "https://ericmjl.github.io/nxviz"
+docs_dir = "docs"
+
+nav = [
+  {"Home" = "index.md"},
+  {"Principles of Visualization" = "theory.md"},
+  {"Releases" = [
+    {"Release History" = "history.md"},
+    {"Contributors" = "contributors.md"},
+  ]},
+  {"Developers" = [
+    {"Architecture" = "developers/architecture.md"},
+    {"Development Guide" = "developers/devguide.md"},
+    {"Ways to contribute" = "developers/contributing.md"},
+    {"Developing new plots" = "developers/new-plots.md"},
+  ]},
+  {"API" = [
+    {"High level API" = "api/high-level-api.md"},
+    {"Mid-level API" = "api/mid-level-api.md"},
+    {"Low-level API" = "api/low-level-api.md"},
+    {"Object-oriented API" = "api/object-oriented-api.md"},
+    {"Faceting API" = "api/facet-api.md"},
+  ]},
+  {"Examples Gallery" = [
+    {"Matrix Plot" = "examples/matrix.md"},
+    {"Geo Plot" = "examples/geo.md"},
+    {"Arc Node Labels" = "examples/arc_node_labels.md"},
+    {"Circos Node Labels" = "examples/circos_node_labels.md"},
+    {"Matrix Node Labels" = "examples/matrix_node_labels.md"},
+  ]},
+]
+
+extra_css = ["stylesheets/custom.css"]
+
+markdown_extensions = [
+  "codehilite",
+  "admonition",
+  "pymdownx.superfences",
+  "markdown.extensions.attr_list",
+]
+
+[project.theme]
+features = ["navigation.tabs"]
+
+[project.theme.icon]
+logo = "fontawesome/solid/book"
+
+[project.extra]
+repo_name = "ericmjl/nxviz"
+repo_url = "https://github.com/ericmjl/nxviz"

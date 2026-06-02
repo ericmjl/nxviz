@@ -103,6 +103,19 @@ venv.bak/
 # mkdocs documentation
 /site
 
+# Generated marimo markdown docs (derived from .py sources)
+docs/api/high-level-api.md
+docs/api/mid-level-api.md
+docs/api/low-level-api.md
+docs/api/object-oriented-api.md
+docs/api/facet-api.md
+docs/developers/new-plots.md
+docs/examples/matrix.md
+docs/examples/geo.md
+docs/examples/arc_node_labels.md
+docs/examples/circos_node_labels.md
+docs/examples/matrix_node_labels.md
+
 # mypy
 .mypy_cache/
 .dmypy.json
