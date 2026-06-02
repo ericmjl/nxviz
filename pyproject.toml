@@ -99,13 +99,8 @@ classifiers = [
 
 [project.optional-dependencies]
 docs = [
-    "pycodestyle",
-    "pyprojroot",
-    "sphinx",
-    "mkdocs",
-    "mkdocs-material",
-    "mknotebooks",
-    "jupyter",
+    "zensical",
+    "marimo",
 ]
 tests = ["hypothesis", "pytest-cov", "pre-commit", "pytest"]
 plotly = ["plotly>=5.0"]
@@ -143,9 +138,10 @@ plotly = ">=5.0"
 marimo = "marimo"
 
 [tool.pixi.feature.docs.dependencies]
-mkdocs = "*"
-mkdocs-material = "*"
-mknotebooks = "*"
+
+[tool.pixi.feature.docs.pypi-dependencies]
+zensical = "*"
+marimo = ">=0.10.0"
 
 [tool.pixi.feature.devtools.dependencies]
 pre-commit = "*"
@@ -160,8 +156,8 @@ lint = "pre-commit run --all-files"
 commit = "git commit"
 
 [tool.pixi.feature.docs.tasks]
-build-docs = "mkdocs build"
-serve-docs = "mkdocs serve"
+build-docs = "python build_docs.py"
+serve-docs = "zensical serve"
 
 [tool.pixi.feature.setup.tasks]
 setup = "pre-commit autoupdate && pre-commit install --install-hooks"
