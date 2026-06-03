@@ -59,6 +59,17 @@ pixi install
 
 CI must be green before merging. When fixing CI failures, uphold all repo standards (no mocking, no private methods, no comments, ruff formatting, etc.). Run `pixi run lint` and `pixi run test` locally before pushing.
 
+## Deploy Preview Verification
+
+When docs are changed on a PR, always verify the deploy preview using the `agent-browser` skill:
+
+1. Wait for the `rossjrw/pr-preview-action` bot to comment on the PR with the preview URL.
+2. Use the `agent-browser` skill to open the preview URL.
+3. Click all top-level navigation links and follow links throughout the site to verify pages render correctly.
+4. Look at the PR diff to determine which specific pages changed, and do a deeper dive on those pages (check content, images, interactive elements, broken links).
+
+This ensures that doc changes are actually viewable and correct before merging.
+
 ## Coding Standards
 
 ### No underscore-prefixed private methods
