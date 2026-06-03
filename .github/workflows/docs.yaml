@@ -8,13 +8,8 @@ on:
     types: [opened, synchronize, reopened]
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
+  contents: write
+  pull-requests: write
 
 jobs:
   build:
@@ -32,20 +27,21 @@ jobs:
       - name: Build docs
         run: pixi run -e docs build-docs
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
-
-  deploy:
-    if: github.event_name == 'push'
-    needs: build
-    runs-on: ubuntu-latest
-    name: Deploy to GitHub Pages
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        if: github.ref_name == 'master'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: site
+          publish_branch: gh-pages
+          allow_empty_commit: false
+          keep_files: false
+          force_orphan: true
+          enable_jekyll: false
+
+      - name: Deploy PR Preview
+        if: github.event_name == 'pull_request'
+        uses: rossjrw/pr-preview-action@v1.8.1
+        with:
+          source-dir: site
+          preview-branch: gh-pages
