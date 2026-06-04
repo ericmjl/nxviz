@@ -77,6 +77,11 @@ def backend_plot(
             nt, group_by, sort_by, **cloned_node_layout_kwargs
         )
 
+    if pos_cloned is not None:
+        backend_obj.draw_nodes(
+            axes, nt, pos_cloned, node_color, alpha, size, encodings_kwargs=enc_kw
+        )
+
     if line_type == "circos":
         path_coords = paths.circos_coords(et, pos)
     elif line_type == "line":
