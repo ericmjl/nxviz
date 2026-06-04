@@ -1,8 +1,30 @@
 # Release History
 
+## 0.8.0 (2026-06-02)
+
+* Added multi-backend support with `PlotBackend` protocol and `get_backend()` factory.
+* Added Plotly interactive backend (`backend="plotly"`) for all six plot types.
+* Added `nxviz/paths.py` for backend-agnostic edge path coordinate computation.
+* Optional plotly dependency via `pip install nxviz[plotly]`.
+
+## 0.7.6 (2025-03-01)
+
+* Added `__all__` attribute to `__init__.py` for explicit module exports.
+* Refined test parameters for polar-cartesian conversion.
+* Switched build system from `setuptools` to `hatchling`.
+* Removed legacy config files (`.editorconfig`, `.pyup.yml`, `.readthedocs.yml`, `Makefile`).
+
 ## 0.7.0 (2021-XX-XX)
 
 * Major refactor behind-the-scenes with a functional API.
+
+## 0.6.3 (2020-XX-XX)
+
+* Version bump release.
+
+## 0.4.0 (2018-06-19)
+
+* Added `nxviz.io` module.
 
 ## 0.3.7 (2018-XX-XX)
 
