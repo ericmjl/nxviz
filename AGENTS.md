@@ -120,6 +120,21 @@ Do not add comments unless explicitly asked. Code should be self-documenting thr
 - Optional deps (plotly) go in `[project.optional-dependencies]` as extras
 - pixi features handle dev/test/doc tooling
 
+### Marimo pair programming
+
+When using marimo-pair to edit a notebook, you **must** guarantee zero errors across all cells after every batch of edits. After creating, editing, or moving cells, always check for errors:
+
+```python
+async with cm.get_context() as ctx:
+    for name, cell in ctx.cells.items():
+        if cell.errors or "error" in str(cell.status):
+            print(f"{name}: {cell.errors}")
+```
+
+Fix any errors before proceeding. Common pitfalls:
+- **Multiply-defined names**: Only one cell may define a variable (e.g., `import marimo as mo`). Other cells that need it must reference it, not re-import it.
+- **Use `skip_validation=True`** on `cm.get_context()` only when editing cells with multiply-defined names to fix them — not as a way to ignore the problem.
+
 ### Marimo notebooks (PEP 723 inline script metadata)
 
 All marimo notebooks in `docs/` use PEP 723 inline script metadata with `[tool.uv.sources]` for local path dependencies. The format is:
