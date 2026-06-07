@@ -8,9 +8,10 @@ from typing import Any, Dict, Hashable, List, Optional
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from matplotlib.patches import Circle
+from matplotlib.patches import Circle, Polygon
 
 from nxviz import lines
+from nxviz.polcart import to_cartesian
 
 
 class MatplotlibBackend:
@@ -115,3 +116,93 @@ class MatplotlibBackend:
     def get_figure(self, axes: Any) -> Any:
         """Return the matplotlib axes object."""
         return axes
+
+    def draw_arcs(
+        self,
+        axes: Any,
+        group_arcs: pd.DataFrame,
+        radius: float,
+        **kwargs,
+    ) -> None:
+        """Draw arc segments for chord diagrams."""
+        arc_half = 0.025 * radius
+
+        for _, row in group_arcs.iterrows():
+            n_pts = max(int((row["end_angle"] - row["start_angle"]) * 50), 10)
+            thetas = np.linspace(row["start_angle"], row["end_angle"], n_pts)
+            outer_x = (radius + arc_half) * np.cos(thetas)
+            outer_y = (radius + arc_half) * np.sin(thetas)
+            inner_x = (radius - arc_half) * np.cos(thetas[::-1])
+            inner_y = (radius - arc_half) * np.sin(thetas[::-1])
+
+            verts_x = np.concatenate([outer_x, inner_x])
+            verts_y = np.concatenate([outer_y, inner_y])
+            verts = np.column_stack([verts_x, verts_y])
+
+            poly = Polygon(
+                verts,
+                closed=True,
+                facecolor=row["color"],
+                edgecolor=row["color"],
+                linewidth=0.5,
+                zorder=2,
+            )
+            axes.add_patch(poly)
+
+    def draw_ribbons(
+        self,
+        axes: Any,
+        ribbon_data: list,
+        **kwargs,
+    ) -> None:
+        """Draw ribbons connecting arc segments for chord diagrams."""
+        for ribbon in ribbon_data:
+            coords = ribbon["path_coords"]
+            if len(coords) < 3:
+                continue
+
+            poly = Polygon(
+                coords,
+                closed=True,
+                facecolor=ribbon["color"],
+                edgecolor=ribbon["color"],
+                alpha=ribbon["alpha"],
+                linewidth=0,
+                zorder=1,
+            )
+            axes.add_patch(poly)
+
+    def draw_arc_labels(
+        self,
+        axes: Any,
+        group_arcs: pd.DataFrame,
+        radius: float,
+        **kwargs,
+    ) -> None:
+        """Draw group labels outside arc segments for chord diagrams."""
+        arc_half = 0.025 * radius
+        label_radius = radius + arc_half + radius * 0.08
+
+        for _, row in group_arcs.iterrows():
+            mid_angle = (row["start_angle"] + row["end_angle"]) / 2
+            x, y = to_cartesian(label_radius, mid_angle)
+
+            angle_deg = np.rad2deg(mid_angle)
+            if 90 < angle_deg <= 270:
+                rotation = angle_deg - 180
+                ha = "right"
+            else:
+                rotation = angle_deg
+                ha = "left"
+
+            axes.text(
+                x,
+                y,
+                str(row["group"]),
+                ha=ha,
+                va="center",
+                rotation=rotation,
+                rotation_mode="anchor",
+                fontsize=10,
+                zorder=3,
+            )

@@ -108,3 +108,4 @@ The compute phase uses existing modules (layouts, encodings, geometry, polcart, 
 ## Related Designs
 
 - [Multi-Backend LLD](./designs/multi-backend/LLD.md)
+- [Chord Diagram LLD](./designs/chord/LLD.md)
