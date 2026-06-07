@@ -10,6 +10,7 @@ import numpy as np
 
 from nxviz import edges, nodes
 from nxviz.plots import aspect_equal, despine
+from nxviz.polcart import to_cartesian
 
 
 def backend_plot(
@@ -475,6 +476,232 @@ matrix = partial(
 )
 update_wrapper(matrix, base_cloned)
 matrix.__name__ = "api.matrix"
+
+
+def base_chord(
+    G: nx.Graph,
+    group_by: Hashable,
+    weight_by: Hashable = None,
+    sort_by: Hashable = None,
+    node_palette: Optional[Union[Dict, List]] = None,
+    edge_palette: Optional[Union[Dict, List]] = None,
+    alpha: float = 0.4,
+    radius: float = 10.0,
+    backend: str = "matplotlib",
+):
+    """Chord diagram plotting function.
+
+    Aggregates nodes into arc segments and edges into ribbons showing
+    aggregate flow between groups.
+
+    Parameters
+    ----------
+    G : nx.Graph
+        A NetworkX Graph.
+    group_by : Hashable
+        Node metadata attribute key to group nodes. Required.
+    weight_by : Hashable, optional
+        Edge metadata attribute key for flow weight.
+        If None, edges are counted.
+    sort_by : Hashable, optional
+        Node metadata attribute key to sort groups.
+    node_palette : optional
+        Custom color palette for groups.
+    edge_palette : optional
+        Unused, kept for API consistency.
+    alpha : float
+        Transparency for ribbons (default 0.4).
+    radius : float
+        Circle radius (default 10.0).
+    backend : str
+        Rendering backend ("matplotlib" or "plotly").
+    """
+    from nxviz.chord_compute import aggregate_edges, group_arcs, ribbon_coords
+    from nxviz.utils import edge_table, node_table
+
+    if group_by is None:
+        raise TypeError(
+            "group_by is required for chord diagrams. "
+            "Provide a node attribute key to group nodes by."
+        )
+
+    nt = node_table(G)
+    arcs = group_arcs(nt, group_by, palette=node_palette)
+
+    et = edge_table(G)
+    agg = aggregate_edges(et, nt, group_by, weight_by)
+
+    ribbons = ribbon_coords(agg, arcs, radius=radius, alpha=alpha)
+
+    if backend != "matplotlib":
+        from nxviz.backend import get_backend
+
+        backend_obj = get_backend(backend)
+        axes = backend_obj.create_axes()
+        backend_obj.draw_ribbons(axes, ribbons, **{})
+        backend_obj.draw_arcs(axes, arcs, radius)
+        backend_obj.draw_arc_labels(axes, arcs, radius)
+        backend_obj.despine(axes)
+        backend_obj.set_aspect_equal(axes)
+
+        pos_data = {}
+        for _, row in arcs.iterrows():
+            mid_angle = (row["start_angle"] + row["end_angle"]) / 2
+            x, y = to_cartesian(radius, mid_angle)
+            pos_data[row["group"]] = np.array([x, y])
+        backend_obj.rescale(axes, pos_data)
+
+        fig = backend_obj.get_figure(axes)
+
+        return fig
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+
+    for ribbon in ribbons:
+        coords = ribbon["path_coords"]
+        if len(coords) < 3:
+            continue
+        poly = plt.Polygon(
+            coords,
+            closed=True,
+            facecolor=ribbon["color"],
+            edgecolor=ribbon["color"],
+            alpha=ribbon["alpha"],
+            linewidth=0,
+            zorder=1,
+        )
+        ax.add_patch(poly)
+
+    arc_half = 0.025 * radius
+
+    for _, row in arcs.iterrows():
+        n_pts = max(int((row["end_angle"] - row["start_angle"]) * 50), 10)
+        thetas = np.linspace(row["start_angle"], row["end_angle"], n_pts)
+        outer_x = (radius + arc_half) * np.cos(thetas)
+        outer_y = (radius + arc_half) * np.sin(thetas)
+        inner_x = (radius - arc_half) * np.cos(thetas[::-1])
+        inner_y = (radius - arc_half) * np.sin(thetas[::-1])
+        verts_x = np.concatenate([outer_x, inner_x])
+        verts_y = np.concatenate([outer_y, inner_y])
+        verts = np.column_stack([verts_x, verts_y])
+        poly = plt.Polygon(
+            verts,
+            closed=True,
+            facecolor=row["color"],
+            edgecolor=row["color"],
+            linewidth=0.5,
+            zorder=2,
+        )
+        ax.add_patch(poly)
+
+    label_radius = radius + arc_half + radius * 0.08
+    for _, row in arcs.iterrows():
+        mid_angle = (row["start_angle"] + row["end_angle"]) / 2
+        x, y = to_cartesian(label_radius, mid_angle)
+        angle_deg = np.rad2deg(mid_angle)
+        if 90 < angle_deg <= 270:
+            rotation = angle_deg - 180
+            ha = "right"
+        else:
+            rotation = angle_deg
+            ha = "left"
+        ax.text(
+            x,
+            y,
+            str(row["group"]),
+            ha=ha,
+            va="center",
+            rotation=rotation,
+            rotation_mode="anchor",
+            fontsize=10,
+            zorder=3,
+        )
+
+    ax.set_aspect("equal")
+    despine(ax)
+    ax.relim()
+    ax.autoscale_view()
+
+    return ax
+
+
+chord = partial(
+    base_chord,
+    group_by=None,
+)
+update_wrapper(chord, base_chord)
+chord.__name__ = "api.chord"
+
+
+def chord_hover_html(fig, height: str = "600px") -> str:
+    """Return full HTML with hover-enabled ribbon highlighting for a Plotly chord figure.
+
+    In marimo notebooks::
+
+        fig = nv.chord(G, group_by="continent", weight_by="flow", backend="plotly")
+        mo.iframe(nv.chord_hover_html(fig), height="600px")
+
+    Args:
+        fig: A ``go.Figure`` returned by ``chord(..., backend="plotly")``.
+        height: iframe height string (default ``"600px"``).
+    """
+    import json
+    import uuid
+
+    from plotly.io import to_json
+
+    fig_json = json.loads(to_json(fig))
+
+    ribbon_meta = {}
+    for i, trace in enumerate(fig.data):
+        if getattr(trace, "name", None) == "ribbons" and getattr(trace, "meta", None):
+            ribbon_meta[str(i)] = trace.meta
+
+    if not ribbon_meta:
+        return fig.to_html(include_plotlyjs="cdn")
+
+    div_id = f"chord-{uuid.uuid4().hex[:8]}"
+    data_json = json.dumps(fig_json["data"])
+    layout_json = json.dumps(fig_json["layout"])
+    config_json = json.dumps({"responsive": True})
+    meta_json = json.dumps(ribbon_meta)
+
+    js = (
+        f"Plotly.newPlot('{div_id}', {data_json}, {layout_json}, {config_json})"
+        f".then(function() {{"
+        f"  var el = document.getElementById('{div_id}');"
+        f"  var meta = {meta_json};"
+        f"  var idx = Object.keys(meta);"
+        f"  el.on('plotly_hover', function(ev) {{"
+        f"    var h = ev.points[0].curveNumber;"
+        f"    idx.forEach(function(i) {{"
+        f"      var m = meta[i];"
+        f"      var n = parseInt(i);"
+        f"      if (n === h) {{"
+        f"        Plotly.restyle(el, {{fillcolor: m.highlight_fill, 'line.color': m.highlight_line}}, [n]);"
+        f"      }} else {{"
+        f"        Plotly.restyle(el, {{fillcolor: m.dimmed_fill, 'line.color': m.dimmed_line}}, [n]);"
+        f"      }}"
+        f"    }});"
+        f"  }});"
+        f"  el.on('plotly_unhover', function() {{"
+        f"    idx.forEach(function(i) {{"
+        f"      var m = meta[i];"
+        f"      Plotly.restyle(el, {{fillcolor: m.default_fill, 'line.color': m.default_line}}, [parseInt(i)]);"
+        f"    }});"
+        f"  }});"
+        f"}});"
+    )
+
+    plotly_src = "https://cdn.plot.ly/plotly-latest.min.js"
+
+    return (
+        f"<!DOCTYPE html>\n"
+        f"<html><head><script src='{plotly_src}'></script></head>\n"
+        f"<body><div id='{div_id}'></div>\n"
+        f"<script>{js}</script></body></html>"
+    )
 
 
 # Object-oriented API below, placed for compatibility.

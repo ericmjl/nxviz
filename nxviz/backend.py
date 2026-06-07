@@ -66,6 +66,22 @@ class PlotBackend(Protocol):
         """Return the top-level figure object for display/saving."""
         ...
 
+    def draw_arcs(
+        self, axes: Any, group_arcs: pd.DataFrame, radius: float, **kwargs
+    ) -> None:
+        """Draw arc segments for chord diagrams."""
+        ...
+
+    def draw_ribbons(self, axes: Any, ribbon_data: List, **kwargs) -> None:
+        """Draw ribbons connecting arc segments for chord diagrams."""
+        ...
+
+    def draw_arc_labels(
+        self, axes: Any, group_arcs: pd.DataFrame, radius: float, **kwargs
+    ) -> None:
+        """Draw group labels outside arc segments for chord diagrams."""
+        ...
+
 
 def get_backend(name: str = "matplotlib") -> Any:
     """Return a backend instance by name.

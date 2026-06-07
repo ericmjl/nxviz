@@ -31,6 +31,10 @@ nxviz/
     └── plotly_backend.py       # Plotly interactive rendering
 ```
 
+## Design Docs First
+
+When asked to change the codebase, always start by examining the design docs under `docs/designs/` to understand what needs updating. Update the relevant EARS and/or LLD documents to preserve intent, then implement the code change. This ensures design documentation stays in sync with the implementation.
+
 ## Architecture: Two Phases
 
 1. **Compute phase** (backend-agnostic): `layouts`, `encodings`, `geometry`, `polcart`, `utils` produce positions, visual encodings, and path coordinates. No rendering code here.

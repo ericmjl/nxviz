@@ -9,6 +9,8 @@ from typing import Dict, Hashable, List, Optional
 import numpy as np
 import pandas as pd
 
+from nxviz.polcart import to_cartesian
+
 try:
     import plotly.graph_objects as go
 except ImportError:
@@ -305,3 +307,132 @@ class PlotlyBackend:
     def get_figure(self, axes: go.Figure) -> go.Figure:
         """Return the Plotly Figure object."""
         return axes
+
+    def draw_arcs(
+        self,
+        axes: go.Figure,
+        group_arcs: pd.DataFrame,
+        radius: float,
+        **kwargs,
+    ) -> None:
+        """Draw arc segments for chord diagrams."""
+        arc_half = 0.025 * radius
+
+        for _, row in group_arcs.iterrows():
+            n_pts = max(int((row["end_angle"] - row["start_angle"]) * 50), 10)
+            thetas = np.linspace(row["start_angle"], row["end_angle"], n_pts)
+            outer_x = ((radius + arc_half) * np.cos(thetas)).tolist()
+            outer_y = ((radius + arc_half) * np.sin(thetas)).tolist()
+            inner_x = ((radius - arc_half) * np.cos(thetas[::-1])).tolist()
+            inner_y = ((radius - arc_half) * np.sin(thetas[::-1])).tolist()
+
+            x_vals = outer_x + inner_x + [outer_x[0]]
+            y_vals = outer_y + inner_y + [outer_y[0]]
+
+            color_str = rgba_to_plotly_str(row["color"])
+
+            axes.add_trace(
+                go.Scatter(
+                    x=x_vals,
+                    y=y_vals,
+                    mode="lines",
+                    fill="toself",
+                    fillcolor=color_str,
+                    line=dict(color=color_str, width=0.5),
+                    hoverinfo="text",
+                    text=f"<b>{row['group']}</b><br>Nodes: {row['n_nodes']}",
+                    showlegend=False,
+                    name="arcs",
+                )
+            )
+
+    def draw_ribbons(
+        self,
+        axes: go.Figure,
+        ribbon_data: list,
+        **kwargs,
+    ) -> None:
+        """Draw ribbons connecting arc segments for chord diagrams."""
+        for ribbon in ribbon_data:
+            coords = ribbon["path_coords"]
+            if len(coords) < 3:
+                continue
+
+            x_vals = coords[:, 0].tolist() + [coords[0, 0]]
+            y_vals = coords[:, 1].tolist() + [coords[0, 1]]
+
+            rgb = (
+                ribbon["color"][:3]
+                if isinstance(ribbon["color"], (tuple, list, np.ndarray))
+                else None
+            )
+
+            fill_color = (
+                rgba_to_plotly_str((*rgb, ribbon["alpha"])) if rgb else ribbon["color"]
+            )
+            outline_color = rgba_to_plotly_str((*rgb, 1.0)) if rgb else ribbon["color"]
+            dimmed_fill = rgba_to_plotly_str((*rgb, 0.05)) if rgb else ribbon["color"]
+            dimmed_line = rgba_to_plotly_str((*rgb, 0.05)) if rgb else ribbon["color"]
+            highlight_fill = rgba_to_plotly_str((*rgb, 1.0)) if rgb else ribbon["color"]
+
+            axes.add_trace(
+                go.Scatter(
+                    x=x_vals,
+                    y=y_vals,
+                    mode="lines",
+                    fill="toself",
+                    fillcolor=fill_color,
+                    line=dict(color=outline_color, width=1),
+                    hoverinfo="text",
+                    hoveron="fills",
+                    text=(
+                        f"<b>{ribbon['source_group']} → {ribbon['target_group']}</b>"
+                        f"<br>Weight: {ribbon['weight']}"
+                    ),
+                    showlegend=False,
+                    name="ribbons",
+                    meta={
+                        "default_fill": fill_color,
+                        "default_line": outline_color,
+                        "dimmed_fill": dimmed_fill,
+                        "dimmed_line": dimmed_line,
+                        "highlight_fill": highlight_fill,
+                        "highlight_line": outline_color,
+                    },
+                )
+            )
+
+    def draw_arc_labels(
+        self,
+        axes: go.Figure,
+        group_arcs: pd.DataFrame,
+        radius: float,
+        **kwargs,
+    ) -> None:
+        """Draw group labels outside arc segments for chord diagrams."""
+        arc_half = 0.025 * radius
+        label_radius = radius + arc_half + radius * 0.08
+
+        x_vals = []
+        y_vals = []
+        texts = []
+
+        for _, row in group_arcs.iterrows():
+            mid_angle = (row["start_angle"] + row["end_angle"]) / 2
+            x, y = to_cartesian(label_radius, mid_angle)
+            x_vals.append(x)
+            y_vals.append(y)
+            texts.append(str(row["group"]))
+
+        axes.add_trace(
+            go.Scatter(
+                x=x_vals,
+                y=y_vals,
+                mode="text",
+                text=texts,
+                textposition="middle center",
+                hoverinfo="skip",
+                showlegend=False,
+                name="labels",
+            )
+        )
