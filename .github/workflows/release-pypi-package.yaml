@@ -78,7 +78,7 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          uv tool install llamabot[cli] --python 3.12 --python-preference only-managed --force
+          uv tool install "llamabot[web,cli]" --python 3.12 --python-preference only-managed --force
           llamabot configure default-model --model-name="${{ secrets.DEFAULT_LANGUAGE_MODEL }}"
           llamabot git write-release-notes
 
