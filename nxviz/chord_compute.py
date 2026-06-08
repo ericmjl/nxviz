@@ -53,9 +53,7 @@ def group_arcs(
     rows = []
     current_angle = gap_per_group / 2
     group_labels = pd.Series(groups, name=group_by)
-    group_colors_series = encodings.data_color(
-        group_labels, group_labels, palette
-    )
+    group_colors_series = encodings.data_color(group_labels, group_labels, palette)
 
     for i, (grp, count) in enumerate(group_counts.items()):
         extent = available * count / total_nodes
@@ -105,14 +103,10 @@ def aggregate_edges(
     missing_target = et_copy["target_group"].isna()
     if missing_source.any():
         missing_nodes = et_copy.loc[missing_source, "source"].unique().tolist()
-        raise KeyError(
-            f"Edge source nodes not found in node table: {missing_nodes}"
-        )
+        raise KeyError(f"Edge source nodes not found in node table: {missing_nodes}")
     if missing_target.any():
         missing_nodes = et_copy.loc[missing_target, "target"].unique().tolist()
-        raise KeyError(
-            f"Edge target nodes not found in node table: {missing_nodes}"
-        )
+        raise KeyError(f"Edge target nodes not found in node table: {missing_nodes}")
 
     if weight_by is not None:
         if weight_by not in et_copy.columns:
@@ -162,9 +156,7 @@ def ribbon_coords(
     alpha : float
         Default transparency for ribbons.
     """
-    arc_lookup = {
-        row["group"]: row for _, row in group_arcs_df.iterrows()
-    }
+    arc_lookup = {row["group"]: row for _, row in group_arcs_df.iterrows()}
 
     group_order = list(group_arcs_df["group"])
     group_index = {g: i for i, g in enumerate(group_order)}
@@ -217,23 +209,33 @@ def ribbon_coords(
             src_total = outgoing_flow[sg]
             tgt_total = incoming_flow[tg]
 
-            src_extent = arc_flow_budget[sg]["src_share"] * weight / src_total if src_total > 0 else 0
-            tgt_extent = arc_flow_budget[tg]["tgt_share"] * weight / tgt_total if tgt_total > 0 else 0
+            src_extent = (
+                arc_flow_budget[sg]["src_share"] * weight / src_total
+                if src_total > 0
+                else 0
+            )
+            tgt_extent = (
+                arc_flow_budget[tg]["tgt_share"] * weight / tgt_total
+                if tgt_total > 0
+                else 0
+            )
 
             src_start = source_band_tracker[sg]
             src_end = src_start + src_extent
             source_band_tracker[sg] = src_end
 
-            edge_records.append({
-                "sg": sg,
-                "tg": tg,
-                "weight": weight,
-                "src_start": src_start,
-                "src_end": src_end,
-                "tgt_extent": tgt_extent,
-                "src_arc": src_arc,
-                "tgt_arc": tgt_arc,
-            })
+            edge_records.append(
+                {
+                    "sg": sg,
+                    "tg": tg,
+                    "weight": weight,
+                    "src_start": src_start,
+                    "src_end": src_end,
+                    "tgt_extent": tgt_extent,
+                    "src_arc": src_arc,
+                    "tgt_arc": tgt_arc,
+                }
+            )
 
     target_band_tracker = {grp: source_band_tracker[grp] for grp in group_order}
 
@@ -258,8 +260,7 @@ def ribbon_coords(
 
         if sg == tg:
             ribbon_path = _self_loop_path(
-                src_start, src_end, tgt_start, tgt_end,
-                radius, inner_r, target_r, t
+                src_start, src_end, tgt_start, tgt_end, radius, inner_r, target_r, t
             )
         else:
             p_src_start = np.array(to_cartesian(inner_r, src_start))
@@ -271,19 +272,23 @@ def ribbon_coords(
 
             n_arc_src = max(int(abs(src_end - src_start) * 20), 3)
             src_thetas = np.linspace(src_start, src_end, n_arc_src)
-            arc_src = np.column_stack([
-                inner_r * np.cos(src_thetas),
-                inner_r * np.sin(src_thetas),
-            ])
+            arc_src = np.column_stack(
+                [
+                    inner_r * np.cos(src_thetas),
+                    inner_r * np.sin(src_thetas),
+                ]
+            )
 
             edge_top = _cubic_bezier(p_src_end, origin, p_tgt_start, t)
 
             n_arc_tgt = max(int(abs(tgt_end - tgt_start) * 20), 3)
             tgt_thetas = np.linspace(tgt_start, tgt_end, n_arc_tgt)
-            arc_tgt = np.column_stack([
-                target_r * np.cos(tgt_thetas),
-                target_r * np.sin(tgt_thetas),
-            ])
+            arc_tgt = np.column_stack(
+                [
+                    target_r * np.cos(tgt_thetas),
+                    target_r * np.sin(tgt_thetas),
+                ]
+            )
 
             edge_bot = _cubic_bezier(p_tgt_end, origin, p_src_start, t)
 
@@ -323,9 +328,7 @@ def _cubic_bezier(start, control, end, t):
     """Evaluate quadratic Bezier from start through control to end."""
     result = np.zeros((len(t), 2))
     for i, ti in enumerate(t):
-        result[i] = (
-            (1 - ti) ** 2 * start + 2 * (1 - ti) * ti * control + ti**2 * end
-        )
+        result[i] = (1 - ti) ** 2 * start + 2 * (1 - ti) * ti * control + ti**2 * end
     return result
 
 
@@ -335,16 +338,20 @@ def _self_loop_path(
     loop_r = inner_r * 0.5
     n_arc_src = max(int(abs(src_end - src_start) * 20), 3)
     src_thetas = np.linspace(src_start, src_end, n_arc_src)
-    arc_src = np.column_stack([
-        inner_r * np.cos(src_thetas),
-        inner_r * np.sin(src_thetas),
-    ])
+    arc_src = np.column_stack(
+        [
+            inner_r * np.cos(src_thetas),
+            inner_r * np.sin(src_thetas),
+        ]
+    )
     n_arc_tgt = max(int(abs(tgt_end - tgt_start) * 20), 3)
     tgt_thetas = np.linspace(tgt_start, tgt_end, n_arc_tgt)
-    arc_tgt = np.column_stack([
-        target_r * np.cos(tgt_thetas),
-        target_r * np.sin(tgt_thetas),
-    ])
+    arc_tgt = np.column_stack(
+        [
+            target_r * np.cos(tgt_thetas),
+            target_r * np.sin(tgt_thetas),
+        ]
+    )
     mid_out = (src_end + tgt_start) / 2
     mid_back = (tgt_end + src_start) / 2
     edge_out = _cubic_bezier(
