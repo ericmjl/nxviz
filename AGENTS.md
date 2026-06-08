@@ -63,6 +63,8 @@ pixi install
 
 CI must be green before merging. When fixing CI failures, uphold all repo standards (no mocking, no private methods, no comments, ruff formatting, etc.). Run `pixi run lint` and `pixi run test` locally before pushing.
 
+After creating or updating a PR, proactively monitor CI until it passes. Check with `gh pr checks <number>` and fix any failures immediately — especially trivial ones like formatting or lint errors. Do not wait for the user to notice CI is red.
+
 ## Deploy Preview Verification
 
 When docs are changed on a PR, always verify the deploy preview using the `agent-browser` skill:

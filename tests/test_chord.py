@@ -11,8 +11,6 @@ import pytest
 from nxviz.chord_compute import aggregate_edges, group_arcs, ribbon_coords
 from nxviz.utils import edge_table, node_table
 
-from .fixtures.graphs import make_dummyG
-
 
 def make_chord_graph():
     """Build a directed graph with continent grouping and flow weights."""
@@ -98,7 +96,9 @@ class TestGroupArcs:
         extents = result["end_angle"] - result["start_angle"]
         proportions = extents / extents.sum()
         expected_proportions = result["n_nodes"] / total
-        np.testing.assert_allclose(proportions.values, expected_proportions.values, rtol=1e-10)
+        np.testing.assert_allclose(
+            proportions.values, expected_proportions.values, rtol=1e-10
+        )
 
     def test_single_group_raises(self):
         import networkx as nx
@@ -234,19 +234,15 @@ class TestRibbonCoords:
         arc_bands = defaultdict(list)
         for r in result:
             sg, tg = r["source_group"], r["target_group"]
-            arc_bands[sg].append(
-                (r["source_angle_start"], r["source_angle_end"])
-            )
-            arc_bands[tg].append(
-                (r["target_angle_start"], r["target_angle_end"])
-            )
+            arc_bands[sg].append((r["source_angle_start"], r["source_angle_end"]))
+            arc_bands[tg].append((r["target_angle_start"], r["target_angle_end"]))
 
         for grp, bands in arc_bands.items():
             bands.sort()
             for i in range(len(bands) - 1):
                 assert bands[i][1] <= bands[i + 1][0] + 1e-10, (
                     f"Overlap on {grp}: [{bands[i][0]:.4f},{bands[i][1]:.4f}] "
-                    f"overlaps [{bands[i+1][0]:.4f},{bands[i+1][1]:.4f}]"
+                    f"overlaps [{bands[i + 1][0]:.4f},{bands[i + 1][1]:.4f}]"
                 )
 
     def test_subbands_within_arc_bounds(self, chord_graph):
@@ -288,9 +284,6 @@ class TestRibbonCoords:
 
 class TestChordAPI:
     def test_matplotlib_returns_axes(self, chord_graph):
-        import matplotlib.pyplot as plt
-
-        ax = plt.figure().add_subplot(111)
         import nxviz as nv
 
         result = nv.chord(chord_graph, group_by="continent", weight_by="flow")
