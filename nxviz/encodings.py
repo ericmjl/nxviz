@@ -6,8 +6,8 @@ from typing import Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
-from matplotlib.cm import get_cmap
 from matplotlib.colors import BoundaryNorm, ListedColormap, Normalize
+from matplotlib.pyplot import get_cmap
 from palettable.colorbrewer import qualitative
 
 from nxviz.utils import infer_data_family
