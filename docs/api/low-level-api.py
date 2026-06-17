@@ -204,8 +204,8 @@ def _(np):
 
     def value_colormap(data: pd.Series):
         """Value colormap."""
-        norm = plt.cm.Normalize(vmin=data.min(), vmax=data.max())
-        cmap = plt.cm.get_cmap("viridis")
+        norm = plt.Normalize(vmin=data.min(), vmax=data.max())
+        cmap = plt.get_cmap("viridis")
         return data.apply(lambda x: cmap(norm(x)))
 
 
