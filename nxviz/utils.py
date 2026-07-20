@@ -200,6 +200,8 @@ def edge_table(G) -> pd.DataFrame:
     in datashader's bundler.
 
     The rest of their node attributes are returned as columns.
+
+    Rows are sorted by `(source, target)` for canonical render order.
     """
     data = []
     for u, v, d in G.edges(data=True):
@@ -215,20 +217,28 @@ def edge_table(G) -> pd.DataFrame:
             row["source"] = u
             row["target"] = v
             data.append(row)
-    return pd.DataFrame(data)
+    df = pd.DataFrame(data)
+    if len(df):
+        df = df.sort_values(["source", "target"], kind="stable").reset_index(drop=True)
+    return df
 
 
 def group_and_sort(
     node_table: pd.DataFrame, group_by: Hashable = None, sort_by: Hashable = None
 ) -> pd.DataFrame:
-    """Group and sort a node table."""
+    """Group and sort a node table.
+
+    The node ID (index) is used as a final tie-breaker so within-group
+    order is canonical rather than dependent on graph construction order.
+    """
     sort_criteria = []
     if group_by:
         sort_criteria.append(group_by)
     if sort_by:
         sort_criteria.append(sort_by)
+    node_table = node_table.sort_index(kind="stable")
     if sort_criteria:
-        node_table = node_table.sort_values(sort_criteria)
+        node_table = node_table.sort_values(sort_criteria, kind="stable")
     return node_table
 
 
