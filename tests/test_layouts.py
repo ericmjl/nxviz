@@ -1,5 +1,6 @@
 """Tests for node layouts."""
 
+import networkx as nx
 import numpy as np
 import pandas as pd
 import pytest
@@ -127,3 +128,26 @@ def test_hive_manygroups(manygroupG, sort_by):
         pos, nt = get_pos_df(
             manygroupG, layouts.hive, group_by="group", sort_by=sort_by
         )
+
+
+def test_hive_independent_of_node_insertion_order():
+    """Hive positions must not depend on G.add_node order (#711)."""
+    nodes = [f"n{i:02d}" for i in range(12)]
+    group_of = {
+        n: "X" if i % 3 == 0 else ("Y" if i % 3 == 1 else "Z")
+        for i, n in enumerate(nodes)
+    }
+
+    def build(node_order):
+        G = nx.Graph()
+        for n in node_order:
+            G.add_node(n, group=group_of[n])
+        return G
+
+    pos_forward, _ = get_pos_df(build(nodes), layouts.hive, group_by="group")
+    pos_reverse, _ = get_pos_df(
+        build(list(reversed(nodes))), layouts.hive, group_by="group"
+    )
+
+    for node in nodes:
+        assert np.allclose(pos_forward.loc[node].values, pos_reverse.loc[node].values)

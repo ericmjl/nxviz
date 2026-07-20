@@ -3,14 +3,18 @@
 import os
 
 import matplotlib.pyplot as plt
+import networkx as nx
 import pytest
 from matplotlib.testing.compare import compare_images
 
 from nxviz.utils import (
+    edge_table,
+    group_and_sort,
     infer_data_type,
     is_data_diverging,
     is_data_homogenous,
     is_groupable,
+    node_table,
     num_discrete_groups,
 )
 
@@ -85,3 +89,37 @@ def diff_plots(plot, plot_fn, baseline_dir, result_dir):
     plt.savefig(result_img_path)
     diff = compare_images(baseline_img_path, result_img_path, tol=0)
     return diff
+
+
+def test_group_and_sort_canonical_across_input_order():
+    """group_and_sort ties break by node ID, not input order (#711)."""
+    forward = group_and_sort(node_table_from(["a", "b", "c", "d"]), group_by="group")
+    reverse = group_and_sort(node_table_from(["d", "c", "b", "a"]), group_by="group")
+    assert list(forward.index) == list(reverse.index)
+
+
+def test_group_and_sort_canonical_without_group_by():
+    """group_and_sort sorts by index even when no group_by is given (#711)."""
+    forward = group_and_sort(node_table_from(["c", "a", "b"]))
+    assert list(forward.index) == ["a", "b", "c"]
+
+
+def test_edge_table_canonical_across_insertion_order():
+    """edge_table rows are sorted by (source, target) (#711)."""
+    forward = edge_table(build_graph([("a", "b"), ("a", "c"), ("b", "c")]))
+    reverse = edge_table(build_graph([("b", "c"), ("a", "c"), ("a", "b")]))
+    assert forward.equals(reverse)
+
+
+def node_table_from(node_order, group="X"):
+    G = nx.Graph()
+    for n in node_order:
+        G.add_node(n, group=group)
+    return node_table(G)
+
+
+def build_graph(edge_order):
+    G = nx.Graph()
+    for u, v in edge_order:
+        G.add_edge(u, v)
+    return G
