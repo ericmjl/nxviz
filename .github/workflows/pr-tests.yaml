@@ -28,7 +28,7 @@ jobs:
         run: pixi run test
 
       - name: Upload code coverage
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@f32b3a3741e1053eb607407145bc9619351dc93b  # v2
         with:
           verbose: true
 
