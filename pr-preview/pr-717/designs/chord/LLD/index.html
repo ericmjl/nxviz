@@ -1,0 +1,1725 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ericmjl.github.io/nxviz/designs/chord/LLD/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.43">
+    
+    
+      
+        <title>Chord Diagram - Low-Level Design - nxviz: Rational Graph Visualization in Python</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.fba56155.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/custom.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chord-diagram-low-level-design" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="nxviz: Rational Graph Visualization in Python" class="md-header__button md-logo" aria-label="nxviz: Rational Graph Visualization in Python" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            nxviz: Rational Graph Visualization in Python
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chord Diagram - Low-Level Design
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../theory/" class="md-tabs__link">
+        
+  
+  Principles of Visualization
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../history/" class="md-tabs__link">
+          
+  
+  Releases
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../developers/architecture/" class="md-tabs__link">
+          
+  
+  Developers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../api/high-level-api/" class="md-tabs__link">
+          
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../examples/matrix/" class="md-tabs__link">
+          
+  
+  Examples Gallery
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="nxviz: Rational Graph Visualization in Python" class="md-nav__button md-logo" aria-label="nxviz: Rational Graph Visualization in Python" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+
+    </a>
+    nxviz: Rational Graph Visualization in Python
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../theory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Principles of Visualization
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Releases
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Releases
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../history/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Release History
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Contributors
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Developers
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Developers
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../developers/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Architecture
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../developers/devguide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Development Guide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../developers/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Ways to contribute
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../developers/new-plots/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Developing new plots
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  API
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  API
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/high-level-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  High level API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/mid-level-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Mid-level API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/low-level-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Low-level API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/object-oriented-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Object-oriented API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/facet-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Faceting API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Examples Gallery
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Examples Gallery
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../examples/matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Matrix Plot
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../examples/geo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Geo Plot
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../examples/arc_node_labels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Arc Node Labels
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../examples/circos_node_labels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Circos Node Labels
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../examples/matrix_node_labels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Matrix Node Labels
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Overview
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Context
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Architecture
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Data Models
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#grouparcs" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GroupArcs
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggedges" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AggEdges
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ribbondata" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        RibbonData
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#directionality-target-gap-offset" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Directionality: target-gap offset
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-module-nxvizchordpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        New Module: <code>nxviz/chord.py</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="New Module: nxviz&#x2f;chord.py">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#group_arcsnt-group_by-palettenone" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>group_arcs(nt, group_by, palette=None)</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregate_edgeset-nt-group_by-weight_bynone" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>aggregate_edges(et, nt, group_by, weight_by=None)</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ribbon_coordsagg_edges-group_arcs-radius" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>ribbon_coords(agg_edges, group_arcs, radius)</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backend-protocol-extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Backend Protocol Extension
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Backend Protocol Extension">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#draw_arcsaxes-group_arcs-radius" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>draw_arcs(axes, group_arcs, radius)</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#draw_ribbonsaxes-ribbon_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>draw_ribbons(axes, ribbon_data)</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#draw_arc_labelsaxes-group_arcs-radius" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>draw_arc_labels(axes, group_arcs, radius)</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        API Integration
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nxvizapipy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>nxviz/api.py</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nxviz__init__py" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>nxviz/__init__.py</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#edge-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Edge Cases
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Dependencies
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference-use-case-population-flow-between-continents" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Reference Use Case: Population Flow Between Continents
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Related Documents
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="chord-diagram-low-level-design">Chord Diagram - Low-Level Design</h1>
+<p><strong>Created</strong>: 2026-06-07
+<strong>HLD Link</strong>: ../../high-level-design.md</p>
+<h2 id="overview">Overview</h2>
+<p>A chord diagram is a circos-plot variant that aggregates nodes into arc segments and edges into ribbons, showing aggregate flow between groups. Unlike the existing circos plot which draws individual nodes and edges, the chord diagram operates at the group level — making it ideal for visualizing inter-group relationships like migration patterns, trade flows, or information exchange.</p>
+<p>This is a new plot type (<code>nv.chord</code>) that reuses the existing compute/render architecture but introduces a distinct pipeline: group arc layout, edge aggregation, and ribbon rendering.</p>
+<h2 id="context">Context</h2>
+<p>nxviz currently supports six plot types (circos, arc, hive, matrix, parallel, geo), all of which operate on individual nodes and edges. The chord diagram is the first plot type that aggregates to the group level. It targets the same user base — researchers and analysts exploring network data — but serves a different need: summarizing patterns across categorical groupings rather than inspecting individual connections.</p>
+<p>The canonical use case is population flow between continents: countries (nodes) grouped into continents, with migration flows (weighted edges) aggregated into ribbons showing how many people move between continent pairs.</p>
+<h2 id="architecture">Architecture</h2>
+<div class="highlight"><pre><span></span><code>User Call: nv.chord(G, group_by=&quot;continent&quot;, weight_by=&quot;flow&quot;)
+    │
+    ▼
+┌─────────────────── COMPUTE PHASE (backend-agnostic) ───────────────────┐
+│                                                                        │
+│  utils.node_table(G)  →  chord.group_arcs(nt, group_by)               │
+│                               →  group_arcs: DataFrame                 │
+│                                  [group, start_angle, end_angle,       │
+│                                   n_nodes, color]                      │
+│                                                                        │
+│  utils.edge_table(G)  →  chord.aggregate_edges(et, nt, group_by,      │
+│                                                  weight_by)            │
+│                               →  agg_edges: DataFrame                  │
+│                                  [source_group, target_group, weight]  │
+│                                                                        │
+│  chord.ribbon_coords(agg_edges, group_arcs, radius)                    │
+│                               →  ribbon_data: List[Dict]               │
+│                                  each with path_coords, width, color   │
+│                                                                        │
+└────────────────────────────────────────────────────────────────────────┘
+    │
+    ▼
+┌─────────────────── RENDER PHASE (backend-specific) ───────────────────┐
+│                                                                        │
+│  backend.draw_arcs(axes, group_arcs, radius)                           │
+│  backend.draw_ribbons(axes, ribbon_data)                               │
+│  backend.draw_arc_labels(axes, group_arcs, radius)                     │
+│  backend.despine(axes)                                                 │
+│  backend.set_aspect_equal(axes)                                        │
+│  backend.rescale(axes, pos_data, &quot;default&quot;)                            │
+│  return backend.get_figure(axes)                                       │
+│                                                                        │
+└────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h2 id="data-models">Data Models</h2>
+<h3 id="grouparcs">GroupArcs</h3>
+<p>Computed by <code>chord.group_arcs()</code> from the node table.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>group</td>
+<td>Hashable</td>
+<td>Group identifier (e.g., "Africa", "Asia")</td>
+</tr>
+<tr>
+<td>start_angle</td>
+<td>float</td>
+<td>Starting angle in radians (inclusive)</td>
+</tr>
+<tr>
+<td>end_angle</td>
+<td>float</td>
+<td>Ending angle in radians (exclusive)</td>
+</tr>
+<tr>
+<td>n_nodes</td>
+<td>int</td>
+<td>Number of nodes in this group</td>
+</tr>
+<tr>
+<td>color</td>
+<td>tuple</td>
+<td>RGBA color assigned to this group</td>
+</tr>
+</tbody>
+</table>
+<p>Angular gap: A small configurable gap (default <code>2π × 0.01</code> radians per group) separates adjacent arcs for visual clarity. Arcs are sized proportionally to <code>n_nodes</code> within the remaining angular space.</p>
+<h3 id="aggedges">AggEdges</h3>
+<p>Computed by <code>chord.aggregate_edges()</code> from the edge table and node table.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>source_group</td>
+<td>Hashable</td>
+<td>Group of the source node</td>
+</tr>
+<tr>
+<td>target_group</td>
+<td>Hashable</td>
+<td>Group of the target node</td>
+</tr>
+<tr>
+<td>weight</td>
+<td>float</td>
+<td>Sum of edge weights (or count of edges if unweighted)</td>
+</tr>
+</tbody>
+</table>
+<p>For undirected graphs, each edge contributes to both (A→B) and (B→A) rows (mirroring existing <code>edge_table</code> behavior). For directed graphs, source and target are preserved as-is. Self-loops (A→A) are included.</p>
+<h3 id="ribbondata">RibbonData</h3>
+<p>Computed by <code>chord.ribbon_coords()</code> from group arcs and aggregated edges.</p>
+<p>Each ribbon is a dictionary:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>source_group</td>
+<td>Hashable</td>
+<td>Source group</td>
+</tr>
+<tr>
+<td>target_group</td>
+<td>Hashable</td>
+<td>Target group</td>
+</tr>
+<tr>
+<td>source_angle_start</td>
+<td>float</td>
+<td>Start angle on source arc</td>
+</tr>
+<tr>
+<td>source_angle_end</td>
+<td>float</td>
+<td>End angle on source arc</td>
+</tr>
+<tr>
+<td>target_angle_start</td>
+<td>float</td>
+<td>Start angle on target arc</td>
+</tr>
+<tr>
+<td>target_angle_end</td>
+<td>float</td>
+<td>End angle on target arc</td>
+</tr>
+<tr>
+<td>path_coords</td>
+<td>np.ndarray</td>
+<td>Shape (N, 2) — Bezier path through center</td>
+</tr>
+<tr>
+<td>color</td>
+<td>tuple</td>
+<td>RGBA color (of source group)</td>
+</tr>
+<tr>
+<td>alpha</td>
+<td>float</td>
+<td>Transparency value</td>
+</tr>
+</tbody>
+</table>
+<p>Ribbon width at each arc is proportional to the flow weight relative to total flow on that arc. Each arc's angular extent is split into a source zone (outgoing) and a target zone (incoming), each proportional to total outgoing/incoming flow. Within each zone, individual ribbons get sub-bands proportional to their weight share. This two-phase allocation guarantees that source and target sub-bands on the same arc never overlap angularly.</p>
+<h3 id="directionality-target-gap-offset">Directionality: target-gap offset</h3>
+<p>To make flow direction visually clear, the <strong>target end</strong> of each ribbon is offset inward from the arc by 3% of the radius. The source end remains attached to the arc at <code>inner_r</code>.</p>
+<table>
+<thead>
+<tr>
+<th>End</th>
+<th>Anchor radius</th>
+<th>Visual effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source (start)</td>
+<td><code>inner_r = radius × (1 - arc_width/2)</code></td>
+<td>Flush with the arc — no gap</td>
+</tr>
+<tr>
+<td>Target (end)</td>
+<td><code>target_r = inner_r - 0.03 × radius</code></td>
+<td>3% gap between ribbon edge and arc</td>
+</tr>
+</tbody>
+</table>
+<p>This creates a visible detachment at the target end, making it easy to distinguish "where flow comes from" (attached) from "where flow goes to" (detached). The gap is proportional to radius so it scales correctly at any size.</p>
+<p>For self-loops (A→A), both source and target sub-bands lie on the same arc. The target-gap offset is especially important here: without it, the source and target bands overlap on the arc, making the self-loop appear to fill the entire arc segment.</p>
+<h2 id="new-module-nxvizchordpy">New Module: <code>nxviz/chord.py</code></h2>
+<p>This module contains all compute-phase functions for the chord diagram. It is the chord-specific equivalent of what <code>layouts.py</code> + <code>paths.py</code> provide for other plot types.</p>
+<h3 id="group_arcsnt-group_by-palettenone"><code>group_arcs(nt, group_by, palette=None)</code></h3>
+<p>Takes the node table and returns the GroupArcs DataFrame.</p>
+<ol>
+<li>Count nodes per group.</li>
+<li>Sort groups by a deterministic order (sorted alphabetically by default).</li>
+<li>Compute total angular gap: <code>n_groups × gap_per_group</code>.</li>
+<li>Available angular space: <code>2π - total_gap</code>.</li>
+<li>Assign each group an angular extent proportional to its node count.</li>
+<li>Assign colors using the existing <code>encodings.color_func()</code> pipeline applied to group labels.</li>
+</ol>
+<h3 id="aggregate_edgeset-nt-group_by-weight_bynone"><code>aggregate_edges(et, nt, group_by, weight_by=None)</code></h3>
+<p>Takes the edge table, node table, and returns the AggEdges DataFrame.</p>
+<ol>
+<li>Build a <code>node → group</code> mapping from the node table.</li>
+<li>Map each edge's source and target to their groups.</li>
+<li>Group by <code>(source_group, target_group)</code>.</li>
+<li>If <code>weight_by</code> is specified, sum the weight column. Otherwise, count rows.</li>
+<li>Return aggregated DataFrame.</li>
+</ol>
+<h3 id="ribbon_coordsagg_edges-group_arcs-radius"><code>ribbon_coords(agg_edges, group_arcs, radius)</code></h3>
+<p>Takes aggregated edges and group arcs, returns list of RibbonData dicts.</p>
+<p><strong>Sub-band allocation</strong> — each group's arc is divided into two contiguous zones: source sub-bands (for outgoing flows) followed by target sub-bands (for incoming flows). This two-phase allocation uses a single tracker per arc, guaranteeing zero angular overlap between source and target sub-bands on the same arc.</p>
+<ol>
+<li><strong>Budget split</strong>: For each group, the arc's total angular extent is divided proportionally between source and target zones based on total outgoing vs incoming flow. If group A sends 1.2M and receives 3.15M, the source zone gets <code>arc_extent × 1.2M / (1.2M + 3.15M)</code> and the target zone gets the remainder.</li>
+<li><strong>Phase 1 — source sub-bands</strong>: For each edge, allocate a source sub-band proportional to <code>weight / outgoing_flow</code> within the source zone. The tracker advances forward. Source sub-bands are ordered by target group index to minimise ribbon crossings.</li>
+<li><strong>Phase 2 — target sub-bands</strong>: Target trackers start where source trackers ended. For each edge, allocate a target sub-band proportional to <code>weight / incoming_flow</code> within the target zone.</li>
+<li>Both phases fit within the arc boundary by construction.</li>
+</ol>
+<p>For each aggregated edge (A→B):
+1. Look up A's source sub-band angles and B's target sub-band angles.
+2. Compute Cartesian coordinates at two anchor radii:
+   - Source arc segment at <code>inner_r</code> (attached to the arc).
+   - Target arc segment at <code>target_r = inner_r - 0.03 × radius</code> (detached for directionality).
+3. Generate a Bezier path through the center connecting the two arc segments.
+4. Build the RibbonData dict.</p>
+<p>For self-loops (A→A), the source sub-band occupies the first portion of A's arc and the target sub-band follows immediately after. The <code>_self_loop_path</code> function draws a loop from the source sub-band through the interior back to the target sub-band, using a control radius of <code>inner_r × 0.5</code> so the loop stays well inside the circle. The target-gap offset (<code>target_r &lt; inner_r</code>) provides visual separation at the arc boundary.</p>
+<h2 id="backend-protocol-extension">Backend Protocol Extension</h2>
+<p>Two new methods on <code>PlotBackend</code>:</p>
+<h3 id="draw_arcsaxes-group_arcs-radius"><code>draw_arcs(axes, group_arcs, radius)</code></h3>
+<p>Draws arc segments around the circle. Each arc is a thick colored band (arc path with linewidth proportional to a configurable band width, default 20px). In matplotlib, this is a <code>matplotlib.patches.Arc</code> or a series of line segments along the arc path with thick linewidth. In plotly, a <code>go.layout.Shape</code> with path type arc.</p>
+<h3 id="draw_ribbonsaxes-ribbon_data"><code>draw_ribbons(axes, ribbon_data)</code></h3>
+<p>Draws ribbons connecting arc segments. Each ribbon is a filled polygon with transparency and a full-opacity border to visually separate overlapping ribbons and preserve the directionality cue (attached source end vs detached target end). In matplotlib, a <code>matplotlib.patches.Polygon</code> or <code>PathPatch</code>. In plotly, a filled <code>go.Scatter</code> or <code>go.Scatterpolar</code>. Interactive backends (plotly) support hover highlighting: the hovered ribbon transitions to full opacity while others dim, with borders following the same transition.</p>
+<h3 id="draw_arc_labelsaxes-group_arcs-radius"><code>draw_arc_labels(axes, group_arcs, radius)</code></h3>
+<p>Draws group labels outside each arc at the midpoint angle. In matplotlib, <code>axes.text()</code> with rotation. In plotly, text annotations.</p>
+<p>Existing backend methods (<code>despine</code>, <code>set_aspect_equal</code>, <code>rescale</code>, <code>get_figure</code>) are reused as-is.</p>
+<h2 id="api-integration">API Integration</h2>
+<h3 id="nxvizapipy"><code>nxviz/api.py</code></h3>
+<p>A new <code>chord</code> function, structured like existing plot types:</p>
+<div class="highlight"><pre><span></span><code><span class="n">chord</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+    <span class="n">base_chord</span><span class="p">,</span>
+    <span class="n">group_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">update_wrapper</span><span class="p">(</span><span class="n">chord</span><span class="p">,</span> <span class="n">base_chord</span><span class="p">)</span>
+<span class="n">chord</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s2">&quot;api.chord&quot;</span>
+</code></pre></div>
+<p>A new <code>base_chord</code> function replaces the node/edge pipeline with the chord-specific pipeline:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">base_chord</span><span class="p">(</span>
+    <span class="n">G</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span>
+    <span class="n">group_by</span><span class="p">:</span> <span class="n">Hashable</span><span class="p">,</span>
+    <span class="n">weight_by</span><span class="p">:</span> <span class="n">Hashable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">sort_by</span><span class="p">:</span> <span class="n">Hashable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">node_palette</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">edge_palette</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;matplotlib&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+</code></pre></div>
+<p>Key differences from <code>base</code>:
+- No individual node drawing — replaced by arc drawing.
+- No individual edge drawing — replaced by ribbon drawing.
+- <code>weight_by</code> replaces <code>edge_color_by</code>, <code>edge_lw_by</code>, etc. (ribbon width encodes weight).
+- The <code>sort_by</code> parameter controls ordering of groups around the circle.</p>
+<h3 id="nxviz__init__py"><code>nxviz/__init__.py</code></h3>
+<p>Export <code>chord</code> alongside existing plot functions.</p>
+<h2 id="edge-cases">Edge Cases</h2>
+<ol>
+<li><strong>Single group</strong>: One arc covers the full circle. All ribbons are self-loops. Render a warning since this is rarely useful.</li>
+<li><strong>Two groups</strong>: Two arcs with a gap. Ribbons connect the two arcs. Self-loops render as small loops on each arc.</li>
+<li><strong>Empty group</strong>: A group with zero nodes produces no arc. Raise ValueError — every group must have at least one node.</li>
+<li><strong>No edges between groups</strong>: Ribbons are absent. Arcs still render. Not an error.</li>
+<li><strong>Self-loops only</strong>: All flow stays within groups. Ribbons loop back on the same arc.</li>
+<li><strong>Unequal group sizes</strong>: Large groups get proportionally wider arcs. Very small groups (1-2 nodes) may produce thin arcs — the gap size bounds the minimum visual thickness.</li>
+<li><strong>Very large number of groups</strong>: Performance degrades with O(n_groups²) ribbons. Cap at a warning threshold (e.g., 20 groups).</li>
+<li><strong>Zero-weight edges</strong>: Edges with zero weight contribute nothing to the aggregation. They are silently dropped.</li>
+</ol>
+<h2 id="dependencies">Dependencies</h2>
+<p>No new external dependencies. The chord diagram uses:
+- <code>numpy</code> — trigonometry for arc/ribbon coordinates
+- <code>pandas</code> — groupby/aggregation
+- Existing <code>nxviz.polcart</code>, <code>nxviz.geometry</code>, <code>nxviz.encodings</code>, <code>nxviz.utils</code> modules</p>
+<h2 id="reference-use-case-population-flow-between-continents">Reference Use Case: Population Flow Between Continents</h2>
+<p>The motivating example uses synthetic migration data:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">nxviz</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nv</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+
+<span class="n">continents</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Nigeria&quot;</span><span class="p">:</span> <span class="s2">&quot;Africa&quot;</span><span class="p">,</span> <span class="s2">&quot;Egypt&quot;</span><span class="p">:</span> <span class="s2">&quot;Africa&quot;</span><span class="p">,</span> <span class="s2">&quot;South Africa&quot;</span><span class="p">:</span> <span class="s2">&quot;Africa&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;China&quot;</span><span class="p">:</span> <span class="s2">&quot;Asia&quot;</span><span class="p">,</span> <span class="s2">&quot;India&quot;</span><span class="p">:</span> <span class="s2">&quot;Asia&quot;</span><span class="p">,</span> <span class="s2">&quot;Japan&quot;</span><span class="p">:</span> <span class="s2">&quot;Asia&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Germany&quot;</span><span class="p">:</span> <span class="s2">&quot;Europe&quot;</span><span class="p">,</span> <span class="s2">&quot;France&quot;</span><span class="p">:</span> <span class="s2">&quot;Europe&quot;</span><span class="p">,</span> <span class="s2">&quot;UK&quot;</span><span class="p">:</span> <span class="s2">&quot;Europe&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;USA&quot;</span><span class="p">:</span> <span class="s2">&quot;N. America&quot;</span><span class="p">,</span> <span class="s2">&quot;Canada&quot;</span><span class="p">:</span> <span class="s2">&quot;N. America&quot;</span><span class="p">,</span> <span class="s2">&quot;Mexico&quot;</span><span class="p">:</span> <span class="s2">&quot;N. America&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Brazil&quot;</span><span class="p">:</span> <span class="s2">&quot;S. America&quot;</span><span class="p">,</span> <span class="s2">&quot;Argentina&quot;</span><span class="p">:</span> <span class="s2">&quot;S. America&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Australia&quot;</span><span class="p">:</span> <span class="s2">&quot;Oceania&quot;</span><span class="p">,</span> <span class="s2">&quot;New Zealand&quot;</span><span class="p">:</span> <span class="s2">&quot;Oceania&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="n">country</span><span class="p">,</span> <span class="n">continent</span> <span class="ow">in</span> <span class="n">continents</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">country</span><span class="p">,</span> <span class="n">continent</span><span class="o">=</span><span class="n">continent</span><span class="p">)</span>
+
+<span class="n">flows</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;India&quot;</span><span class="p">,</span> <span class="s2">&quot;UK&quot;</span><span class="p">,</span> <span class="mi">500000</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;India&quot;</span><span class="p">,</span> <span class="s2">&quot;USA&quot;</span><span class="p">,</span> <span class="mi">800000</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;Mexico&quot;</span><span class="p">,</span> <span class="s2">&quot;USA&quot;</span><span class="p">,</span> <span class="mi">1200000</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;China&quot;</span><span class="p">,</span> <span class="s2">&quot;USA&quot;</span><span class="p">,</span> <span class="mi">400000</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;Nigeria&quot;</span><span class="p">,</span> <span class="s2">&quot;UK&quot;</span><span class="p">,</span> <span class="mi">300000</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;France&quot;</span><span class="p">,</span> <span class="s2">&quot;UK&quot;</span><span class="p">,</span> <span class="mi">200000</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;Brazil&quot;</span><span class="p">,</span> <span class="s2">&quot;USA&quot;</span><span class="p">,</span> <span class="mi">300000</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;UK&quot;</span><span class="p">,</span> <span class="s2">&quot;Australia&quot;</span><span class="p">,</span> <span class="mi">250000</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;Germany&quot;</span><span class="p">,</span> <span class="s2">&quot;USA&quot;</span><span class="p">,</span> <span class="mi">200000</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Egypt&quot;</span><span class="p">,</span> <span class="s2">&quot;France&quot;</span><span class="p">,</span> <span class="mi">150000</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;South Africa&quot;</span><span class="p">,</span> <span class="s2">&quot;UK&quot;</span><span class="p">,</span> <span class="mi">200000</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;China&quot;</span><span class="p">,</span> <span class="s2">&quot;Australia&quot;</span><span class="p">,</span> <span class="mi">350000</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;Argentina&quot;</span><span class="p">,</span> <span class="s2">&quot;Spain&quot;</span><span class="p">,</span> <span class="mi">300000</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;India&quot;</span><span class="p">,</span> <span class="s2">&quot;Canada&quot;</span><span class="p">,</span> <span class="mi">250000</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="k">for</span> <span class="n">src</span><span class="p">,</span> <span class="n">tgt</span><span class="p">,</span> <span class="n">flow</span> <span class="ow">in</span> <span class="n">flows</span><span class="p">:</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">tgt</span><span class="p">,</span> <span class="n">flow</span><span class="o">=</span><span class="n">flow</span><span class="p">)</span>
+
+<span class="n">nv</span><span class="o">.</span><span class="n">chord</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s2">&quot;continent&quot;</span><span class="p">,</span> <span class="n">weight_by</span><span class="o">=</span><span class="s2">&quot;flow&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Expected output: six arc segments (Africa, Asia, Europe, N. America, Oceania, S. America) with colored ribbons showing migration volumes. The USA-bound flows from Asia and N. America should produce the thickest ribbons.</p>
+<h2 id="related-documents">Related Documents</h2>
+<ul>
+<li><a href="../../../high-level-design/">High-Level Design</a></li>
+<li><a href=".././arc-computation-EARS/">Group Arc Computation EARS</a></li>
+<li><a href=".././edge-aggregation-EARS/">Edge Aggregation EARS</a></li>
+<li><a href=".././chord-rendering-EARS/">Chord Rendering EARS</a></li>
+<li><a href=".././chord-api-EARS/">Chord API EARS</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["navigation.tabs"],"search":"../../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>

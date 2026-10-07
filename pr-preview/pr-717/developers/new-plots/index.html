@@ -1,0 +1,1633 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ericmjl.github.io/nxviz/developers/new-plots/">
+      
+      
+        <link rel="prev" href="../contributing/">
+      
+      
+        <link rel="next" href="../../api/high-level-api/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.43">
+    
+    
+      
+        <title>New Plots - nxviz: Rational Graph Visualization in Python</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.fba56155.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#implementing-a-new-plot" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="nxviz: Rational Graph Visualization in Python" class="md-header__button md-logo" aria-label="nxviz: Rational Graph Visualization in Python" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            nxviz: Rational Graph Visualization in Python
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              New Plots
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../theory/" class="md-tabs__link">
+        
+  
+  Principles of Visualization
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../history/" class="md-tabs__link">
+          
+  
+  Releases
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../architecture/" class="md-tabs__link">
+          
+  
+  Developers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/high-level-api/" class="md-tabs__link">
+          
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/matrix/" class="md-tabs__link">
+          
+  
+  Examples Gallery
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="nxviz: Rational Graph Visualization in Python" class="md-nav__button md-logo" aria-label="nxviz: Rational Graph Visualization in Python" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+
+    </a>
+    nxviz: Rational Graph Visualization in Python
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Principles of Visualization
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Releases
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Releases
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../history/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Release History
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Contributors
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Developers
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Developers
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Architecture
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../devguide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Development Guide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Ways to contribute
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Developing new plots
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Developing new plots
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Example graph
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implement-node-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Implement node layout
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drawing-edges" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Drawing edges
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#annotations" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Annotations
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Annotations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-color-by-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Node color by group
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#node-color-by-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Node color by value
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#annotating-group-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Annotating group identity
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#annotate-matrix-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Annotate matrix blocks
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-level-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        High level API
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  API
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  API
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/high-level-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  High level API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/mid-level-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Mid-level API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/low-level-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Low-level API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/object-oriented-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Object-oriented API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/facet-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Faceting API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Examples Gallery
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Examples Gallery
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Matrix Plot
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/geo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Geo Plot
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/arc_node_labels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Arc Node Labels
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/circos_node_labels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Circos Node Labels
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/matrix_node_labels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Matrix Node Labels
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Example graph
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implement-node-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Implement node layout
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drawing-edges" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Drawing edges
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#annotations" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Annotations
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Annotations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#node-color-by-group" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Node color by group
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#node-color-by-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Node color by value
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#annotating-group-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Annotating group identity
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#annotate-matrix-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Annotate matrix blocks
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-level-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        High level API
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<div class="marimo highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">marimo</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mo</span>
+</code></pre></div>
+<h1 id="implementing-a-new-plot">Implementing a new plot</h1>
+<p>We'll show you how to implement a new plot using the nxviz's layered API.</p>
+<p>As an example, we'll show you how the design process works
+for the matrix plot.</p>
+<div class="marimo highlight"><pre><span></span><code><span class="c1"># magic command not supported in marimo; please file an issue to add support</span>
+<span class="c1"># %config InlineBackend.figure_format = &#39;retina&#39;</span>
+<span class="c1"># magic command not supported in marimo; please file an issue to add support</span>
+<span class="c1"># %load_ext autoreload</span>
+<span class="c1"># &#39;%autoreload 2&#39; command supported automatically in marimo</span>
+</code></pre></div>
+<h2 id="example-graph">Example graph</h2>
+<p>As always, we'll need an example graph to anchor our notebook.</p>
+<div class="marimo highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">random</span><span class="w"> </span><span class="kn">import</span> <span class="n">choice</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">erdos_renyi_graph</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">choice</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">])</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">exponential</span><span class="p">()</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">44</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">][</span><span class="s2">&quot;edge_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">exponential</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="implement-node-layout">Implement node layout</h2>
+<p>We first have to worry about how the nodes are placed.
+Therefore, we need a node layout function.</p>
+<p>All node layout functions accept the following arguments:</p>
+<ul>
+<li>a node table <code>nt</code>,</li>
+<li>the key to <code>group_by</code></li>
+<li>the key to <code>sort_by</code> (optionally)</li>
+<li>any other relevant keyword arguments</li>
+</ul>
+<p>With the matrix plot layout,
+from thinking about how the nodes should be laid out,
+we will probably arrive at the conclusion
+that grouping and sorting are technically optional
+and not intrinsic to the layout.
+If that's not obvious at first glance,
+please think about it, you'll probably arrive at the same conclusion!</p>
+<p>They then return the x, y coordinates to place nodes on.</p>
+<p>The exact glyphs and their styles are out-of-bounds!
+Therefore, don't worry about them just yet.</p>
+<div class="marimo highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Hashable</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nxviz.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">group_and_sort</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">matrix_layout</span><span class="p">(</span><span class="n">nt</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">group_by</span><span class="p">:</span> <span class="n">Hashable</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sort_by</span><span class="p">:</span> <span class="n">Hashable</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="c1"># Just the skeleton first!</span>
+    <span class="n">_nt</span> <span class="o">=</span> <span class="n">group_and_sort</span><span class="p">(</span><span class="n">nt</span><span class="o">=</span><span class="n">_nt</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="n">group_by</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="n">sort_by</span><span class="p">)</span>
+</code></pre></div>
+<p>With a matrix plot, our goal is to place nodes along the x- and y-axis.
+It's a bit like the hive plot with cloned axes.</p>
+<p>See the code annotations for the logic.</p>
+<div class="marimo highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">matrix_layout_1</span><span class="p">(</span><span class="n">nt</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">group_by</span><span class="p">:</span> <span class="n">Hashable</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sort_by</span><span class="p">:</span> <span class="n">Hashable</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">):</span>
+    <span class="n">_nt</span> <span class="o">=</span> <span class="n">group_and_sort</span><span class="p">(</span><span class="n">node_table</span><span class="o">=</span><span class="n">_nt</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="n">group_by</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="n">sort_by</span><span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">_nt</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">pos</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">pos</span>
+</code></pre></div>
+<p>Now that we have the positions implemented, let's see what they look like.</p>
+<div class="marimo highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">nxviz.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">node_table</span>
+<span class="n">_nt</span> <span class="o">=</span> <span class="n">node_table</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="n">pos_x</span> <span class="o">=</span> <span class="n">matrix_layout_1</span><span class="p">(</span><span class="n">_nt</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="n">pos_y</span> <span class="o">=</span> <span class="n">matrix_layout_1</span><span class="p">(</span><span class="n">_nt</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+</code></pre></div>
+<div class="marimo highlight"><pre><span></span><code><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">pos_x</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+</code></pre></div>
+<div class="marimo highlight"><pre><span></span><code><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">pos_y</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+</code></pre></div>
+<p>Now, we can worry about the glyphs being drawn to screen.
+We will follow the logic for the mid-level API.
+There is a <code>draw</code> function that we can take advantage of
+to make it happen.</p>
+<div class="marimo highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">nxviz</span><span class="w"> </span><span class="kn">import</span> <span class="n">nodes</span>
+</code></pre></div>
+<div class="marimo highlight"><pre><span></span><code><span class="n">matrix</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">draw</span><span class="p">,</span> <span class="n">layout_func</span><span class="o">=</span><span class="n">matrix_layout_1</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">pos_x_1</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="n">pos_y_1</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">layout_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">))</span>
+</code></pre></div>
+<p>Not bad! We're off to a good start.
+This looks ugly, but upon inspection, its' because the aspect ratio isn't that good.
+We can fix this.</p>
+<div class="marimo highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">nxviz.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">aspect_equal</span><span class="p">,</span> <span class="n">despine</span>
+<span class="n">matrix_1</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">draw</span><span class="p">,</span> <span class="n">layout_func</span><span class="o">=</span><span class="n">matrix_layout_1</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">pos_x_2</span> <span class="o">=</span> <span class="n">matrix_1</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="n">pos_y_2</span> <span class="o">=</span> <span class="n">matrix_1</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">layout_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">))</span>
+<span class="n">aspect_equal</span><span class="p">()</span>
+<span class="n">despine</span><span class="p">()</span>
+</code></pre></div>
+<p>Now that's looking good! We have a square matrix, just as we expected.</p>
+<!---->
+<h2 id="drawing-edges">Drawing edges</h2>
+<p>For edges, we could take advantage of hive plot's lines.
+That would make the chart look interesting...
+like one of those arts and crafts tapestries we might have made when we were younger.</p>
+<div class="marimo highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">nxviz</span><span class="w"> </span><span class="kn">import</span> <span class="n">edges</span>
+<span class="n">matrix_2</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">draw</span><span class="p">,</span> <span class="n">layout_func</span><span class="o">=</span><span class="n">matrix_layout_1</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">pos_x_3</span> <span class="o">=</span> <span class="n">matrix_2</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="n">pos_y_3</span> <span class="o">=</span> <span class="n">matrix_2</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">layout_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">))</span>
+<span class="n">edges</span><span class="o">.</span><span class="n">hive</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos_x_3</span><span class="p">,</span> <span class="n">pos_cloned</span><span class="o">=</span><span class="n">pos_y_3</span><span class="p">,</span> <span class="n">curves</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+<p>However, the spirit of a matrix plot is to fill in an <code>n-by-n</code> matrix.
+Thus, we should actually be using a custom implementation of edges
+that draws in a circle glyph where needed.</p>
+<p>The matrix "lines" function will follow the API of the functions in the <code>nxviz.lines</code> file.
+Lines are in quotes because we're not technically writing out lines. :)</p>
+<div class="marimo highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Circle</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">matrix_lines</span><span class="p">(</span><span class="n">et</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">pos_cloned</span><span class="p">,</span> <span class="n">edge_color</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">lw</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">aes_kw</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+    <span class="n">patches</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">et</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
+        <span class="n">x_start</span><span class="p">,</span> <span class="n">y_start</span> <span class="o">=</span> <span class="n">pos_y_3</span><span class="p">[</span><span class="n">start</span><span class="p">]</span>
+        <span class="n">x_end</span><span class="p">,</span> <span class="n">y_end</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="n">end</span><span class="p">]</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">x_start</span><span class="p">,</span> <span class="n">y_start</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_end</span><span class="p">,</span> <span class="n">y_end</span><span class="p">))</span>
+        <span class="n">kw</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;fc&#39;</span><span class="p">:</span> <span class="n">edge_color</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">alpha</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="s1">&#39;radius&#39;</span><span class="p">:</span> <span class="n">lw</span><span class="p">[</span><span class="n">r</span><span class="p">],</span> <span class="s1">&#39;zorder&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
+        <span class="n">kw</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">aes_kw</span><span class="p">)</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+        <span class="n">patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">patches</span>
+<span class="n">matrix_edges</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">edges</span><span class="o">.</span><span class="n">draw</span><span class="p">,</span> <span class="n">lines_func</span><span class="o">=</span><span class="n">matrix_lines</span><span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">_fig</span><span class="p">,</span> <span class="n">_ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">pos_x_4</span> <span class="o">=</span> <span class="n">matrix_2</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="n">pos_y_4</span> <span class="o">=</span> <span class="n">matrix_2</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">layout_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">))</span>
+<span class="n">edges</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos_x_4</span><span class="p">,</span> <span class="n">pos_cloned</span><span class="o">=</span><span class="n">pos_y_4</span><span class="p">,</span> <span class="n">alpha_by</span><span class="o">=</span><span class="s1">&#39;edge_value&#39;</span><span class="p">)</span>
+<span class="n">despine</span><span class="p">()</span>
+<span class="n">aspect_equal</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="annotations">Annotations</h2>
+<p>We may wish to annotate the plot with additional information.
+For example, we might want to annotate the node values.
+This is doable using the same annotation tools available to us in nxviz.</p>
+<!---->
+<h3 id="node-color-by-group">Node color by group</h3>
+<div class="marimo highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">nxviz</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotate</span>
+<span class="n">_fig</span><span class="p">,</span> <span class="n">_ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">pos_x_5</span> <span class="o">=</span> <span class="n">matrix_2</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="n">pos_y_5</span> <span class="o">=</span> <span class="n">matrix_2</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">layout_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">))</span>
+<span class="n">matrix_edges</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos_x_5</span><span class="p">,</span> <span class="n">pos_cloned</span><span class="o">=</span><span class="n">pos_y_5</span><span class="p">,</span> <span class="n">alpha_by</span><span class="o">=</span><span class="s1">&#39;edge_value&#39;</span><span class="p">)</span>
+<span class="n">annotate</span><span class="o">.</span><span class="n">node_colormapping</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">)</span>
+<span class="n">despine</span><span class="p">()</span>
+<span class="n">aspect_equal</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="node-color-by-value">Node color by value</h3>
+<div class="marimo highlight"><pre><span></span><code><span class="n">_fig</span><span class="p">,</span> <span class="n">_ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">pos_x_6</span> <span class="o">=</span> <span class="n">matrix_2</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="n">pos_y_6</span> <span class="o">=</span> <span class="n">matrix_2</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">layout_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">))</span>
+<span class="n">matrix_edges</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos_x_6</span><span class="p">,</span> <span class="n">pos_cloned</span><span class="o">=</span><span class="n">pos_y_6</span><span class="p">,</span> <span class="n">encodings_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;alpha_scale&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
+<span class="n">annotate</span><span class="o">.</span><span class="n">node_colormapping</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="n">despine</span><span class="p">()</span>
+<span class="n">aspect_equal</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="annotating-group-identity">Annotating group identity</h3>
+<p>The group identities can also be annotated on the chart itself.
+Here's how the <code>matrix_group</code> annotation function is implemented.</p>
+<div class="marimo highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">nxviz.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">respine</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">matrix_group</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">offset</span><span class="o">=-</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">xrotation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">yrotation</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">_ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="n">_nt</span> <span class="o">=</span> <span class="n">node_table</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="n">group_sizes</span> <span class="o">=</span> <span class="n">_nt</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">group_by</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+    <span class="n">proportions</span> <span class="o">=</span> <span class="n">group_sizes</span> <span class="o">/</span> <span class="n">group_sizes</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">midpoint</span> <span class="o">=</span> <span class="n">proportions</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">starting_positions</span> <span class="o">=</span> <span class="n">proportions</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span> <span class="o">-</span> <span class="n">proportions</span>
+    <span class="n">label_positions</span> <span class="o">=</span> <span class="p">(</span><span class="n">starting_positions</span> <span class="o">+</span> <span class="n">midpoint</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">G</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">label_positions</span> <span class="o">=</span> <span class="n">label_positions</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">position</span> <span class="ow">in</span> <span class="n">label_positions</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">position</span>
+        <span class="n">_ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">position</span>
+        <span class="n">_ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">_fig</span><span class="p">,</span> <span class="n">_ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">pos_x_7</span> <span class="o">=</span> <span class="n">matrix_2</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="n">pos_y_7</span> <span class="o">=</span> <span class="n">matrix_2</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">layout_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">))</span>
+<span class="n">matrix_edges</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos_x_7</span><span class="p">,</span> <span class="n">pos_cloned</span><span class="o">=</span><span class="n">pos_y_7</span><span class="p">,</span> <span class="n">alpha_by</span><span class="o">=</span><span class="s1">&#39;edge_value&#39;</span><span class="p">)</span>
+<span class="n">matrix_group</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">)</span>
+<span class="n">despine</span><span class="p">()</span>
+<span class="n">aspect_equal</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="annotate-matrix-blocks">Annotate matrix blocks</h3>
+<p>We could also annotate the matrix blocks using the exact same logic.</p>
+<p>Matrix blocks are defined as the blocks of nodes in the same group,
+so this only applies to graphs for which the nodes can be grouped together.</p>
+<div class="marimo highlight"><pre><span></span><code><span class="n">_fig</span><span class="p">,</span> <span class="n">_ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">pos_x_8</span> <span class="o">=</span> <span class="n">matrix_2</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="n">pos_y_8</span> <span class="o">=</span> <span class="n">matrix_2</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">layout_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">))</span>
+<span class="n">matrix_edges</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos_x_8</span><span class="p">,</span> <span class="n">pos_cloned</span><span class="o">=</span><span class="n">pos_y_8</span><span class="p">,</span> <span class="n">alpha_by</span><span class="o">=</span><span class="s1">&#39;edge_value&#39;</span><span class="p">)</span>
+<span class="n">matrix_group</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">)</span>
+<span class="n">respine</span><span class="p">()</span>
+<span class="n">aspect_equal</span><span class="p">()</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rectangle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nxviz</span><span class="w"> </span><span class="kn">import</span> <span class="n">encodings</span> <span class="k">as</span> <span class="n">aes</span>
+<span class="n">_nt</span> <span class="o">=</span> <span class="n">node_table</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="n">group_by</span> <span class="o">=</span> <span class="s1">&#39;group&#39;</span>
+<span class="n">color_by</span> <span class="o">=</span> <span class="s1">&#39;group&#39;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">matrix_block</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">group_sizes</span> <span class="o">=</span> <span class="n">_nt</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">group_by</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">starting_positions</span> <span class="o">=</span> <span class="n">group_sizes</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">group_sizes</span>
+    <span class="n">starting_positions</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;black&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_sizes</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">group_sizes</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">color_by</span><span class="p">:</span>
+        <span class="n">color_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">group_sizes</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">group_sizes</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="n">aes</span><span class="o">.</span><span class="n">data_color</span><span class="p">(</span><span class="n">color_data</span><span class="p">,</span> <span class="n">color_data</span><span class="p">)</span>
+    <span class="n">patches</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">position</span> <span class="ow">in</span> <span class="n">starting_positions</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">xy</span> <span class="o">=</span> <span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">position</span><span class="p">)</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="n">height</span> <span class="o">=</span> <span class="n">group_sizes</span><span class="p">[</span><span class="n">label</span><span class="p">]</span>
+        <span class="n">patch</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">label</span><span class="p">])</span>
+        <span class="n">patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">_ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">patch</span> <span class="ow">in</span> <span class="n">patches</span><span class="p">:</span>
+        <span class="n">_ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
+<span class="n">matrix_block</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="n">group_by</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="n">color_by</span><span class="p">)</span>
+<span class="n">despine</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="high-level-api">High level API</h2>
+<p>Of course, in showing you how to implement a matrix plot from scratch,
+we took the code and shoved it into our high-level API.
+Here's a few examples of how it's used.</p>
+<div class="marimo highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">nxviz</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nv</span>
+<span class="n">_ax</span> <span class="o">=</span> <span class="n">nv</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+</code></pre></div>
+<div class="marimo highlight"><pre><span></span><code><span class="n">_ax</span> <span class="o">=</span> <span class="n">nv</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">node_color_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">edge_alpha_by</span><span class="o">=</span><span class="s1">&#39;edge_value&#39;</span><span class="p">)</span>
+<span class="n">annotate</span><span class="o">.</span><span class="n">matrix_block</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["navigation.tabs"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>
