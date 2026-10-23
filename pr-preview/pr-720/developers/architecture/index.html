@@ -1,0 +1,1788 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ericmjl.github.io/nxviz/developers/architecture/">
+      
+      
+        <link rel="prev" href="../../contributors/">
+      
+      
+        <link rel="next" href="../devguide/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.43">
+    
+    
+      
+        <title>Library Architecture - nxviz: Rational Graph Visualization in Python</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.fba56155.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/custom.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#library-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="nxviz: Rational Graph Visualization in Python" class="md-header__button md-logo" aria-label="nxviz: Rational Graph Visualization in Python" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            nxviz: Rational Graph Visualization in Python
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Library Architecture
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../theory/" class="md-tabs__link">
+        
+  
+  Principles of Visualization
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../history/" class="md-tabs__link">
+          
+  
+  Releases
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="././" class="md-tabs__link">
+          
+  
+  Developers
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/high-level-api/" class="md-tabs__link">
+          
+  
+  API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/matrix/" class="md-tabs__link">
+          
+  
+  Examples Gallery
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="nxviz: Rational Graph Visualization in Python" class="md-nav__button md-logo" aria-label="nxviz: Rational Graph Visualization in Python" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+
+    </a>
+    nxviz: Rational Graph Visualization in Python
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Principles of Visualization
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Releases
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Releases
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../history/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Release History
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Contributors
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Developers
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Developers
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Architecture
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Architecture
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#high-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        High level
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="High level">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intended-usage-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Intended usage example
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#medium-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Medium Level
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Medium Level">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intended-usage-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Intended usage example
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#low-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Low Level
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Low Level">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intended-usage-example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Intended usage example
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plotting-utilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Plotting utilities
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#annotations" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Annotations
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visual-encodings" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Visual Encodings
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#geometry" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Geometry
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backend-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Backend System
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Backend System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#switching-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Switching backends
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture-compute-vs-render" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Architecture: Compute vs. Render
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#available-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Available backends
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Key modules
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#utils" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Utils
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../devguide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Development Guide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Ways to contribute
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../new-plots/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Developing new plots
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  API
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  API
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/high-level-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  High level API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/mid-level-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Mid-level API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/low-level-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Low-level API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/object-oriented-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Object-oriented API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/facet-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Faceting API
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Examples Gallery
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Examples Gallery
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Matrix Plot
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/geo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Geo Plot
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/arc_node_labels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Arc Node Labels
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/circos_node_labels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Circos Node Labels
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/matrix_node_labels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Matrix Node Labels
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#high-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        High level
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="High level">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intended-usage-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Intended usage example
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#medium-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Medium Level
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Medium Level">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intended-usage-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Intended usage example
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#low-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Low Level
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Low Level">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intended-usage-example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Intended usage example
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plotting-utilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Plotting utilities
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#annotations" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Annotations
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visual-encodings" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Visual Encodings
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#geometry" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Geometry
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backend-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Backend System
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Backend System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#switching-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Switching backends
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture-compute-vs-render" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Architecture: Compute vs. Render
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#available-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Available backends
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Key modules
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#utils" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Utils
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="library-architecture">Library Architecture</h1>
+<p><code>nxviz</code>'s architecture, or how the code is organized,
+follows the logical structure of prioritizing nodes' positioning over edges.
+As such, there are multiple API layers.
+We have documentation on how to use each of those API layers,
+so we won't go through them too closely here.</p>
+<h2 id="high-level">High level</h2>
+<p>At the high level, we provide the following plots in the <code>nxviz</code> main namespace:</p>
+<ul>
+<li>Graph visualizations with no cloned axes<ul>
+<li><code>arc</code>: Arc plots</li>
+<li><code>circos</code>: Circos plots</li>
+<li><code>parallel</code>: Parallel coordinate plots</li>
+</ul>
+</li>
+<li>Graph visualizations with cloned axes<ul>
+<li><code>hive</code>: Hive plots</li>
+<li><code>matrix</code>: Matrix plots</li>
+</ul>
+</li>
+</ul>
+<p>The intent for this level of API is to provide
+a single function call that enables users to draw a graph to screen.</p>
+<h3 id="intended-usage-example">Intended usage example</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">nxviz</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nv</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">nv</span><span class="o">.</span><span class="n">hive</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">node_color_by</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="medium-level">Medium Level</h2>
+<p>At the medium level API,
+users interact with node layout and plotting functions in <code>nxviz.nodes</code>
+as well as edge drawing functions in <code>nxviz.edges</code>.
+Mostly it provides a way to compose
+node rendering and edge rendering.</p>
+<p>Mapping from quantitative or qualitative data
+is still done by nxviz's built-in default functions,
+and can't be changed at this level.</p>
+<h3 id="intended-usage-example_1">Intended usage example</h3>
+<p>Here is an example of how one would use the mid-level API.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">nxviz</span><span class="w"> </span><span class="kn">import</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">edges</span>
+
+<span class="n">pos</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">circos</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">)</span>
+<span class="n">edges</span><span class="o">.</span><span class="n">circos</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">alpha_by</span><span class="o">=</span><span class="s2">&quot;edge_value&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="low-level">Low Level</h2>
+<p>At the low level API, <code>nxviz</code> provides users with
+the maximum amount of control over node and edge styling.
+Here, instead of passing graph objects into the plotting and layout functions,
+users interact with node and edge tables.</p>
+<p>For node plotting, the steps are:</p>
+<ol>
+<li>Obtain the node table</li>
+<li>Using the node table, obtain the node positions using a node layout function.</li>
+<li>Using the node table, obtain node color, transparency, and sizes based on node metadata.</li>
+<li>Finally, obtain the matplotlib patches, and add them to the plot.</li>
+</ol>
+<p>For edge plotting, the steps are:</p>
+<ol>
+<li>Obtain the edge table</li>
+<li>Using the edge table, obtain the edge color, transparency and line widths based on edge metadata.</li>
+<li>Finally, obtain the matplotlib patches, and add them to the plot.</li>
+</ol>
+<h3 id="intended-usage-example_2">Intended usage example</h3>
+<p>Here's an example of how one would use the low-level API.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">nxviz</span><span class="w"> </span><span class="kn">import</span> <span class="n">lines</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+<span class="c1">##### Part 1: Nodes #####</span>
+<span class="c1"># 1. Obtain node table</span>
+<span class="n">nt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">node_table</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+
+<span class="c1"># 2. Obtain positions using node table.</span>
+<span class="n">pos</span> <span class="o">=</span> <span class="n">layouts</span><span class="o">.</span><span class="n">circos</span><span class="p">(</span><span class="n">nt</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+
+<span class="c1"># 3. Obtain node styles</span>
+<span class="n">node_color</span> <span class="o">=</span> <span class="n">group_colormap</span><span class="p">(</span><span class="n">nt</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">])</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">transparency</span><span class="p">(</span><span class="n">nt</span><span class="p">,</span> <span class="n">alpha_by</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">size</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">node_size</span><span class="p">(</span><span class="n">nt</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">)</span>
+
+<span class="c1"># 4. Obtain patches styled correctly and add them to matplotlib axes.</span>
+<span class="n">patches</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">node_glyphs</span><span class="p">(</span>
+    <span class="n">nt</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="n">node_color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span>
+<span class="p">)</span>
+<span class="k">for</span> <span class="n">patch</span> <span class="ow">in</span> <span class="n">patches</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
+
+<span class="c1">##### Part 2: Edges #####</span>
+<span class="c1"># 1. Obtain edge table</span>
+<span class="n">et</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">edge_table</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+
+<span class="c1"># 2. Obtain edge styling.</span>
+<span class="n">edge_color</span> <span class="o">=</span> <span class="n">edges</span><span class="o">.</span><span class="n">edge_colors</span><span class="p">(</span><span class="n">et</span><span class="p">,</span> <span class="n">nt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">node_color_by</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">lw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">et</span><span class="p">[</span><span class="s2">&quot;edge_value&quot;</span><span class="p">])</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="n">edges</span><span class="o">.</span><span class="n">transparency</span><span class="p">(</span><span class="n">et</span><span class="p">,</span> <span class="n">alpha_by</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="c1"># 3. Obtain edge patches styled and add them to matplotlib axes.</span>
+<span class="n">patches</span> <span class="o">=</span> <span class="n">lines</span><span class="o">.</span><span class="n">circos</span><span class="p">(</span>
+    <span class="n">et</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="n">edge_color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">lw</span><span class="p">,</span> <span class="n">aes_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;fc&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+<span class="k">for</span> <span class="n">patch</span> <span class="ow">in</span> <span class="n">patches</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="plotting-utilities">Plotting utilities</h2>
+<p>We include some plotting utilities
+to make composing new plots together a bit easier.
+These functions are located in the <code>nxviz.plots</code> module.
+These include functions to rescale matplotlib axes (<code>plots.rescale()</code>),
+and despine and re-spine the axes objects
+(<code>plots.despine()</code> and <code>plots.respine()</code>).</p>
+<h2 id="annotations">Annotations</h2>
+<p>The core node and edge drawing functions
+can be composed with a variety of annotations onto the axes.
+These are all located in the <code>nxviz.annotate</code> module.
+For example, if one wants to add grouping annotations onto a Circos plot,
+one would use <code>annotate.circos_group</code>.
+Or if one wants to add in group block diagonals to the Matrix plot,
+one would call <code>annotate.matrix_block</code>.</p>
+<h2 id="visual-encodings">Visual Encodings</h2>
+<p>The default functions for mapping data to
+visual properties of node and edges
+are located in the <code>nxviz.nodes</code> and <code>nxviz.edges</code> modules.
+Underneath the hood, however,
+they call on functions in the <code>encodings</code> module.</p>
+<p>The pattern here is to produce an iterable of colors
+that correspond to each node and edge,
+done in a data-driven fashion.
+Underneath the hood, for code conciseness,
+we take advantage of the pandas DataFrame and Series APIs.</p>
+<h2 id="geometry">Geometry</h2>
+<p>The <code>nxviz.polcart</code> and <code>nxviz.geometry</code> modules
+give us convenience functions
+for calculating (x, y) coordinates from polcar coordinates
+and doing trigonometric calculations.
+(These are heavily used in plots with circular layouts,
+such as the Circos and Hive plots.)</p>
+<h2 id="backend-system">Backend System</h2>
+<p>nxviz supports multiple rendering backends behind a unified API.
+The default backend is matplotlib (unchanged from previous versions).
+An optional Plotly backend provides interactive web-based plots.</p>
+<h3 id="switching-backends">Switching backends</h3>
+<p>Users switch backends by adding a single <code>backend=</code> parameter:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">nxviz</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nv</span>
+
+<span class="c1"># Static (default, matplotlib)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">nv</span><span class="o">.</span><span class="n">circos</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">node_color_by</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">)</span>
+
+<span class="c1"># Interactive (plotly) — one parameter change</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">nv</span><span class="o">.</span><span class="n">circos</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">group_by</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">node_color_by</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;plotly&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p>All parameters (<code>group_by</code>, <code>sort_by</code>, <code>node_color_by</code>, etc.) work identically across backends.</p>
+<h3 id="architecture-compute-vs-render">Architecture: Compute vs. Render</h3>
+<p>The pipeline has two phases:</p>
+<ol>
+<li><strong>Compute phase</strong> (backend-agnostic): <code>layouts</code>, <code>encodings</code>, <code>geometry</code>, <code>polcart</code>, <code>utils</code>
+   produce node positions (<code>pos</code> dict), visual encodings (color/size/alpha Series),
+   and edge path coordinates.</li>
+<li><strong>Render phase</strong> (backend-specific): A <code>PlotBackend</code> implementation draws nodes,
+   edges, and annotations onto its native canvas.</li>
+</ol>
+<p>The <code>nxviz.paths</code> module extracts backend-agnostic edge path coordinates
+from the matplotlib-specific <code>nxviz.lines</code> module.
+The <code>nxviz.backend</code> module defines the <code>PlotBackend</code> protocol
+and a <code>get_backend()</code> factory.</p>
+<h3 id="available-backends">Available backends</h3>
+<ul>
+<li><strong>matplotlib</strong> (default): Static plots, returns <code>matplotlib.axes.Axes</code>.
+  No extra dependencies.</li>
+<li><strong>plotly</strong> (optional): Interactive plots with hover/zoom/pan,
+  returns <code>plotly.graph_objects.Figure</code>.
+  Install with <code>pip install nxviz[plotly]</code>.</li>
+</ul>
+<h3 id="key-modules">Key modules</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nxviz.backend</code></td>
+<td><code>PlotBackend</code> protocol + <code>get_backend()</code> factory</td>
+</tr>
+<tr>
+<td><code>nxviz.paths</code></td>
+<td>Backend-agnostic edge path coordinate computation</td>
+</tr>
+<tr>
+<td><code>nxviz.backends.matplotlib_backend</code></td>
+<td>Matplotlib rendering implementation</td>
+</tr>
+<tr>
+<td><code>nxviz.backends.plotly_backend</code></td>
+<td>Plotly rendering implementation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="utils">Utils</h2>
+<p>The <code>nxviz.utils</code> module is a catch-all
+for utility functions that don't fall into the aforementioned categories.
+For example, the node and edge table functions
+(<code>utils.node_table(G)</code> and <code>utils.edge_table(G)</code>),
+which construct the pandas DataFrame versions of the node set and edge set,
+are located in there.
+Because grouping and sorting nodes are intrinsic
+to constructing rational graph visualizations,
+the function <code>utils.group_and_sort(nt)</code> is also provided in there.
+Finally, there are utilities for automatically inferring
+whether a column of data is categorical,
+ordinal,
+or continuous based on data types and ranges.
+(That is used for identifying colormaps to be used for a particular data.)</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["navigation.tabs"],"search":"../../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>
