@@ -1,5 +1,7 @@
 """Tests for annotation."""
 
+import matplotlib.pyplot as plt
+import networkx as nx
 import pytest
 
 import nxviz as nv
@@ -93,6 +95,19 @@ def test_edge_colormapping(dummyG):
     """Execution test for edge_colormapping."""
     nv.circos(dummyG, group_by="group", edge_color_by="edge_value")
     annotate.edge_colormapping(dummyG, color_by="edge_value")
+
+
+def test_edge_colormapping_divergent():
+    """Test that divergent edge values get a colorbar instead of crashing."""
+    G = nx.Graph()
+    G.add_edge(0, 1, weight=-1.5)
+    G.add_edge(1, 2, weight=0.5)
+    G.add_edge(2, 0, weight=2.0)
+    fig = plt.figure()
+    nv.circos(G, edge_color_by="weight")
+    annotate.edge_colormapping(G, color_by="weight")
+    assert len(fig.axes) == 2
+    plt.close(fig)
 
 
 @pytest.mark.usefixtures("smallG")

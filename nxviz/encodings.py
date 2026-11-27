@@ -59,15 +59,23 @@ def continuous_color_func(val, cmap, data: pd.Series):
     return cmap(norm(val))
 
 
-def divergent_color_func(val, cmap, data: pd.Series):
-    """Return RGBA for divergent color func.
+def divergent_norm(data: pd.Series) -> Normalize:
+    """Return a normalization for divergent data that is symmetric about zero.
 
     Divergent colormaps are best made symmetric.
     Hence, vmin and vmax are set appropriately here.
     """
     vmin = min(data.min(), -data.max())
     vmax = max(data.max(), -data.min())
-    norm = Normalize(vmin=vmin, vmax=vmax)
+    return Normalize(vmin=vmin, vmax=vmax)
+
+
+def divergent_color_func(val, cmap, data: pd.Series):
+    """Return RGBA for divergent color func.
+
+    The colormap is centered on zero; see `divergent_norm`.
+    """
+    norm = divergent_norm(data)
     return cmap(norm(val))
 
 
@@ -119,6 +127,8 @@ def color_func(
     if data_family in ["continuous", "ordinal"]:
         func = continuous_color_func
         return partial(func, cmap=cmap, data=data)
+    elif data_family == "divergent":
+        return partial(divergent_color_func, cmap=cmap, data=data)
     else:
         return partial(func, cmap=cmap, data=data, palette=palette)
 

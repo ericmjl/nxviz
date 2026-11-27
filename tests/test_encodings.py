@@ -21,6 +21,12 @@ def continuous_series():
     return pd.Series(values)
 
 
+def divergent_series():
+    """Generator for a float series spanning negative and positive values."""
+    values = np.linspace(-1, 2, 100)
+    return pd.Series(values)
+
+
 def ordinal_series():
     """Generator for an ordinal series."""
     values = [1, 2, 3, 4]
@@ -40,6 +46,7 @@ def too_many_categories():
         (categorical_series(), "categorical"),
         (continuous_series(), "continuous"),
         (ordinal_series(), "ordinal"),
+        (divergent_series(), "divergent"),
     ],
 )
 def test_data_cmap(data, category):
@@ -60,12 +67,22 @@ def test_data_cmap_errors(too_many_categories):
         (categorical_series()),
         (continuous_series()),
         (ordinal_series()),
+        (divergent_series()),
     ],
 )
 def test_data_color(data):
     """Test data_color."""
     colors = aes.data_color(data, data)
     assert isinstance(colors, pd.Series)
+
+
+def test_data_color_divergent_is_centered_on_zero():
+    """Test that divergent data maps zero to the colormap midpoint."""
+    ref_data = pd.Series([-1.0, 0.5, 2.0])
+    data = pd.Series([-2.0, 0.0, 2.0])
+    colors = aes.data_color(data, ref_data)
+    cmap, _ = aes.data_cmap(ref_data)
+    assert colors.tolist() == [cmap(0.0), cmap(0.5), cmap(1.0)]
 
 
 @pytest.mark.parametrize(
