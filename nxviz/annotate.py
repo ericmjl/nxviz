@@ -249,15 +249,19 @@ def colormapping(
 ):
     """Annotate node color mapping.
 
-    If the color attribute is continuous, a colorbar will be added to the matplotlib figure.
+    If the color attribute is continuous or divergent,
+    a colorbar will be added to the matplotlib figure.
     Otherwise, a legend will be added.
     """
     cmap, data_family = encodings.data_cmap(data, palette)
     fig = plt.gcf()  # Get the current figure
     if ax is None:
         ax = plt.gca()
-    if data_family == "continuous":
-        norm = Normalize(vmin=data.min(), vmax=data.max())
+    if data_family in ["continuous", "divergent"]:
+        if data_family == "divergent":
+            norm = encodings.divergent_norm(data)
+        else:
+            norm = Normalize(vmin=data.min(), vmax=data.max())
         scalarmap = ScalarMappable(
             cmap=cmap,
             norm=norm,
